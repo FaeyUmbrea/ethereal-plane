@@ -1,4 +1,3 @@
-import PollApplication from "../applications/pollApplication";
 import { getGame } from "./helpers";
 import { Poll } from "./polls";
 

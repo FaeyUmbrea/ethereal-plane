@@ -4,22 +4,22 @@ import { Server } from "../utils/server";
 const PLAIN_TEMPLATE = 'modules/ethereal-plane/templates/apps.hbs'
 
 export default class PollApplication extends Application {
-    server:Server;
+    server: Server;
     sidebarButton: SceneControlTool;
-    constructor(server:Server,sidebarButton: SceneControlTool){
+    constructor(server: Server, sidebarButton: SceneControlTool) {
         super();
         this.server = server;
         this.sidebarButton = sidebarButton;
 
     }
 
-    static get defaultOptions(){
-        return mergeObject(super.defaultOptions,{
-            classes:['eppolls'],
+    static get defaultOptions() {
+        return mergeObject(super.defaultOptions, {
+            classes: ['eppolls'],
             popOut: true,
             minimizable: true,
             width: 230,
-            template: PLAIN_TEMPLATE, 
+            template: PLAIN_TEMPLATE,
             id: 'polls-application',
             title: 'Polls',
         })
