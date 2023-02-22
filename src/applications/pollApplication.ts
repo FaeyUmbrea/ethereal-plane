@@ -18,10 +18,12 @@ export default class PollApplication extends Application {
             classes: ['eppolls'],
             popOut: true,
             minimizable: true,
-            width: 230,
+            width: 400,
+            height: 300,
             template: PLAIN_TEMPLATE,
             id: 'polls-application',
             title: 'Polls',
+            resizable: true
         })
     }
 
