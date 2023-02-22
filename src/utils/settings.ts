@@ -1,4 +1,6 @@
+import PollApplication from "../applications/pollApplication";
 import { getGame } from "./helpers";
+import { Poll } from "./polls";
 
 const moduleID = "ethereal-plane"
 
@@ -21,6 +23,12 @@ export function registerSettings() {
         scope: 'world',
         config: true
     })
+    registerSetting("currentPoll", {
+        type: Object,
+        scope: 'world',
+        config: false,
+        default: new Poll()
+    })
 }
 
 function registerSetting(settingName: string, config: Record<string, unknown>): void {
@@ -32,9 +40,9 @@ function registerSetting(settingName: string, config: Record<string, unknown>): 
 }
 
 export function getSetting(settingName: string): any {
-    return getGame().settings.get('obs-utils', settingName);
+    return getGame().settings.get(moduleID, settingName);
 }
 
 export async function setSetting(settingName: string, value: any) {
-    await getGame().settings.set('obs-utils', settingName, value);
+    await getGame().settings.set(moduleID, settingName, value);
 }

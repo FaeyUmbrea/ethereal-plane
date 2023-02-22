@@ -1,5 +1,6 @@
+import { Server } from "../utils/server";
 import { registerHanlder } from "./rollHandler";
 
-export function registerHanlders(){
-    registerHanlder()
+export function registerHanlders(server:Server){
+    registerHanlder(server)
 }
