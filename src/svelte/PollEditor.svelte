@@ -1,12 +1,12 @@
-<script lang="ts">
-    import { Poll, PollStatus } from "../utils/polls";
-    import { Server } from "../utils/server";
-    import { setSetting } from "../utils/settings";
+<script>
+    import { Poll, PollStatus } from "../utils/polls.js";
+    import { Server } from "../utils/server.js";
+    import { setSetting } from "../utils/settings.js";
 
     export var poll: Poll
     export let server:Server;
-    var options = poll.options;
-    var optionSize = options.length;
+    const options = poll.options;
+    let optionSize = options.length;
 
     function addOption(){
         options.push("")

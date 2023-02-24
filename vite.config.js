@@ -35,7 +35,7 @@ const config = {
     sourcemap: true,
     lib: {
       name: 'ethereal-plane',
-      entry: 'src/ethereal-plane.ts',
+      entry: 'src/ethereal-plane.js',
       formats: ['es'],
       fileName: 'ethereal-plane',
     },

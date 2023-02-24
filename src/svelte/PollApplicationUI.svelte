@@ -1,16 +1,16 @@
-<script lang="ts">
+<script>
     import { onDestroy } from "svelte";
-    import { Poll } from "../utils/polls";
-    import { Server } from "../utils/server";
-    import { getSetting } from "../utils/settings";
+    import { Poll } from "../utils/polls.js";
+    import { Server } from "../utils/server.js";
+    import { getSetting } from "../utils/settings.js";
     import PollDisplay from "./PollDisplay.svelte";
     import PollEditor from "./PollEditor.svelte";
 
-    let poll = getSetting("currentPoll") as Poll;
+    let poll = getSetting("currentPoll");
     export let server: Server;
 
-    let hook = Hooks.on("updateSetting", (setting: Setting, change:any) => {
-        if(setting.key == 'ethereal-plane.currentPoll' && change != null){
+    let hook = Hooks.on("updateSetting", (setting, change) => {
+        if(setting.key === 'ethereal-plane.currentPoll' && change != null){
             poll = JSON.parse(change.value);
         }
     })

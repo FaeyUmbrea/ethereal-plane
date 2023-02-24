@@ -1,25 +1,28 @@
-import { Poll, PollStatus } from "./polls";
-import { getSetting, setSetting } from "./settings";
+import { PollStatus } from "./polls.js";
+import { getSetting, setSetting } from "./settings.js";
 
 export class Server {
-    url: string;
+    url = "";
+    /**
+     * @type {io.Socket}
+     */
     socket;
     constructor(){
-        this.url = getSetting("server-url") as string;
+        this.url = getSetting("server-url");
         this.socket = io.connect(this.url ) 
         this.socket.on("chatMessageRecieved", (user,message)=> console.log(user,message))
         this.socket.on("poll",(tally)=>{
             console.debug(tally);
-            const poll = getSetting("currentPoll") as Poll;
-            if(poll.until && poll.status == PollStatus.started){
+            const poll = getSetting("currentPoll");
+            if(poll.until && poll.status === PollStatus.started){
                 poll.tally = tally;
                 if(Date.now() > new Date(poll.until).getTime()) poll.status = PollStatus.stopped;
                 setSetting("currentPoll",poll);
             }
         })
         this.socket.on("noPoll",()=>{
-            const poll = getSetting("currentPoll") as Poll;
-            if(poll.until && poll.status == PollStatus.started){
+            const poll = getSetting("currentPoll");
+            if(poll.until && poll.status === PollStatus.started){
                 poll.status = PollStatus.failed;
                 setSetting("currentPoll",poll);
             }
@@ -27,11 +30,22 @@ export class Server {
         this.socket.emit("getPoll",0);
     }
 
-    async sendMessage(message: string){
+    /**
+     *
+     * @param {string} message
+     * @returns {Promise<void>}
+     */
+    async sendMessage(message){
         this.socket.emit("message",message);
     }
 
-    async createPoll(options:Array<string>,timeout:number){
+    /**
+     *
+     * @param {string[]} options
+     * @param {number} timeout
+     * @returns {Promise<void>}
+     */
+    async createPoll(options,timeout){
         this.socket.emit("createPoll",options,timeout,0);
     }
 }

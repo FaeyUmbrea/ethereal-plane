@@ -1,5 +1,4 @@
-import { getGame } from "./helpers";
-import { Poll } from "./polls";
+import { Poll } from "./polls.js";
 
 const moduleID = "ethereal-plane"
 
@@ -30,18 +29,34 @@ export function registerSettings() {
     })
 }
 
-function registerSetting(settingName: string, config: Record<string, unknown>): void {
-    getGame().settings.register(moduleID, settingName, {
+/**
+ *
+ * @param {string} settingName
+ * @param { Record<string, unknown>} config
+ */
+function registerSetting(settingName, config){
+    game.settings.register(moduleID, settingName, {
         name: `${moduleID}.settings.${settingName}.Name`,
         hint: `${moduleID}.settings.${settingName}.Hint`,
         ...config,
     });
 }
 
-export function getSetting(settingName: string): any {
-    return getGame().settings.get(moduleID, settingName);
+/**
+ *
+ * @param {string} settingName
+ * @returns {unknown}
+ */
+export function getSetting(settingName) {
+    return game.settings.get(moduleID, settingName);
 }
 
-export async function setSetting(settingName: string, value: any) {
-    await getGame().settings.set(moduleID, settingName, value);
+/**
+ *
+ * @param {string} settingName
+ * @param {any} value
+ * @returns {Promise<void>}
+ */
+export async function setSetting(settingName, value) {
+    await game.settings.set(moduleID, settingName, value);
 }

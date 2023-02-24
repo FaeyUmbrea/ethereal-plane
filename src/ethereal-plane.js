@@ -1,26 +1,33 @@
-import PollApplication from "./applications/pollApplication";
-import { registerHanlders } from "./handlers";
-import { getGame } from "./utils/helpers";
-import { Server } from "./utils/server";
-import { getSetting, registerSettings } from "./utils/settings";
+import PollApplication from "./applications/pollApplication.js";
+import { registerHanlders } from "./handlers/index.js";
+import { Server } from "./utils/server.js";
+import { getSetting, registerSettings } from "./utils/settings.js";
 
-let polls: any;
-let server: Server;
+let polls;
+let server;
 
-function buildButtons(buttons: SceneControl[]) {
-  if (!getGame().user?.isGM) return;
+/**
+ * @param {SceneControl[]} buttons
+ */
+function buildButtons(buttons) {
+  if (game.user?.isGM) return;
   const buttonGroup = buttons.find((element) => element.name === 'token');
   const newButton = {
     icon: 'fa-solid fa-square-poll-vertical',
     name: 'openPolls',
     title: 'Open Polls',
     toggle: true,
-    onClick: (): void => openPolls(server,newButton),
+    onClick: () => openPolls(server,newButton),
   };
   buttonGroup?.tools.push(newButton);
 }
 
-function openPolls(server:Server,button: SceneControlTool) {
+/**
+ *
+ * @param {Server} server
+ * @param {SceneControl} button
+ */
+function openPolls(server,button) {
   if (!polls) polls = new PollApplication(server,button);
   if (!polls.rendered) polls.render(true);
   else polls.close();

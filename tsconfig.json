@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "types": ["@league-of-foundry-developers/foundry-vtt-types"],
+    "types": ["@league-of-foundry-developers/foundry-vtt-types","svelte"],
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
-    "moduleResolution": "Node",
+    "moduleResolution": "nodenext",
+    "allowJs": true,
+    "checkJs": false,
     "strict": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -14,7 +16,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte", "src/node_modules/**/*"],
   "exclude": ["node_modules/*", "__sapper__/*", "public/*"],
