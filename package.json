@@ -10,6 +10,7 @@
     "watch": "vite build --watch"
   },
   "devDependencies": {
+    "@league-of-foundry-developers/foundry-vtt-types": "^9.280.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@sveltejs/vite-plugin-svelte": "^2.0.3",
     "@typhonjs-fvtt/runtime": "^0.0.22",

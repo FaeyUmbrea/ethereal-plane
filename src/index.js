@@ -44,4 +44,3 @@ Hooks.once("ready",()=>{
 })
 
 Hooks.on('getSceneControlButtons', buildButtons);
-

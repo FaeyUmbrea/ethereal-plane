@@ -4,12 +4,12 @@ import {getSetting, setSetting} from "./settings.js";
 export class Server {
     url = "";
     /**
-     * @type {import('socket.io-client').Socket}
+     * @type {io.Socket}
      */
     socket;
     constructor(){
         this.url = getSetting("server-url");
-        this.socket = io.connect(this.url ) 
+        this.socket = io.connect(this.url )
         this.socket.on("chatMessageRecieved", (user,message)=> console.log(user,message))
         this.socket.on("poll",(tally)=>{
             console.debug(tally);
