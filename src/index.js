@@ -1,7 +1,7 @@
 import PollApplication from "./applications/pollApplication.js";
-import { registerHanlders } from "./handlers/index.js";
-import { Server } from "./utils/server.js";
-import { getSetting, registerSettings } from "./utils/settings.js";
+import {registerHanlders} from "./handlers/index.js";
+import {Server} from "./utils/server.js";
+import {getSetting, registerSettings} from "./utils/settings.js";
 
 let polls;
 let server;
@@ -10,7 +10,7 @@ let server;
  * @param {SceneControl[]} buttons
  */
 function buildButtons(buttons) {
-  if (game.user?.isGM) return;
+  if (!game.user?.isGM) return;
   const buttonGroup = buttons.find((element) => element.name === 'token');
   const newButton = {
     icon: 'fa-solid fa-square-poll-vertical',

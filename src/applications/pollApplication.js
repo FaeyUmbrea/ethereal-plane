@@ -1,5 +1,5 @@
 import PollApplicationUi from '../svelte/PollApplicationUI.svelte';
-import {SvelteApplication} from '@typhonjs-fvtt/runtime/application';
+import {SvelteApplication} from '@typhonjs-fvtt/runtime/svelte/application';
 
 const PLAIN_TEMPLATE = "modules/ethereal-plane/templates/apps.hbs"
 
@@ -7,7 +7,7 @@ export default class PollApplication extends SvelteApplication {
     /**
      * @type {import("../utils/server").Server}
      */
-    server;
+    static server;
     /**
      * @type {SceneControlTool}
      */
@@ -26,33 +26,26 @@ export default class PollApplication extends SvelteApplication {
     }
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ['eppolls'],
-            popOut: true,
             minimizable: true,
-            width: 400,
-            height: 300,
+            width: 500,
+            height: 320,
             template: PLAIN_TEMPLATE,
             id: 'polls-application',
             title: 'Polls',
-            resizable: true
-        })
-    }
-
-    /**
-     * @param {any} data
-     * @returns {Promise<any>}
-     * @private
-     */
-    async _renderInner(data){
-        const html = await super._renderInner(data);
-        new PollApplicationUi({
-            target: html.get(0),
-            props: {
-                server: this.server
+            resizable: true,
+            positionOrtho: false,
+            transformOrigin: null,
+            svelte: {
+                class: PollApplicationUi,
+                target: document.body,
+                intro: true,
+                props:{
+                    server: this.server
+                }
             }
         })
-        return html;
     }
 
     /**

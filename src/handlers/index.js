@@ -1,4 +1,4 @@
-import { registerHanlder } from "./rollHandler.js";
+import {registerHanlder} from "./rollHandler.js";
 
 /**
  *

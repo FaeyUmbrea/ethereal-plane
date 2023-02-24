@@ -1,4 +1,4 @@
-import { Poll } from "./polls.js";
+import {Poll} from "./polls.js";
 
 const moduleID = "ethereal-plane"
 

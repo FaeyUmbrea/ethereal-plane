@@ -1,4 +1,4 @@
-import { getSetting } from "../utils/settings.js";
+import {getSetting} from "../utils/settings.js";
 
 /**
  *

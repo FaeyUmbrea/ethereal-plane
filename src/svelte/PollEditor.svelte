@@ -1,10 +1,10 @@
 <script>
-    import { Poll, PollStatus } from "../utils/polls.js";
-    import { Server } from "../utils/server.js";
-    import { setSetting } from "../utils/settings.js";
+    import {PollStatus} from "../utils/polls.js";
+    import {setSetting} from "../utils/settings.js";
 
-    export var poll: Poll
-    export let server:Server;
+    export var poll;
+    export let server;
+    // noinspection JSUnusedAssignment
     const options = poll.options;
     let optionSize = options.length;
 

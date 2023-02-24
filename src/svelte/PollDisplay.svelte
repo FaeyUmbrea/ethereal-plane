@@ -1,7 +1,7 @@
-<script lang="ts">
-    import { Poll, PollStatus } from "../utils/polls.js";
+<script>
+    import {PollStatus} from "../utils/polls.js";
 
-    export var poll:Poll
+    export var poll
 </script>
 
 <div>

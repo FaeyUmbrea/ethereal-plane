@@ -1,10 +1,10 @@
-import { PollStatus } from "./polls.js";
-import { getSetting, setSetting } from "./settings.js";
+import {PollStatus} from "./polls.js";
+import {getSetting, setSetting} from "./settings.js";
 
 export class Server {
     url = "";
     /**
-     * @type {io.Socket}
+     * @type {import('socket.io-client').Socket}
      */
     socket;
     constructor(){

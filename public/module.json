@@ -6,9 +6,9 @@
     "library": "false",
     "manifestPlusVersion": "1.2.0",
     "compatibility": {
-      "minimum": 10,
+      "maximum": 11,
       "verified": 10,
-      "maximum": 11
+      "minimum": 10
     },
     "authors": [
       {
@@ -22,7 +22,10 @@
       "requires": [
       ]
     },
-    "esmodules": ["ethereal-plane.js"],
+    "styles": [
+      "style.css"
+    ],
+    "esmodules": ["index.min.js"],
     "languages": [
       {
         "lang": "en",
