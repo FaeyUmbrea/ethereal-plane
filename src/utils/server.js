@@ -2,14 +2,12 @@ import {PollStatus} from "./polls.js";
 import {getSetting, setSetting} from "./settings.js";
 
 export class Server {
+    static #singleton;
     url = "";
-    /**
-     * @type {io.Socket}
-     */
     socket;
     constructor(){
         this.url = getSetting("server-url");
-        this.socket = io.connect(this.url )
+        this.socket = io.connect(this.url)
         this.socket.on("chatMessageRecieved", (user,message)=> console.log(user,message))
         this.socket.on("poll",(tally)=>{
             console.debug(tally);
@@ -39,6 +37,10 @@ export class Server {
         this.socket.emit("message",message);
     }
 
+    async abortPoll(){
+        this.socket.emit("endPoll",0);
+    }
+
     /**
      *
      * @param {string[]} options
@@ -48,4 +50,13 @@ export class Server {
     async createPoll(options,timeout){
         this.socket.emit("createPoll",options,timeout,0);
     }
+
+    static getServer(){
+        return this.#singleton
+    }
+
+    static createServer(){
+        this.#singleton = new Server();
+    }
 }
+

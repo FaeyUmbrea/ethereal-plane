@@ -7,7 +7,6 @@
     import {ApplicationShell} from '@typhonjs-fvtt/runtime/svelte/component/core';
 
     let poll = getSetting("currentPoll");
-    export let server;
     export let elementRoot = void 0;
 
     let hook = Hooks.on("updateSetting", (setting, change) => {
@@ -32,7 +31,7 @@
 {#if (poll.until)}
     <PollDisplay bind:poll={poll}/>
 {:else}
-    <PollEditor server={server} bind:poll={poll} />
+    <PollEditor bind:poll={poll} />
 {/if}
     </main>
 </ApplicationShell >

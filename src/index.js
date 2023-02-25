@@ -1,10 +1,9 @@
 import PollApplication from "./applications/pollApplication.js";
 import {registerHanlders} from "./handlers/index.js";
-import {Server} from "./utils/server.js";
 import {getSetting, registerSettings} from "./utils/settings.js";
+import {Server} from "./utils/server.js";
 
 let polls;
-let server;
 
 /**
  * @param {SceneControl[]} buttons
@@ -17,7 +16,7 @@ function buildButtons(buttons) {
     name: 'openPolls',
     title: 'Open Polls',
     toggle: true,
-    onClick: () => openPolls(server,newButton),
+    onClick: () => openPolls(newButton),
   };
   buttonGroup?.tools.push(newButton);
 }
@@ -27,19 +26,18 @@ function buildButtons(buttons) {
  * @param {Server} server
  * @param {SceneControl} button
  */
-function openPolls(server,button) {
-  if (!polls) polls = new PollApplication(server,button);
+function openPolls(button) {
+  if (!polls) polls = new PollApplication(button);
   if (!polls.rendered) polls.render(true);
   else polls.close();
 }
 
-Hooks.once("ready",()=>{
+Hooks.once("ready",async () => {
   registerSettings();
-  
-  server = new Server();
 
-  if(getSetting("enabled")){
-    registerHanlders(server);
+  await Server.createServer();
+  if (getSetting("enabled")) {
+    registerHanlders();
   }
 })
 

@@ -25,7 +25,7 @@
     "styles": [
       "style.css"
     ],
-    "esmodules": ["index.min.js"],
+    "esmodules": ["index.js"],
     "languages": [
       {
         "lang": "en",

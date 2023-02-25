@@ -5,10 +5,6 @@ const PLAIN_TEMPLATE = "modules/ethereal-plane/templates/apps.hbs"
 
 export default class PollApplication extends SvelteApplication {
     /**
-     * @type {import("../utils/server").Server}
-     */
-    static server;
-    /**
      * @type {SceneControlTool}
      */
     sidebarButton;
@@ -18,9 +14,8 @@ export default class PollApplication extends SvelteApplication {
      * @param {import("../utils/server").Server} server
      * @param {SceneControlTool} sidebarButton
      */
-    constructor(server, sidebarButton) {
+    constructor(sidebarButton) {
         super();
-        this.server = server;
         this.sidebarButton = sidebarButton;
 
     }
@@ -41,9 +36,6 @@ export default class PollApplication extends SvelteApplication {
                 class: PollApplicationUi,
                 target: document.body,
                 intro: true,
-                props:{
-                    server: this.server
-                }
             }
         })
     }

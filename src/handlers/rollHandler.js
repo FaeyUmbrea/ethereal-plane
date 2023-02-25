@@ -1,10 +1,7 @@
 import {getSetting} from "../utils/settings.js";
+import {Server} from "../utils/server.js";
 
-/**
- *
- * @param {import("../utils/server").Server} server
- */
-export function registerHanlder(server){
+export function registerHanlder(){
     Hooks.on("createChatMessage",(event)=>{
         const msg = event
         if(msg.isRoll&&(msg.whisper.length === 0))
@@ -13,7 +10,7 @@ export function registerHanlder(server){
             const result = msg.roll?.result;
 
             if(getSetting("sendRollsToChat")){
-                server.sendMessage("Rolled "+formula+" and got a "+result+"!");
+                Server.getServer().sendMessage("Rolled "+formula+" and got a "+result+"!");
             }
         }
     })
