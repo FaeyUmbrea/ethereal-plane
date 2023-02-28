@@ -11,7 +11,6 @@ export default class PollApplication extends SvelteApplication {
 
     /**
      *
-     * @param {import("../utils/server").Server} server
      * @param {SceneControlTool} sidebarButton
      */
     constructor(sidebarButton) {

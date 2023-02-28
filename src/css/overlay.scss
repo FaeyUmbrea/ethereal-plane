@@ -1,0 +1,19 @@
+.ethereal-plane#poll{
+  color: white;
+    .tally {
+      align-content: flex-start;
+      display: grid;
+      grid-template-columns: auto auto auto;
+      grid-row-gap: 5px;
+      grid-column-gap: 2px;
+    }
+    progress {
+      height: 25px;
+    }
+    span {
+      padding-top: 2.5px;
+    }
+    .poll-status {
+      display:none;
+    }
+}

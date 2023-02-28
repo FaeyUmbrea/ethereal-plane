@@ -2,6 +2,7 @@ import PollApplication from "./applications/pollApplication.js";
 import {registerHanlders} from "./handlers/index.js";
 import {getSetting, registerSettings} from "./utils/settings.js";
 import {Server} from "./utils/server.js";
+import {registerOverlay} from "./utils/overlay.js";
 
 let polls;
 
@@ -23,7 +24,6 @@ function buildButtons(buttons) {
 
 /**
  *
- * @param {Server} server
  * @param {SceneControl} button
  */
 function openPolls(button) {
@@ -32,8 +32,11 @@ function openPolls(button) {
   else polls.close();
 }
 
+Hooks.once("init", async ()=>{
+  await registerSettings();
+})
 Hooks.once("ready",async () => {
-  registerSettings();
+
 
   await Server.createServer();
   if (getSetting("enabled")) {
@@ -42,3 +45,5 @@ Hooks.once("ready",async () => {
 })
 
 Hooks.on('getSceneControlButtons', buildButtons);
+
+Hooks.on('obsUtilsInit', registerOverlay)

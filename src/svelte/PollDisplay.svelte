@@ -4,10 +4,7 @@
     import {Server} from "../utils/server.js";
 
     export var poll
-
-    function tallyTotal() {
-        return poll.tally.reduce((prev, val) => prev + val[1])
-    }
+    export var total
 
     function abortPoll() {
         poll.status = PollStatus.failed;
@@ -24,7 +21,7 @@
         {#if (poll.tally)}
             {#each (poll.tally) as tally,index}
                 <span class="tally-entry">{poll.options[Number.fromString(tally[0])]}</span>
-                <progress value={tally[1]} max={tallyTotal()}></progress>
+                <progress value={tally[1]} max={total}></progress>
             {/each}
         {/if}
     </div>

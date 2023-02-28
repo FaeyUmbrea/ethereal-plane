@@ -8,13 +8,19 @@
 
     let poll = getSetting("currentPoll");
     export let elementRoot = void 0;
+    let total = tallyTotal();
 
     let hook = Hooks.on("updateSetting", (setting, change) => {
         if(setting.key === 'ethereal-plane.currentPoll' && change != null){
             poll = JSON.parse(change.value);
+            total = tallyTotal()
         }
     })
 
+    function tallyTotal() {
+        if(!poll.tally) return 0;
+        return poll.tally.reduce((prev, val) => prev + val[1],0)
+    }
     onDestroy(() => {
         Hooks.off('updateSettings', hook);
     })
@@ -29,7 +35,7 @@
 <ApplicationShell  bind:elementRoot>
     <main>
 {#if (poll.until)}
-    <PollDisplay bind:poll={poll}/>
+    <PollDisplay bind:poll={poll} {total}/>
 {:else}
     <PollEditor bind:poll={poll} />
 {/if}
