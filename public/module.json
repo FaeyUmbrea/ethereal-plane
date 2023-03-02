@@ -20,6 +20,10 @@
     "relationships": {
       "systems": [],
       "requires": [
+        {
+          "id": "lib-wrapper",
+          "type": "module"
+        }
       ]
     },
     "styles": [
