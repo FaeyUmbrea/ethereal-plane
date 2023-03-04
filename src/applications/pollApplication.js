@@ -1,8 +1,6 @@
 import PollApplicationUi from '../svelte/PollApplicationUI.svelte';
 import {SvelteApplication} from '@typhonjs-fvtt/runtime/svelte/application';
 
-const PLAIN_TEMPLATE = "modules/ethereal-plane/templates/apps.hbs"
-
 export default class PollApplication extends SvelteApplication {
     /**
      * @type {SceneControlTool}
@@ -25,7 +23,6 @@ export default class PollApplication extends SvelteApplication {
             minimizable: true,
             width: 500,
             height: 320,
-            template: PLAIN_TEMPLATE,
             id: 'polls-application',
             title: 'Polls',
             resizable: true,

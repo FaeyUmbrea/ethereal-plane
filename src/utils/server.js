@@ -1,15 +1,18 @@
 import {PollStatus} from "./polls.js";
 import {getSetting, setSetting} from "./settings.js";
+import {chatMessages} from "../svelte/stores/chatMessages.js";
+import {get} from 'svelte/store';
 
 export class Server {
     static #singleton;
     url = "";
     socket;
-    constructor(){
+
+    constructor() {
         this.url = getSetting("server-url");
         this.socket = io.connect(this.url)
-        this.socket.on("chatMessageRecieved", (user,message)=> console.log(user,message))
-        this.socket.on("poll",(tally)=>{
+        this.socket.on("chatMessageRecieved", (user, message) => console.log(user, message))
+        this.socket.on("poll", (tally) => {
             console.debug(tally);
             const poll = getSetting("currentPoll");
             if(poll.until && poll.status === PollStatus.started){
@@ -18,14 +21,18 @@ export class Server {
                 setSetting("currentPoll",poll);
             }
         })
-        this.socket.on("noPoll",()=>{
+        this.socket.on("noPoll", () => {
             const poll = getSetting("currentPoll");
-            if(poll.until && poll.status === PollStatus.started){
+            if (poll.until && poll.status === PollStatus.started) {
                 poll.status = PollStatus.failed;
-                setSetting("currentPoll",poll);
+                setSetting("currentPoll", poll);
             }
         })
-        this.socket.emit("getPoll",0);
+        this.socket.emit("getPoll", 0);
+        this.socket.on("chatMessageRecieved", (user, message) => {
+            chatMessages.set([...(get(chatMessages)), [user, message]])
+        })
+        this.socket.emit("startChat");
     }
 
     /**

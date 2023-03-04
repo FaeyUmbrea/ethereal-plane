@@ -1,13 +1,20 @@
-import {SvelteApplication} from '@typhonjs-fvtt/runtime/svelte/application';
 import {SvelteSidebarTab} from "./SvelteSidebarTab.js";
-import PollApplicationUi from "../svelte/PollApplicationUI.svelte";
-export class ChatSidebar extends SvelteSidebarTab{
+import ChatTab from "../svelte/ChatTab.svelte";
+
+export class ChatSidebar extends SvelteSidebarTab {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: "epchat",
+            headerButtonNoClose: true,
+            resizable: false,
+            minimizable: true,
+            popOut: false,
+            height: 'auto',
+            positionOrtho: false,
+            transformOrigin: null,
+            zIndex: 95,
             svelte: {
-                class: PollApplicationUi,
-                target: document.body,
+                class: ChatTab,
                 intro: true,
             }
         })

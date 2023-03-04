@@ -3,9 +3,11 @@ import {registerHanlders} from "./handlers/index.js";
 import {getSetting, registerSettings} from "./utils/settings.js";
 import {Server} from "./utils/server.js";
 import {registerOverlay} from "./utils/overlay.js";
-import {ChatSidebar} from "./applications/chatSidebar.js";
+import {ChatApplication} from "./applications/chatApplication.js";
+//import {ChatSidebar} from "./applications/chatSidebar.js";
 
 let polls;
+let chat;
 
 /**
  * @param {SceneControl[]} buttons
@@ -13,14 +15,22 @@ let polls;
 function buildButtons(buttons) {
   if (!game.user?.isGM) return;
   const buttonGroup = buttons.find((element) => element.name === 'token');
-  const newButton = {
+  const pollsButton = {
     icon: 'fa-solid fa-square-poll-vertical',
     name: 'openPolls',
     title: 'Open Polls',
     toggle: true,
-    onClick: () => openPolls(newButton),
+    onClick: () => openPolls(pollsButton),
   };
-  buttonGroup?.tools.push(newButton);
+  const chatButton = {
+    icon: 'fa-solid fa-plus',
+    name: 'openChat',
+    title: 'Open Chat',
+    toggle: true,
+    onClick: () => openChat(chatButton),
+  }
+  buttonGroup?.tools.push(pollsButton);
+  buttonGroup?.tools.push(chatButton);
 }
 
 /**
@@ -33,8 +43,14 @@ function openPolls(button) {
   else polls.close();
 }
 
-Hooks.once("init", async ()=>{
-  libWrapper.register('ethereal-plane','Sidebar.prototype.getData',function (wrapped, ...args) {
+function openChat(button) {
+  if (!chat) chat = new ChatApplication(button);
+  if (!chat.rendered) chat.render(true);
+  else chat.close();
+}
+
+Hooks.once("init", async () => {
+  /*libWrapper.register('ethereal-plane','Sidebar.prototype.getData',function (wrapped, ...args) {
     let result = wrapped(...args);
 
     return foundry.utils.mergeObject(result,{
@@ -45,11 +61,11 @@ Hooks.once("init", async ()=>{
         }
       }
     })
-  }, 'MIXED');
+  }, 'MIXED');*/
+
+  //CONFIG.ui.epchat = ChatSidebar
 
   await registerSettings();
-
-  CONFIG.ui.epchat = ChatSidebar
 })
 Hooks.once("ready",async () => {
 
