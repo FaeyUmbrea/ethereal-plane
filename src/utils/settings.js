@@ -27,6 +27,12 @@ export function registerSettings() {
         config: false,
         default: new Poll()
     })
+    registerSetting("enableChatTab", {
+        type: Boolean,
+        scope: 'world',
+        config: true,
+        default: true
+    })
 }
 
 /**

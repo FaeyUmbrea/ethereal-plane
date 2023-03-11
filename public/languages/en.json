@@ -1,0 +1,22 @@
+{
+  "ethereal-plane": {
+    "settings": {
+      "server-url": {
+        "Name": "Server Url",
+        "Hint": "The URL on which Ethereal Plane Server is running"
+      },
+      "enabled": {
+        "Name": "Enable Module",
+        "Hint": "If this is not checked, the module will not connect to the server"
+      },
+      "sendRollsToChat": {
+        "Name": "Send Rolls to Chat",
+        "Hint": "If this is checked, public rolls will be forwarded to stream chat"
+      },
+      "enableChatTab": {
+        "Name": "Chat Tab",
+        "Hint": "If this is checked, the Chat Tab will be loaded"
+      }
+    }
+  }
+}

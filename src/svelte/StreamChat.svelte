@@ -9,12 +9,11 @@
 
 </script>
 
-
 <div class="ep-chat">
+    <ChatMessage user="System" message="This is your stream chat! Messages will appear as they are posted"/>
     {#each $chatMessages as [user, message]}
         <ChatMessage {user} {message}/>
     {/each}
-
 </div>
 <div id="anchor"></div>
 

@@ -4,7 +4,9 @@ import {getSetting, registerSettings} from "./utils/settings.js";
 import {Server} from "./utils/server.js";
 import {registerOverlay} from "./utils/overlay.js";
 import {ChatApplication} from "./applications/chatApplication.js";
-//import {ChatSidebar} from "./applications/chatSidebar.js";
+import {FVTTSidebarControl} from '@typhonjs-fvtt/svelte-standard/application';
+import StreamChat from "./svelte/StreamChat.svelte";
+
 
 let polls;
 let chat;
@@ -83,3 +85,16 @@ Hooks.on('getSceneControlButtons', buildButtons);
 
 Hooks.on('obsUtilsInit', registerOverlay)
 
+Hooks.once('setup', () => {
+  if (getSetting("enableChatTab"))
+    FVTTSidebarControl.add({
+      beforeId: 'combat',
+      id: 'epchat',
+      icon: 'fas fa-message-bot',
+      title: 'Stream Chat',
+      tooltip: 'Stream Chat',
+      svelte: {
+        class: StreamChat
+      }
+    })
+})

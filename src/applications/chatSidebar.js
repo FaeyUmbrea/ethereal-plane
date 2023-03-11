@@ -1,7 +1,6 @@
-import {SvelteSidebarTab} from "./SvelteSidebarTab.js";
 import ChatTab from "../svelte/ChatTab.svelte";
 
-export class ChatSidebar extends SvelteSidebarTab {
+export class ChatSidebar extends FVTTSidebarControl {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: "epchat",
