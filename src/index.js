@@ -52,21 +52,6 @@ function openChat(button) {
 }
 
 Hooks.once("init", async () => {
-  /*libWrapper.register('ethereal-plane','Sidebar.prototype.getData',function (wrapped, ...args) {
-    let result = wrapped(...args);
-
-    return foundry.utils.mergeObject(result,{
-      tabs: {
-        epchat: {
-          tooltip: "SIDEBAR.TabSettings",
-          icon: "fas fa-plus"
-        }
-      }
-    })
-  }, 'MIXED');*/
-
-  //CONFIG.ui.epchat = ChatSidebar
-
   await registerSettings();
 })
 Hooks.once("ready",async () => {
@@ -85,8 +70,8 @@ Hooks.on('getSceneControlButtons', buildButtons);
 
 Hooks.on('obsUtilsInit', registerOverlay)
 
-Hooks.once('setup', () => {
-  if (getSetting("enableChatTab"))
+Hooks.once('getSceneControlButtons', () => {
+  if (game.user?.isGM && getSetting("enableChatTab"))
     FVTTSidebarControl.add({
       beforeId: 'combat',
       id: 'epchat',
