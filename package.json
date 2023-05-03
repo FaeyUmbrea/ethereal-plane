@@ -27,5 +27,6 @@
     ">5%",
     "not IE 11"
   ],
-  "license": "AGPL3.0"
+  "license": "AGPL3.0",
+  "packageManager": "yarn@3.5.1"
 }
