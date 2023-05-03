@@ -29,4 +29,4 @@ jobs:
         id: create_version_release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: './dist/module.zip, ./dist/module.json'
+          artifacts: './module.zip, ./dist/module.json'
