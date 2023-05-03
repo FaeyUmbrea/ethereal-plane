@@ -22,7 +22,7 @@ jobs:
           rm ./public/module.json 
           mv ./public/module.json.tmp ./public/module.json
       - name: Build
-        run: xc build:windows
+        run: xc build
       - run: (cd dist && zip -r ../module.zip *)
       - run: zip -ur module.zip LICENSE README.md
       - name: Update Release with Files
