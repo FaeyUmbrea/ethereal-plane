@@ -10,7 +10,7 @@ This repository uses xc for task definitions! As such only nodejs, yarn and xc a
 |-------------|----------|
 | nodejs.org  | ^18.12.1 |
 | xcfile.dev  | ^0.0.159 |
-| yarnpkg.com | ^1.22.19 |
+| yarnpkg.com | ^3.5.1   |
 
 ## Tasks
 
