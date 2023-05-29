@@ -1,12 +1,13 @@
 <script>
+  import { getContext } from 'svelte';
 
-    import {getContext} from "svelte";
-
-
-    const {application} = getContext('#external');
+  const { application } = getContext('#external');
 </script>
 
-<section class="{application.options.classes.join(' ')} directory flexcol" id="{application.options.id}"
-         data-tab="{application.options.id}">
-    rendered
+<section
+  class="{application.options.classes.join(' ')} directory flexcol"
+  data-tab={application.options.id}
+  id={application.options.id}
+>
+  rendered
 </section>

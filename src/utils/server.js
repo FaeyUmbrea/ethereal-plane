@@ -1,69 +1,68 @@
-import {PollStatus} from "./polls.js";
-import {getSetting, setSetting} from "./settings.js";
-import {chatMessages} from "../svelte/stores/chatMessages.js";
-import {get} from 'svelte/store';
+import { PollStatus } from './polls.js';
+import { getSetting, setSetting } from './settings.js';
+import { chatMessages } from '../svelte/stores/chatMessages.js';
+import { get } from 'svelte/store';
 
 export class Server {
-    static #singleton;
-    url = "";
-    socket;
+  static #singleton;
+  url = '';
+  socket;
 
-    constructor() {
-        this.url = getSetting("server-url");
-        this.socket = io.connect(this.url)
-        this.socket.on("chatMessageRecieved", (user, message) => console.log(user, message))
-        this.socket.on("poll", (tally) => {
-            console.debug(tally);
-            const poll = getSetting("currentPoll");
-            if(poll.until && poll.status === PollStatus.started){
-                poll.tally = tally;
-                if(Date.now() > new Date(poll.until).getTime()) poll.status = PollStatus.stopped;
-                setSetting("currentPoll",poll);
-            }
-        })
-        this.socket.on("noPoll", () => {
-            const poll = getSetting("currentPoll");
-            if (poll.until && poll.status === PollStatus.started) {
-                poll.status = PollStatus.failed;
-                setSetting("currentPoll", poll);
-            }
-        })
-        this.socket.emit("getPoll", 0);
-        this.socket.on("chatMessageRecieved", (user, message) => {
-            chatMessages.set([...(get(chatMessages)), [user, message]])
-        })
-        this.socket.emit("startChat");
-    }
+  constructor() {
+    this.url = getSetting('server-url');
+    this.socket = io.connect(this.url);
+    this.socket.on('chatMessageRecieved', (user, message) => console.log(user, message));
+    this.socket.on('poll', (tally) => {
+      console.debug(tally);
+      const poll = getSetting('currentPoll');
+      if (poll.until && poll.status === PollStatus.started) {
+        poll.tally = tally;
+        if (Date.now() > new Date(poll.until).getTime()) poll.status = PollStatus.stopped;
+        setSetting('currentPoll', poll);
+      }
+    });
+    this.socket.on('noPoll', () => {
+      const poll = getSetting('currentPoll');
+      if (poll.until && poll.status === PollStatus.started) {
+        poll.status = PollStatus.failed;
+        setSetting('currentPoll', poll);
+      }
+    });
+    this.socket.emit('getPoll', 0);
+    this.socket.on('chatMessageRecieved', (user, message) => {
+      chatMessages.set([...get(chatMessages), [user, message]]);
+    });
+    this.socket.emit('startChat');
+  }
 
-    /**
-     *
-     * @param {string} message
-     * @returns {Promise<void>}
-     */
-    async sendMessage(message){
-        this.socket.emit("message",message);
-    }
+  static getServer() {
+    return this.#singleton;
+  }
 
-    async abortPoll(){
-        this.socket.emit("endPoll",0);
-    }
+  static createServer() {
+    this.#singleton = new Server();
+  }
 
-    /**
-     *
-     * @param {string[]} options
-     * @param {number} timeout
-     * @returns {Promise<void>}
-     */
-    async createPoll(options,timeout){
-        this.socket.emit("createPoll",options,timeout,0);
-    }
+  /**
+   *
+   * @param {string} message
+   * @returns {Promise<void>}
+   */
+  async sendMessage(message) {
+    this.socket.emit('message', message);
+  }
 
-    static getServer(){
-        return this.#singleton
-    }
+  async abortPoll() {
+    this.socket.emit('endPoll', 0);
+  }
 
-    static createServer(){
-        this.#singleton = new Server();
-    }
+  /**
+   *
+   * @param {string[]} options
+   * @param {number} timeout
+   * @returns {Promise<void>}
+   */
+  async createPoll(options, timeout) {
+    this.socket.emit('createPoll', options, timeout, 0);
+  }
 }
-

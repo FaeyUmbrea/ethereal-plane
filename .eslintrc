@@ -1,0 +1,33 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:svelte/prettier",
+    "prettier"
+  ],
+  "plugins": [
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": [
+      "error"
+    ]
+  },
+  "ignorePatterns": [
+    "dist/*"
+  ],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": "latest"
+  },
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "game": true,
+    "io": true,
+    "Hooks": true,
+    "ui": true,
+    "foundry": true,
+    "$": true
+  }
+}

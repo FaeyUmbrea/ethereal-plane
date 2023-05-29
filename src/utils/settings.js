@@ -1,38 +1,38 @@
-import {Poll} from "./polls.js";
+import { Poll } from './polls.js';
 
-const moduleID = "ethereal-plane"
+const moduleID = 'ethereal-plane';
 
 export function registerSettings() {
-    registerSetting("server-url", {
-        default: "http://localhost:3000",
-        type: String,
-        scope: 'client',
-        config: true
-    })
-    registerSetting("enabled", {
-        default: false,
-        type: Boolean,
-        scope: 'client',
-        config: true
-    })
-    registerSetting("sendRollsToChat", {
-        default: true,
-        type: Boolean,
-        scope: 'world',
-        config: true
-    })
-    registerSetting("currentPoll", {
-        type: Object,
-        scope: 'world',
-        config: false,
-        default: new Poll()
-    })
-    registerSetting("enableChatTab", {
-        type: Boolean,
-        scope: 'world',
-        config: true,
-        default: true
-    })
+  registerSetting('server-url', {
+    default: 'http://localhost:3000',
+    type: String,
+    scope: 'client',
+    config: true,
+  });
+  registerSetting('enabled', {
+    default: false,
+    type: Boolean,
+    scope: 'client',
+    config: true,
+  });
+  registerSetting('sendRollsToChat', {
+    default: true,
+    type: Boolean,
+    scope: 'world',
+    config: true,
+  });
+  registerSetting('currentPoll', {
+    type: Object,
+    scope: 'world',
+    config: false,
+    default: new Poll(),
+  });
+  registerSetting('enableChatTab', {
+    type: Boolean,
+    scope: 'world',
+    config: true,
+    default: true,
+  });
 }
 
 /**
@@ -40,12 +40,12 @@ export function registerSettings() {
  * @param {string} settingName
  * @param { Record<string, unknown>} config
  */
-function registerSetting(settingName, config){
-    game.settings.register(moduleID, settingName, {
-        name: `${moduleID}.settings.${settingName}.Name`,
-        hint: `${moduleID}.settings.${settingName}.Hint`,
-        ...config,
-    });
+function registerSetting(settingName, config) {
+  game.settings.register(moduleID, settingName, {
+    name: `${moduleID}.settings.${settingName}.Name`,
+    hint: `${moduleID}.settings.${settingName}.Hint`,
+    ...config,
+  });
 }
 
 /**
@@ -54,7 +54,7 @@ function registerSetting(settingName, config){
  * @returns {unknown}
  */
 export function getSetting(settingName) {
-    return game.settings.get(moduleID, settingName);
+  return game.settings.get(moduleID, settingName);
 }
 
 /**
@@ -64,5 +64,5 @@ export function getSetting(settingName) {
  * @returns {Promise<void>}
  */
 export async function setSetting(settingName, value) {
-    await game.settings.set(moduleID, settingName, value);
+  await game.settings.set(moduleID, settingName, value);
 }

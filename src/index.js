@@ -1,12 +1,11 @@
-import PollApplication from "./applications/pollApplication.js";
-import {registerHanlders} from "./handlers/index.js";
-import {getSetting, registerSettings} from "./utils/settings.js";
-import {Server} from "./utils/server.js";
-import {registerOverlay} from "./utils/overlay.js";
-import {ChatApplication} from "./applications/chatApplication.js";
-import {FVTTSidebarControl} from '@typhonjs-fvtt/svelte-standard/application';
-import StreamChat from "./svelte/StreamChat.svelte";
-
+import PollApplication from './applications/pollApplication.js';
+import { registerHanlders } from './handlers/index.js';
+import { getSetting, registerSettings } from './utils/settings.js';
+import { Server } from './utils/server.js';
+import { registerOverlay } from './utils/overlay.js';
+import { ChatApplication } from './applications/chatApplication.js';
+import { FVTTSidebarControl } from '@typhonjs-fvtt/svelte-standard/application';
+import StreamChat from './svelte/StreamChat.svelte';
 
 let polls;
 let chat;
@@ -30,7 +29,7 @@ function buildButtons(buttons) {
     title: 'Open Chat',
     toggle: true,
     onClick: () => openChat(chatButton),
-  }
+  };
   buttonGroup?.tools.push(pollsButton);
   buttonGroup?.tools.push(chatButton);
 }
@@ -51,27 +50,26 @@ function openChat(button) {
   else chat.close();
 }
 
-Hooks.once("init", async () => {
+Hooks.once('init', async () => {
   await registerSettings();
-})
-Hooks.once("ready",async () => {
-
+});
+Hooks.once('ready', async () => {
   await Server.createServer();
-  if (getSetting("enabled")) {
+  if (getSetting('enabled')) {
     registerHanlders();
   }
-})
+});
 Hooks.once('ready', () => {
-  if(!game.modules.get('lib-wrapper')?.active && game.user.isGM)
+  if (!game.modules.get('lib-wrapper')?.active && game.user.isGM)
     ui.notifications.error("Module XYZ requires the 'libWrapper' module. Please install and activate it.");
 });
 
 Hooks.on('getSceneControlButtons', buildButtons);
 
-Hooks.on('obsUtilsInit', registerOverlay)
+Hooks.on('obsUtilsInit', registerOverlay);
 
 Hooks.once('getSceneControlButtons', () => {
-  if (game.user?.isGM && getSetting("enableChatTab"))
+  if (game.user?.isGM && getSetting('enableChatTab'))
     FVTTSidebarControl.add({
       beforeId: 'combat',
       id: 'epchat',
@@ -79,7 +77,7 @@ Hooks.once('getSceneControlButtons', () => {
       title: 'Stream Chat',
       tooltip: 'Stream Chat',
       svelte: {
-        class: StreamChat
-      }
-    })
-})
+        class: StreamChat,
+      },
+    });
+});

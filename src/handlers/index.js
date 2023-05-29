@@ -1,9 +1,9 @@
-import {registerHanlder} from "./rollHandler.js";
+import { registerHanlder } from './rollHandler.js';
 
 /**
  *
- * @param {import("../utils/server").Server} server
+ * @param {import('../utils/server').Server} server
  */
-export function registerHanlders(){
-    registerHanlder()
+export function registerHanlders() {
+  registerHanlder();
 }

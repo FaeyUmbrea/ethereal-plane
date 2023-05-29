@@ -1,1 +1,1 @@
-export const MODULE_ID = "ethereal-plane"
+export const MODULE_ID = 'ethereal-plane';
