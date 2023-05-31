@@ -28,6 +28,7 @@
     "Hooks": true,
     "ui": true,
     "foundry": true,
-    "$": true
+    "$": true,
+    "FormApplication": true
   }
 }

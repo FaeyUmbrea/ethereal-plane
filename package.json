@@ -33,6 +33,7 @@
   "dependencies": {
     "@typhonjs-fvtt/runtime": "^0.0.23",
     "@typhonjs-fvtt/svelte-standard": "^0.0.23",
+    "jose": "^4.14.4",
     "svelte": "^3.59.1"
   },
   "browserslist": [

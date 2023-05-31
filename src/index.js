@@ -1,11 +1,11 @@
 import PollApplication from './applications/pollApplication.js';
 import { registerHanlders } from './handlers/index.js';
-import { getSetting, registerSettings } from './utils/settings.js';
-import { Server } from './utils/server.js';
+import { getSetting, settings } from './utils/settings.js';
 import { registerOverlay } from './utils/overlay.js';
 import { ChatApplication } from './applications/chatApplication.js';
 import { FVTTSidebarControl } from '@typhonjs-fvtt/svelte-standard/application';
 import StreamChat from './svelte/StreamChat.svelte';
+import { patreon } from './utils/patreon.js';
 
 let polls;
 let chat;
@@ -51,11 +51,12 @@ function openChat(button) {
 }
 
 Hooks.once('init', async () => {
-  await registerSettings();
+  settings.init();
 });
 Hooks.once('ready', async () => {
-  await Server.createServer();
+  //await Server.createServer();
   if (getSetting('enabled')) {
+    await patreon.init();
     registerHanlders();
   }
 });
