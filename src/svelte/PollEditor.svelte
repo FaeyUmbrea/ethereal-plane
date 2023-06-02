@@ -1,7 +1,7 @@
 <script>
   import { PollStatus } from '../utils/polls.ts';
   import { setSetting } from '../utils/settings.ts';
-  import { Server } from '../server/server.ts';
+  import { getConnectionManager } from '../server/connectionManager.ts';
 
   export var poll;
   // noinspection JSUnusedAssignment
@@ -23,7 +23,7 @@
     poll.tally = Array.from(options).map((_val, i) => [i.toString(), 0]);
     poll.status = PollStatus.started;
     setSetting('currentPoll', poll);
-    Server.getServer().createPoll(
+    getConnectionManager().createPoll(
       options.map((_val, index) => index.toString()),
       30000
     );

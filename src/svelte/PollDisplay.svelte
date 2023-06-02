@@ -1,14 +1,14 @@
 <script>
   import { Poll, PollStatus } from '../utils/polls.ts';
   import { setSetting } from '../utils/settings.ts';
-  import { Server } from '../server/server.ts';
+  import { getConnectionManager } from '../server/connectionManager.ts';
 
   export var poll;
   export var total;
 
   function abortPoll() {
     poll.status = PollStatus.failed;
-    Server.getServer().abortPoll();
+    getConnectionManager().abortPoll();
   }
 
   function endPoll() {

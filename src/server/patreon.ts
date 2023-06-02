@@ -1,7 +1,8 @@
 import { getSetting, setSetting, settings } from '../utils/settings.ts';
 import * as jose from 'jose';
-import { type ChatConnector } from './chatConnector.ts';
+import type { ChatConnector, ChatMessageCallback } from './chatConnector.ts';
 import type { Poll } from '../utils/polls.js';
+import type { PollConnector } from './pollConnector.js';
 
 const publicKey = {
   kty: 'EC',
@@ -15,8 +16,9 @@ async function verifyToken(token) {
   return await jose.jwtVerify(token, jwtPublicKey);
 }
 
-class PatreonConnector implements ChatConnector {
+export class PatreonConnector implements ChatConnector, PollConnector {
   socket;
+  private callback?: ChatMessageCallback;
 
   constructor() {
     Hooks.on('ethereal-plane.patreon-login', () => this.login());
@@ -42,7 +44,7 @@ class PatreonConnector implements ChatConnector {
         });
         this.socket.emit('features');
         this.socket.on('chat-message', (message: string, user: string) => {
-
+          if (this.callback) this.callback(message, user);
         });
       });
     }
@@ -115,6 +117,17 @@ class PatreonConnector implements ChatConnector {
     };
     this.socket.emit('create-poll', pollCreateData);
   }
-}
 
-export const patreon = new PatreonConnector();
+  disconnect(): void | Promise<void> {
+    return undefined;
+  }
+
+  setCallback(callback: ChatMessageCallback): void | Promise<void> {
+    this.callback = callback;
+  }
+
+  abortPoll(): number | Promise<number> {
+    const until = getSetting('currentPoll').until();
+    return until ? until : 0;
+  }
+}

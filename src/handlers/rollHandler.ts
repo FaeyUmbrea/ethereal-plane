@@ -1,6 +1,6 @@
 import { getSetting } from '../utils/settings.ts';
-import { Server } from '../server/server.ts';
 import { getGame } from '../utils/helpers.js';
+import { getConnectionManager } from '../server/connectionManager.js';
 
 export function registerHanlder() {
   Hooks.on('createChatMessage', (event) => {
@@ -10,7 +10,7 @@ export function registerHanlder() {
       const result = msg.roll?.total;
 
       if (getSetting('sendRollsToChat')) {
-        Server.getServer().sendMessage('Rolled ' + formula + ' and got a ' + result + '!');
+        getConnectionManager().sendMessage('Rolled ' + formula + ' and got a ' + result + '!');
       }
     }
   });
@@ -23,7 +23,7 @@ export function registerHanlder() {
     const result = attackRoll.total;
 
     if (message.data.whisper.length === 0 && getSetting('sendRollsToChat')) {
-      Server.getServer().sendMessage('Rolled ' + formula + ' and got a ' + result + '!');
+      getConnectionManager().sendMessage('Rolled ' + formula + ' and got a ' + result + '!');
     }
   });
 
@@ -35,7 +35,7 @@ export function registerHanlder() {
     const result = attackRoll.total;
 
     if (message.data.whisper.length === 0 && getSetting('sendRollsToChat')) {
-      Server.getServer().sendMessage('Rolled ' + formula + ' and got a ' + result + '!');
+      getConnectionManager().sendMessage('Rolled ' + formula + ' and got a ' + result + '!');
     }
   });
 }

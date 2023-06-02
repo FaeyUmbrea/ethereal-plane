@@ -5,8 +5,8 @@ import { registerOverlay } from './utils/overlay.js';
 import { ChatApplication } from './applications/chatApplication.js';
 import { FVTTSidebarControl } from '@typhonjs-fvtt/svelte-standard/application';
 import StreamChat from './svelte/StreamChat.svelte';
-import { patreon } from './server/patreon.js';
 import { getGame } from './utils/helpers.js';
+import { getConnectionManager } from './server/connectionManager.js';
 
 let polls;
 let chat;
@@ -57,7 +57,7 @@ Hooks.once('init', async () => {
 Hooks.once('ready', async () => {
   //await Server.createServer();
   if (getSetting('enabled')) {
-    await patreon.init();
+    getConnectionManager();
     registerHanlders();
   }
 });

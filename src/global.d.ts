@@ -1,6 +1,7 @@
 import 'svelte';
 import { SvelteComponent } from 'svelte';
 import type { Poll } from './utils/polls.js';
+import type { Modes } from './utils/const.js';
 
 declare global {
   interface ModuleConfig {
@@ -21,6 +22,7 @@ declare global {
       'ethereal-plane.server-url': string;
       'ethereal-plane.currentPoll': Poll;
       'ethereal-plane.refresh-token': string;
+      'ethereal-plane.mode': Modes;
     }
   }
 }

@@ -2,6 +2,7 @@ import { Poll } from './polls.js';
 import { type GameSetting, TJSGameSettings } from '@typhonjs-fvtt/svelte-standard/store';
 import { ConfigApplication } from '../applications/configApplication.js';
 import { getGame } from './helpers.js';
+import { Modes } from './const.js';
 
 const moduleID = 'ethereal-plane';
 
@@ -82,11 +83,12 @@ class EtherealPlaneSettings extends TJSGameSettings {
       })
     );
     settings.push(
-      registerSetting('local-server', {
-        type: Boolean,
+      registerSetting('mode', {
+        type: String,
+        choices: Object.values(Modes).reduce((a, v) => ({ ...a, [v]: `ethereal-plane.settings.mode.${v}` }), {}),
         scope: 'world',
-        config: false,
-        default: false
+        config: true,
+        default: Modes.localonly
       })
     );
     settings.push(

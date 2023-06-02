@@ -1,5 +1,4 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte';
-//import resolve from '@rollup/plugin-node-resolve'; // This resolves NPM modules from node_modules.
 import preprocess from 'svelte-preprocess';
 import { postcssConfig, terserConfig } from '@typhonjs-fvtt/runtime/rollup';
 import { visualizer } from 'rollup-plugin-visualizer';

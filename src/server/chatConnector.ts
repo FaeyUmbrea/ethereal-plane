@@ -1,6 +1,6 @@
-import type { Poll } from '../utils/polls.ts';
-
 export interface ChatConnector {
+  setCallback(callback: ChatMessageCallback): void | Promise<void>;
+
   init(): void | Promise<void>;
 
   sendMessage(message: string): void | Promise<void>;
@@ -9,5 +9,7 @@ export interface ChatConnector {
 
   disableChatListener(): void | Promise<void>;
 
-  startPoll(poll: Poll): void | Promise<void>;
+  disconnect(): void | Promise<void>;
 }
+
+export declare type ChatMessageCallback = (message: string, user: string) => void | Promise<void>;

@@ -7,13 +7,13 @@ export class Poll {
   status = PollStatus.notStarted;
   id: 'none';
   until = () => {
-    return this.createdAt ? this.duration ? this.createdAt.getTime() + this.duration : undefined : undefined;
+    return this.createdAt ? (this.duration ? this.createdAt.getTime() + this.duration : undefined) : undefined;
   };
 }
 
 export interface PollOption {
-  text: string,
-  macro?: Macro
+  text: string;
+  macro?: Macro;
 }
 
 export enum PollStatus {
