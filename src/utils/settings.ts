@@ -1,6 +1,7 @@
 import { Poll } from './polls.js';
-import { TJSGameSettings } from '@typhonjs-fvtt/svelte-standard/store';
+import { type GameSetting, TJSGameSettings } from '@typhonjs-fvtt/svelte-standard/store';
 import { ConfigApplication } from '../applications/configApplication.js';
+import { getGame } from './helpers.js';
 
 const moduleID = 'ethereal-plane';
 
@@ -10,15 +11,15 @@ class EtherealPlaneSettings extends TJSGameSettings {
   }
 
   init() {
-    const settings = [];
+    const settings: GameSetting[] = [];
 
-    game.settings.registerMenu(moduleID, 'setup', {
+    getGame().settings.registerMenu(moduleID, 'setup', {
       name: `${moduleID}.settings.setup.Name`,
       label: `${moduleID}.settings.setup.Label`,
       hint: `${moduleID}.settings.setup.Hint`,
       icon: 'fas fa-bars',
       restricted: true,
-      type: SettingsShell(ConfigApplication),
+      type: SettingsShell(ConfigApplication)
     });
 
     settings.push(
@@ -85,47 +86,51 @@ class EtherealPlaneSettings extends TJSGameSettings {
         type: Boolean,
         scope: 'world',
         config: false,
-        default: false,
+        default: false
+      })
+    );
+    settings.push(
+      registerSetting('version', {
+        type: Number,
+        scope: 'world',
+        config: false,
+        default: 0
+      })
+    );
+    settings.push(
+      registerSetting('available-features', {
+        type: Array<string>,
+        scope: 'client',
+        config: false,
+        default: []
       })
     );
     this.registerAll(settings, true);
   }
 }
 
-/**
- *
- * @param {string} settingName
- * @param { Record<string, unknown>} config
- */
-function registerSetting(settingName, config) {
+function registerSetting(settingName, config, folder = '') {
   return {
     namespace: moduleID,
     key: settingName,
+    folder,
     options: {
       name: `${moduleID}.settings.${settingName}.Name`,
       hint: `${moduleID}.settings.${settingName}.Hint`,
-      ...config,
-    },
+      ...config
+    }
   };
 }
 
-/**
- *
- * @param {string} settingName
- * @returns {unknown}
- */
-export function getSetting(settingName) {
-  return game.settings.get(moduleID, settingName);
+export function getSetting<N extends string>(settingName: N): ClientSettings.Values[`${typeof moduleID}.${N}`] {
+  return getGame().settings.get(moduleID, settingName);
 }
 
-/**
- *
- * @param {string} settingName
- * @param {any} value
- * @returns {Promise<void>}
- */
-export async function setSetting(settingName, value) {
-  await game.settings.set(moduleID, settingName, value);
+export async function setSetting<N extends string>(
+  settingName: N,
+  value: ClientSettings.Values[`${typeof moduleID}.${N}`]
+) {
+  await getGame().settings.set(moduleID, settingName, value);
 }
 
 function SettingsShell(Application) {
@@ -149,6 +154,10 @@ function SettingsShell(Application) {
 
     render() {
       this.close();
+    }
+
+    protected async _updateObject() {
+      return;
     }
   };
 }

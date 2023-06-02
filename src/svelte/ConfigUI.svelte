@@ -2,15 +2,17 @@
 
 <script>
   import { ApplicationShell } from '@typhonjs-fvtt/runtime/svelte/component/core';
-  import { setSetting, settings } from '../utils/settings.js';
-  import { patreon } from '../utils/patreon.js';
+  import { setSetting } from '../utils/settings.ts';
+  import { localize } from '@typhonjs-fvtt/runtime/svelte/helper';
 
+  export let settings = void 0;
   const key = settings.getStore('authentication-token');
+  const features = settings.getStore('available-features');
 
   export let elementRoot = void 0;
 
   function login() {
-    patreon.login();
+    Hooks.call('ethereal-plane.patreon-login');
   }
 
   function logout() {
@@ -22,8 +24,14 @@
 <ApplicationShell bind:elementRoot>
   <main>
     Status:
-    {#if !!$key} Logged in!{:else} Logged out!{/if}
+    {#if !!$key} <span class="green">Logged in!</span>{:else} Logged out!{/if}
     {#if !!$key}
+      <br />
+      Available Features:
+      {#each $features as feature}
+        <br />
+        {localize('ethereal-plane.feature-names.' + feature)}
+      {/each}
       <button on:click={logout}>Log out</button>
     {:else}
       <button on:click={login}>Log in with Patreon&nbsp;<i class="fa-brands fa-patreon orange" /></button>
@@ -32,6 +40,9 @@
 </ApplicationShell>
 
 <style lang="sass">
+  .green
+    color: green
+
   .orange
     color: #f96854
 </style>

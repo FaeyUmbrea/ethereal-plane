@@ -1,9 +1,10 @@
-import { PollStatus } from './polls.js';
-import { getSetting, setSetting } from './settings.js';
+import { Poll, PollStatus } from '../utils/polls.js';
+import { getSetting, setSetting } from '../utils/settings.ts';
 import { chatMessages } from '../svelte/stores/chatMessages.js';
 import { get } from 'svelte/store';
+import type { ChatConnector } from './chatConnector.js';
 
-export class Server {
+export class Server implements ChatConnector {
   static #singleton;
   url = '';
   socket;
@@ -15,21 +16,23 @@ export class Server {
     this.socket.on('poll', (tally) => {
       console.debug(tally);
       const poll = getSetting('currentPoll');
-      if (poll.until && poll.status === PollStatus.started) {
+      const until = poll.until();
+      if (until && poll.status === PollStatus.started) {
         poll.tally = tally;
-        if (Date.now() > new Date(poll.until).getTime()) poll.status = PollStatus.stopped;
+        if (Date.now() > until) poll.status = PollStatus.stopped;
         setSetting('currentPoll', poll);
       }
     });
     this.socket.on('noPoll', () => {
       const poll = getSetting('currentPoll');
-      if (poll.until && poll.status === PollStatus.started) {
+      const until = poll.until();
+      if (until && poll.status === PollStatus.started) {
         poll.status = PollStatus.failed;
         setSetting('currentPoll', poll);
       }
     });
     this.socket.emit('getPoll', 0);
-    this.socket.on('chatMessageRecieved', (user, message) => {
+    this.socket.on('chatMessageRecieved', (user: string, message: string) => {
       chatMessages.set([...get(chatMessages), [user, message]]);
     });
     this.socket.emit('startChat');
@@ -56,13 +59,19 @@ export class Server {
     this.socket.emit('endPoll', 0);
   }
 
-  /**
-   *
-   * @param {string[]} options
-   * @param {number} timeout
-   * @returns {Promise<void>}
-   */
-  async createPoll(options, timeout) {
-    this.socket.emit('createPoll', options, timeout, 0);
+  disableChatListener(): void | Promise<void> {
+    return undefined;
+  }
+
+  enableChatListener(): void | Promise<void> {
+    return undefined;
+  }
+
+  init(): void | Promise<void> {
+    return undefined;
+  }
+
+  startPoll(poll: Poll): void | Promise<void> {
+    this.socket.emit('createPoll', poll.options.map((option) => option.text), poll.duration, 0);
   }
 }

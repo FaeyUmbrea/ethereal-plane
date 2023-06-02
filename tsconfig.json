@@ -1,0 +1,28 @@
+{
+  "extends": [
+    "@tsconfig/svelte/tsconfig.json"
+  ],
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "sourceMap": true,
+    "allowJs": true,
+    "rootDir": "src/",
+    "moduleResolution": "NodeNext",
+    "types": [
+      "@league-of-foundry-developers/foundry-vtt-types"
+    ],
+    "strictNullChecks": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": [
+    "src/**/*",
+    "src/node_modules",
+    "vite.config.js"
+  ],
+  "exclude": [
+    "node_modules/*",
+    "__sapper__/*",
+    "public/*"
+  ]
+}

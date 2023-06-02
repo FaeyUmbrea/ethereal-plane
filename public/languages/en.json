@@ -17,6 +17,11 @@
         "Name": "Chat Tab",
         "Hint": "If this is checked, the Chat Tab will be loaded"
       }
+    },
+    "feature-names": {
+      "custom-twitch-bot": "Custom Twitch Bot Name",
+      "twitch-bot": "Twitch Bot",
+      "twitch-polls": "Twitch Polls"
     }
   }
 }

@@ -1,7 +1,7 @@
 <script>
-  import { Poll, PollStatus } from '../utils/polls.js';
-  import { setSetting } from '../utils/settings.js';
-  import { Server } from '../utils/server.js';
+  import { Poll, PollStatus } from '../utils/polls.ts';
+  import { setSetting } from '../utils/settings.ts';
+  import { Server } from '../server/server.ts';
 
   export var poll;
   export var total;

@@ -1,5 +1,6 @@
-import { getSetting } from '../utils/settings.js';
-import { Server } from '../utils/server.js';
+import { getSetting } from '../utils/settings.ts';
+import { Server } from '../server/server.ts';
+import { getGame } from '../utils/helpers.js';
 
 export function registerHanlder() {
   Hooks.on('createChatMessage', (event) => {
@@ -16,22 +17,24 @@ export function registerHanlder() {
 
   Hooks.on('midi-qol.AttackRollComplete', (workflow) => {
     const attackRoll = workflow.attackRoll;
-    const message = game.messages.get(workflow.itemCardId);
+    const message = getGame().messages?.get(workflow.itemCardId);
+    if (!message) return;
     const formula = attackRoll.formula;
     const result = attackRoll.total;
 
-    if (message.whisper.length === 0 && getSetting('sendRollsToChat')) {
+    if (message.data.whisper.length === 0 && getSetting('sendRollsToChat')) {
       Server.getServer().sendMessage('Rolled ' + formula + ' and got a ' + result + '!');
     }
   });
 
   Hooks.on('midi-qol.DamageRollComplete', (workflow) => {
     const attackRoll = workflow.damageRoll;
-    const message = game.messages.get(workflow.itemCardId);
+    const message = getGame().messages?.get(workflow.itemCardId);
+    if (!message) return;
     const formula = attackRoll.formula;
     const result = attackRoll.total;
 
-    if (message.whisper.length === 0 && getSetting('sendRollsToChat')) {
+    if (message.data.whisper.length === 0 && getSetting('sendRollsToChat')) {
       Server.getServer().sendMessage('Rolled ' + formula + ' and got a ' + result + '!');
     }
   });

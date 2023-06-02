@@ -2,8 +2,8 @@
 
 <script>
   import { onDestroy } from 'svelte';
-  import { Poll } from '../utils/polls.js';
-  import { getSetting } from '../utils/settings.js';
+  import { Poll } from '../utils/polls.ts';
+  import { getSetting } from '../utils/settings.ts';
   import PollDisplay from './PollDisplay.svelte';
   import PollEditor from './PollEditor.svelte';
   import { ApplicationShell } from '@typhonjs-fvtt/runtime/svelte/component/core';

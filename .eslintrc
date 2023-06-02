@@ -1,11 +1,13 @@
 {
   "extends": [
     "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:svelte/prettier",
     "prettier"
   ],
   "plugins": [
-    "prettier"
+    "prettier",
+    "@typescript-eslint"
   ],
   "rules": {
     "prettier/prettier": [
@@ -17,7 +19,11 @@
   ],
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": "latest"
+    "ecmaVersion": "latest",
+    "extraFileExtensions": [
+      ".svelte"
+    ],
+    "project": "./tsconfig.json"
   },
   "env": {
     "browser": true
@@ -30,5 +36,21 @@
     "foundry": true,
     "$": true,
     "FormApplication": true
-  }
+  },
+  "parser": "@typescript-eslint/parser",
+  "root": true,
+  "overrides": [
+    {
+      "files": [
+        "*.svelte"
+      ],
+      "parser": "svelte-eslint-parser",
+      "parserOptions": {
+        // Specify a parser for each lang.
+        "ts": "@typescript-eslint/parser",
+        "js": "espree",
+        "typescript": "@typescript-eslint/parser"
+      }
+    }
+  ]
 }

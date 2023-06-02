@@ -2,7 +2,9 @@ import { SvelteApplication } from '@typhonjs-fvtt/runtime/svelte/application';
 import ChatApplicationUi from '../svelte/ChatApplicationUi.svelte';
 
 export class ChatApplication extends SvelteApplication {
-  constructor(sidebarButton) {
+  sidebarButton: SceneControlTool;
+
+  constructor(sidebarButton: SceneControlTool) {
     super();
     this.sidebarButton = sidebarButton;
   }

@@ -1,7 +1,7 @@
 <script>
-  import { chatMessages } from './stores/chatMessages.js';
+  import { chatMessages } from './stores/chatMessages.ts';
   import ChatMessage from './ChatMessage.svelte';
-  import { scrollTop } from './stores/chatScroll.js';
+  import { scrollTop } from './stores/chatScroll.ts';
 
   scrollTop.subscribe(() => {
     console.warn('Scroll');
