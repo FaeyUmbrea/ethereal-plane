@@ -18,7 +18,8 @@
   "include": [
     "src/**/*",
     "src/node_modules",
-    "vite.config.js"
+    "vite.config.js",
+    "tools/foundryLink.js"
   ],
   "exclude": [
     "node_modules/*",

@@ -17,7 +17,7 @@ async function verifyToken(token) {
 }
 
 export class PatreonConnector implements ChatConnector, PollConnector {
-  socket;
+  socket: ReturnType<typeof window.io>;
   private callback?: ChatMessageCallback;
 
   constructor() {
@@ -119,7 +119,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
   }
 
   disconnect(): void | Promise<void> {
-    return undefined;
+    this.socket.disconnect();
   }
 
   setCallback(callback: ChatMessageCallback): void | Promise<void> {

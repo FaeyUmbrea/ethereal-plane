@@ -40,8 +40,8 @@
     {/key}
   </div>
   <div class="buttons">
-    <button class="addrem" on:click={addOption}><i class="fas fa-plus" /></button>
-    <button class="addrem" on:click={removeOption}><i class="fas fa-minus" /></button>
+    <button class="addrem" disabled={optionSize >= 5} on:click={addOption}><i class="fas fa-plus" /></button>
+    <button class="addrem" disabled={optionSize <= 2} on:click={removeOption}><i class="fas fa-minus" /></button>
     <button on:click={startPoll}>Start</button>
   </div>
 </div>

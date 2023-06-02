@@ -35,7 +35,7 @@
 
 <ApplicationShell bind:elementRoot>
   <main>
-    {#if poll.until}
+    {#if poll.duration}
       <PollDisplay bind:poll {total} />
     {:else}
       <PollEditor bind:poll />

@@ -5,7 +5,7 @@ import type { PollConnector } from './pollConnector.js';
 
 export class LocalServer implements ChatConnector, PollConnector {
   url = '';
-  socket;
+  socket: ReturnType<typeof window.io>;
   private callback?: ChatMessageCallback;
 
   /**
@@ -69,7 +69,7 @@ export class LocalServer implements ChatConnector, PollConnector {
   }
 
   disconnect(): void | Promise<void> {
-    return undefined;
+    this.socket.close();
   }
 
   setCallback(callback: ChatMessageCallback): void | Promise<void> {

@@ -11,7 +11,8 @@
     "watch": "vite build --watch",
     "prepare": "husky install",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "linkFoundry": "node tools/foundryLink.js"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.1",

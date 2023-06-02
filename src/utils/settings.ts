@@ -87,7 +87,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         type: String,
         choices: Object.values(Modes).reduce((a, v) => ({ ...a, [v]: `ethereal-plane.settings.mode.${v}` }), {}),
         scope: 'world',
-        config: true,
+        config: false,
         default: Modes.localonly
       })
     );
