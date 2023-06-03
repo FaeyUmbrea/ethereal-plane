@@ -17,7 +17,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
     getGame().settings.registerMenu(moduleID, 'setup', {
       name: `${moduleID}.settings.setup.Name`,
       label: `${moduleID}.settings.setup.Label`,
-      hint: `${moduleID}.settings.setup.Hint`,
+      hint: '',
       icon: 'fas fa-bars',
       restricted: true,
       type: SettingsShell(ConfigApplication)
@@ -39,15 +39,23 @@ class EtherealPlaneSettings extends TJSGameSettings {
         config: true,
         onChange: () => {
           debouncedReload();
-        },
+        }
       })
     );
     settings.push(
-      registerSetting('sendRollsToChat', {
+      registerSetting('polls-enabled', {
+        default: false,
+        type: Boolean,
+        scope: 'world',
+        config: true
+      })
+    );
+    settings.push(
+      registerSetting('send-rolls-to-chat', {
         default: true,
         type: Boolean,
         scope: 'world',
-        config: true,
+        config: false
       })
     );
     settings.push(
@@ -59,11 +67,14 @@ class EtherealPlaneSettings extends TJSGameSettings {
       })
     );
     settings.push(
-      registerSetting('enableChatTab', {
+      registerSetting('enable-chat-tab', {
         type: Boolean,
         scope: 'world',
         config: true,
         default: true,
+        onChange: () => {
+          debouncedReload();
+        }
       })
     );
     settings.push(
@@ -105,6 +116,30 @@ class EtherealPlaneSettings extends TJSGameSettings {
         scope: 'client',
         config: false,
         default: []
+      })
+    );
+    settings.push(
+      registerSetting('patreon-status', {
+        type: Object,
+        scope: 'client',
+        config: false,
+        default: false
+      })
+    );
+    settings.push(
+      registerSetting('chat-message-template', {
+        type: String,
+        scope: 'world',
+        config: false,
+        default: '%USER% rolled %FORMULA% and got a %RESULT%!'
+      })
+    );
+    settings.push(
+      registerSetting('campaign-id', {
+        type: String,
+        scope: 'world',
+        config: false,
+        default: ''
       })
     );
     this.registerAll(settings, true);

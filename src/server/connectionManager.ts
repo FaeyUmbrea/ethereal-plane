@@ -28,8 +28,13 @@ class ConnectionManager {
     console.log('Ethereal Plane | Starting connection manager in ' + mode + ' mode.');
     if (this.currentMode && this.currentMode !== mode) {
       if (mode !== Modes.localchat && this.currentMode === Modes.localchat) {
-        if (mode === Modes.patreon) this.chatConnector.disconnect();
-        else this.pollConnector.disconnect();
+        if (mode === Modes.patreon) {
+          this.chatConnector.disconnect();
+          this.chatConnector = this.pollConnector as PatreonConnector;
+        } else {
+          this.pollConnector.disconnect();
+          this.pollConnector = this.chatConnector as LocalServer;
+        }
       } else {
         this.chatConnector.disconnect();
         this.pollConnector.disconnect();

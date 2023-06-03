@@ -21,17 +21,16 @@ export default class PollApplication extends SvelteApplication {
       classes: ['eppolls'],
       minimizable: true,
       width: 500,
-      height: 320,
+      height: 275,
       id: 'polls-application',
       title: 'Polls',
-      resizable: true,
       positionOrtho: false,
       transformOrigin: null,
       svelte: {
         class: PollApplicationUi,
         target: document.body,
-        intro: true,
-      },
+        intro: true
+      }
     });
   }
 

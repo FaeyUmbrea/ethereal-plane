@@ -17,15 +17,6 @@
         "discord": "Faey#0001"
       }
     ],
-    "relationships": {
-      "systems": [],
-      "requires": [
-        {
-          "id": "lib-wrapper",
-          "type": "module"
-        }
-      ]
-    },
     "styles": [
       "style.css"
     ],

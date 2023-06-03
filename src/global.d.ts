@@ -23,6 +23,14 @@ declare global {
       'ethereal-plane.currentPoll': Poll;
       'ethereal-plane.refresh-token': string;
       'ethereal-plane.mode': Modes;
+      'ethereal-plane.patreon-status': PatreonStatus;
+      'ethereal-plane.chat-message-template': string;
     }
   }
+}
+
+declare interface PatreonStatus {
+  polls: boolean;
+  twitch: boolean;
+  customTwitchBot: boolean;
 }

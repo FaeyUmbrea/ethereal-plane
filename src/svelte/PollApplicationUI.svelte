@@ -1,44 +1,27 @@
 <svelte:options accessors={true} />
 
 <script>
-  import { onDestroy } from 'svelte';
   import { Poll } from '../utils/polls.ts';
-  import { getSetting } from '../utils/settings.ts';
+  import { settings } from '../utils/settings.ts';
   import PollDisplay from './PollDisplay.svelte';
   import PollEditor from './PollEditor.svelte';
   import { ApplicationShell } from '@typhonjs-fvtt/runtime/svelte/component/core';
 
-  let poll = getSetting('currentPoll');
+  let poll = settings.getStore('currentPoll');
   export let elementRoot = void 0;
-  let total = tallyTotal();
 
-  let hook = Hooks.on('updateSetting', (setting, change) => {
-    if (setting.key === 'ethereal-plane.currentPoll' && change != null) {
-      poll = JSON.parse(change.value);
-      total = tallyTotal();
-    }
-  });
-
-  function tallyTotal() {
-    if (!poll.tally) return 0;
-    return poll.tally.reduce((prev, val) => prev + val[1], 0);
-  }
-
-  onDestroy(() => {
-    Hooks.off('updateSettings', hook);
-  });
-
-  if (!poll) {
-    poll = new Poll();
+  if (!$poll) {
+    console.warn('No Poll Found');
+    poll.set(new Poll());
   }
 </script>
 
 <ApplicationShell bind:elementRoot>
   <main>
-    {#if poll.duration}
-      <PollDisplay bind:poll {total} />
+    {#if $poll.duration}
+      <PollDisplay />
     {:else}
-      <PollEditor bind:poll />
+      <PollEditor />
     {/if}
   </main>
 </ApplicationShell>

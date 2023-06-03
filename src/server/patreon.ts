@@ -19,17 +19,41 @@ async function verifyToken(token) {
 export class PatreonConnector implements ChatConnector, PollConnector {
   socket: ReturnType<typeof window.io>;
   private callback?: ChatMessageCallback;
+  apiOk = false;
 
   constructor() {
     Hooks.on('ethereal-plane.patreon-login', () => this.login());
+    Hooks.on('ethereal-plane.patreon-logout', () => this.logout());
+    Hooks.on('ethereal-plane.twitch-connect', () => {
+      this.twitchConnect();
+    });
+    Hooks.on('ethereal-plane.twitch-disconnect', () => {
+      this.twitchDisconnect();
+    });
+    Hooks.on('ethereal-plane.custom-twitch-logout', () => {
+      this.twitchCustomBotLogout();
+    });
+    Hooks.on('ethereal-plane.custom-twitch-login', () => {
+      this.twitchCustomBotLogin();
+    });
   }
 
   async init() {
+    console.log('Ethereal Plane | Connecting to Patreon Server');
+    const apiVersion = await (await fetch('https://ep.void.monster/version')).text();
+    if (apiVersion !== '1') {
+      ui.notifications?.error('Ethereal Plane API version does not match the installed Module. Please Update. Patreon Features Disabled.');
+      return;
+    } else {
+      this.apiOk = true;
+    }
+    console.log('Ethereal Plane | Api Version OK');
     const token = getSetting('authentication-token');
     const refreshToken = getSetting('refresh-token');
     if (token) {
       try {
         await verifyToken(token);
+        console.log('Ethereal Plane | Connected to Patreon Server');
         this.socket = window.io('ep.void.monster', { auth: { token } });
       } catch (e) {
         this.refresh(refreshToken);
@@ -46,12 +70,32 @@ export class PatreonConnector implements ChatConnector, PollConnector {
         this.socket.on('chat-message', (message: string, user: string) => {
           if (this.callback) this.callback(message, user);
         });
+        this.socket.on('status', (status: string[]) => {
+          settings.getStore('patreon-status')?.set(status);
+        });
+        this.socket.emit('status');
+        this.socket.on('link-twitch', () => {
+          console.log('Ethereal Plane | Connected Twitch Account to Patreon Service');
+          this.socket.emit('status');
+        });
+        this.socket.on('unlink-twitch', () => {
+          console.log('Ethereal Plane | Disconnected Twitch Account from Patreon Service');
+          this.socket.emit('status');
+        });
+        this.socket.on('twitch-bot-logout', () => {
+          console.log('Ethereal Plane | Disconnected Custom Bot Account from Patreon Service');
+          this.socket.emit('status');
+        });
+        this.socket.on('insufficient-level', () => {
+          console.error('Ethereal Plane | Somehow your pledge was too low. Contact Faey about this.');
+        });
       });
     }
   }
 
   refresh(refreshToken: string) {
-    if (!refreshToken) return;
+    if (!refreshToken || !this.apiOk) return;
+    console.log('Ethereal Plane | Token Expired - Refreshing');
     const authSocket = window.io('ep.void.monster/auth');
     authSocket.on('connect', () => {
       console.log('refreshing with', refreshToken);
@@ -71,7 +115,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
       });
       authSocket.on('patreon-error', async () => {
         console.error('patreon-error');
-        await setSetting('authentication-token', false);
+        await setSetting('authentication-token', '');
         await setSetting('refresh-token', '');
         authSocket.close();
       });
@@ -81,7 +125,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
   login() {
     const authSocket = window.io('wss://ep.void.monster/auth');
     authSocket.on('connect', () => {
-      authSocket.on('login', (uri) => {
+      authSocket.once('login', (uri) => {
         console.info(uri);
         window.open(uri, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
       });
@@ -129,5 +173,36 @@ export class PatreonConnector implements ChatConnector, PollConnector {
   abortPoll(): number | Promise<number> {
     const until = getSetting('currentPoll').until();
     return until ? until : 0;
+  }
+
+  private twitchConnect() {
+    console.log('Ethereal Plane | Requesting Twitch Connection Callback');
+    this.socket.once('twitch-login', (uri) => {
+      window.open(uri, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
+    });
+    this.socket.emit('link-twitch');
+  }
+
+  private twitchDisconnect() {
+    console.log('Ethereal Plane | Disconnecting Twitch Account from Patreon Service');
+    this.socket.emit('unlink-twitch');
+  }
+
+  private twitchCustomBotLogin() {
+    console.log('Ethereal Plane | Logging into Custom Bot Acount');
+    this.socket.once('twitch-login', (uri) => {
+      window.open(uri, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
+    });
+    this.socket.emit('twitch-bot-login');
+  }
+
+  private twitchCustomBotLogout() {
+    this.socket.emit('twitch-bot-logout');
+  }
+
+  private async logout() {
+    this.disconnect();
+    await setSetting('refresh-token', '');
+    await setSetting('authentication-token', '');
   }
 }

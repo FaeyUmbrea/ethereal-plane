@@ -9,13 +9,27 @@
         "Name": "Enable Module",
         "Hint": "If this is not checked, the module will not connect to the server"
       },
-      "sendRollsToChat": {
+      "send-rolls-to-chat": {
         "Name": "Send Rolls to Chat",
         "Hint": "If this is checked, public rolls will be forwarded to stream chat"
       },
-      "enableChatTab": {
+      "enable-chat-tab": {
         "Name": "Chat Tab",
         "Hint": "If this is checked, the Chat Tab will be loaded"
+      },
+      "mode": {
+        "Name": "Mode",
+        "localchat": "Patreon + Local Chat Bridge",
+        "localonly": "Local Bridge only",
+        "patreon": "Patreon"
+      },
+      "setup": {
+        "Name": "Setup",
+        "Hint": "Base Setup",
+        "Label": "Open Setup Menu"
+      },
+      "chat-message-template": {
+        "Name": "Chat Message Template"
       }
     },
     "feature-names": {

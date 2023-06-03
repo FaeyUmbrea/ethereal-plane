@@ -1,32 +1,40 @@
 <script>
   import { Poll, PollStatus } from '../utils/polls.ts';
-  import { setSetting } from '../utils/settings.ts';
+  import { setSetting, settings } from '../utils/settings.ts';
   import { getConnectionManager } from '../server/connectionManager.ts';
 
-  export var poll;
-  export var total;
+  const pollStore = settings.getStore('currentPoll');
 
   function abortPoll() {
+    const poll = $pollStore;
     poll.status = PollStatus.failed;
+    setSetting('currentPoll', poll);
     getConnectionManager().abortPoll();
   }
 
   function endPoll() {
     setSetting('currentPoll', new Poll());
   }
+
+  function total() {
+    return $pollStore.tally.reduce((e, p) => e + p, 0);
+  }
+
+  console.log(total());
 </script>
 
 <div class="display">
   <div class="tally">
-    {#if poll.tally}
-      {#each poll.tally as tally}
-        <span class="tally-entry">{poll.options[Number.fromString(tally[0])]}</span>
-        <progress value={tally[1]} max={total} />
+    {#if $pollStore.tally}
+      {#each $pollStore.tally as tally, index}
+        <span class="tally-entry">{$pollStore.options[index].text}</span>
+        <progress value={tally} max={total(tally)} />
+        <span class="tally-entry">{tally} / {Math.round((tally / total()) * 100)}%</span>
       {/each}
     {/if}
   </div>
   <div class="buttons">
-    {#if poll.status <= PollStatus.started}
+    {#if $pollStore.status <= PollStatus.started}
       <button id="abort" on:click={abortPoll}>Abort</button>
     {:else}
       <button id="end" on:click={endPoll}>End</button>
@@ -45,9 +53,9 @@
   .tally {
     align-content: flex-start;
     display: grid;
-    grid-template-columns: 100px auto;
+    grid-template-columns: min-content auto min-content;
     grid-row-gap: 5px;
-    grid-column-gap: 2px;
+    grid-column-gap: 5px;
   }
   progress {
     width: auto;
@@ -57,6 +65,9 @@
     border: gray solid 1px;
     border-radius: 5px;
     padding-top: 2.5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    white-space: nowrap;
   }
   #abort {
     background: lightcoral;

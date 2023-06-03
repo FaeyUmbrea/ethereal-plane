@@ -2,68 +2,74 @@
 
 <script>
   import { ApplicationShell } from '@typhonjs-fvtt/runtime/svelte/component/core';
-  import { setSetting } from '../utils/settings.ts';
   import { localize } from '@typhonjs-fvtt/runtime/svelte/helper';
   import { Modes } from '../utils/const.ts';
   import CollapsibleSection from './components/CollapsibleSection.svelte';
+  import PatreonConfig from './components/PatreonConfig.svelte';
 
   export let settings = void 0;
-  const key = settings.getStore('authentication-token');
-  const features = settings.getStore('available-features');
   const mode = settings.getStore('mode');
   const modes = Object.values(Modes);
   const serverUrl = settings.getStore('server-url');
+  const sendRollsToChat = settings.getStore('send-rolls-to-chat');
+  const chatMessageTemplate = settings.getStore('chat-message-template');
 
   export let elementRoot = void 0;
-
-  function login() {
-    Hooks.call('ethereal-plane.patreon-login');
-  }
-
-  function logout() {
-    key.set('');
-    setSetting('refresh-token', '');
-  }
 </script>
 
 <ApplicationShell bind:elementRoot>
   <main>
-    <select bind:value={$mode} name="mode">
-      {#each modes as choice}
-        <option value={choice}>{localize(`ethereal-plane.settings.mode.${choice}`)}</option>
-      {/each}
-    </select>
+    <CollapsibleSection collapsed={false} title="General">
+      <section class="settings">
+        <span>{localize(`ethereal-plane.settings.mode.Name`)}</span>
+        <select bind:value={$mode} name="mode">
+          {#each modes as choice}
+            <option value={choice}>{localize(`ethereal-plane.settings.mode.${choice}`)}</option>
+          {/each}
+        </select>
+        <span>{localize('ethereal-plane.settings.sendRollsToChat.Name')}</span>
+        <input bind:checked={$sendRollsToChat} type="checkbox" />
+        {#if $sendRollsToChat}
+          <span>{localize('ethereal-plane.settings.chat-message-template.Name')}</span>
+          <textarea bind:value={$chatMessageTemplate} />
+        {/if}
+      </section>
+    </CollapsibleSection>
     {#if $mode === Modes.patreon || $mode === Modes.localchat}
       <CollapsibleSection title="Patreon">
-        Status:
-        {#if !!$key} <span class="green">Logged in!</span> {:else} Logged out!{/if}
-
-        {#if !!$key}
-          <br />
-          Available Features:
-          {#each $features as feature}
-            <br />
-            {localize('ethereal-plane.feature-names.' + feature)}
-          {/each}
-          <button on:click={logout}>Log out</button>
-        {:else}
-          <button on:click={login}>Log in with Patreon&nbsp;<i class="fa-brands fa-patreon orange" /></button>
-        {/if}
+        <PatreonConfig {settings} />
       </CollapsibleSection>
     {/if}
 
     {#if $mode === Modes.localonly || $mode === Modes.localchat}
       <CollapsibleSection title="Local Server">
-        <input type="text" bind:value={$serverUrl} />
+        <section class="settings">
+          <span>{localize(`ethereal-plane.settings.server-url.Name`)}</span>
+          <input type="text" bind:value={$serverUrl} />
+        </section>
       </CollapsibleSection>
     {/if}
   </main>
 </ApplicationShell>
 
 <style lang="sass">
-  .green
-    color: green
+  .settings
+    display: grid
+    grid-template-columns: min-content auto
+    row-gap: 5px
+    column-gap: 2px
+    text-align: center
+    vertical-align: middle
+    white-space: nowrap
 
-  .orange
-    color: #f96854
+    span
+      padding-top: 5px
+
+    input
+      justify-self: right
+
+    textarea
+      resize: vertical
+
+
 </style>

@@ -1,14 +1,11 @@
 export class Poll {
   title: string;
   options: PollOption[] = [{ text: 'yes' }, { text: 'no' }];
-  tally: Map<PollOption, number>;
+  tally: Array<number> = [0, 0];
   duration?: number;
   createdAt?: Date;
   status = PollStatus.notStarted;
   id: 'none';
-  until = () => {
-    return this.createdAt ? (this.duration ? this.createdAt.getTime() + this.duration : undefined) : undefined;
-  };
 }
 
 export interface PollOption {

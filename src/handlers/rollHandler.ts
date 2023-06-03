@@ -3,14 +3,15 @@ import { getGame } from '../utils/helpers.js';
 import { getConnectionManager } from '../server/connectionManager.js';
 
 export function registerHanlder() {
-  Hooks.on('createChatMessage', (event) => {
+  Hooks.on('createChatMessage', (event: ChatMessage) => {
     const msg = event;
-    if (msg.isRoll && msg.whisper.length === 0) {
+    if (msg.isRoll && msg.data.whisper.length === 0) {
       const formula = msg.roll?.formula;
       const result = msg.roll?.total;
 
-      if (getSetting('sendRollsToChat')) {
-        getConnectionManager().sendMessage('Rolled ' + formula + ' and got a ' + result + '!');
+      if (getSetting('send-rolls-to-chat')) {
+        if (!event.user?.name || !formula || !result) return;
+        sendRoll(event.user.name, formula, result.toString());
       }
     }
   });
@@ -22,8 +23,10 @@ export function registerHanlder() {
     const formula = attackRoll.formula;
     const result = attackRoll.total;
 
-    if (message.data.whisper.length === 0 && getSetting('sendRollsToChat')) {
-      getConnectionManager().sendMessage('Rolled ' + formula + ' and got a ' + result + '!');
+    if (message.data.whisper.length === 0 && getSetting('send-rolls-to-chat')) {
+      const name = getGame().user?.name;
+      if (!name) return;
+      sendRoll(name, formula, result);
     }
   });
 
@@ -34,8 +37,17 @@ export function registerHanlder() {
     const formula = attackRoll.formula;
     const result = attackRoll.total;
 
-    if (message.data.whisper.length === 0 && getSetting('sendRollsToChat')) {
-      getConnectionManager().sendMessage('Rolled ' + formula + ' and got a ' + result + '!');
+    if (message.data.whisper.length === 0 && getSetting('send-rolls-to-chat')) {
+      const name = getGame().user?.name;
+      if (!name) return;
+      sendRoll(name, formula, result);
     }
   });
+}
+
+
+function sendRoll(user: string, formula: string, result: string) {
+  const pattern = getSetting('chat-message-template');
+  const message = pattern.replace('%USER%', user).replace('%FORMULA%', formula).replace('%RESULT%', result);
+  getConnectionManager().sendMessage(message);
 }
