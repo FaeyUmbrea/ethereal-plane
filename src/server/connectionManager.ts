@@ -4,6 +4,7 @@ import type { ChatConnector } from './chatConnector.js';
 import type { PollConnector } from './pollConnector.js';
 import { PatreonConnector } from './patreon.js';
 import { LocalServer } from './localserver.js';
+import type { Poll } from '../utils/polls.js';
 
 class ConnectionManager {
   private currentMode?: Modes;
@@ -18,6 +19,10 @@ class ConnectionManager {
 
   sendMessage(message) {
     this.chatConnector.sendMessage(message);
+  }
+
+  createPoll(poll: Poll) {
+    this.pollConnector.startPoll(poll);
   }
 
   abortPoll() {

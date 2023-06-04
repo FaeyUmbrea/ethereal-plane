@@ -1,4 +1,4 @@
-import { Poll, PollStatus } from '../utils/polls.js';
+import { executePollMacro, Poll, PollStatus } from '../utils/polls.js';
 import { getSetting, setSetting } from '../utils/settings.ts';
 import type { ChatConnector, ChatMessageCallback } from './chatConnector.js';
 import type { PollConnector } from './pollConnector.js';
@@ -19,7 +19,6 @@ export class LocalServer implements ChatConnector, PollConnector {
 
   async abortPoll() {
     this.socket.emit('endPoll', 0);
-    return 0;
   }
 
   disableChatListener(): void | Promise<void> {
@@ -37,16 +36,19 @@ export class LocalServer implements ChatConnector, PollConnector {
     this.socket.on('poll', async (tally) => {
       console.debug(tally);
       const poll = getSetting('currentPoll');
-      const until = poll.until();
+      if (!poll.createdAt || !poll.duration) return;
+      const until = poll.createdAt?.getTime() + poll.duration * 1000;
       if (until && poll.status === PollStatus.started) {
         poll.tally = tally;
         if (Date.now() > until) poll.status = PollStatus.stopped;
         await setSetting('currentPoll', poll);
+        executePollMacro();
       }
     });
     this.socket.on('noPoll', async () => {
       const poll = getSetting('currentPoll');
-      const until = poll.until();
+      if (!poll.createdAt || !poll.duration) return;
+      const until = poll.createdAt?.getTime() + poll.duration * 1000;
       if (until && poll.status === PollStatus.started) {
         poll.status = PollStatus.failed;
         await setSetting('currentPoll', poll);

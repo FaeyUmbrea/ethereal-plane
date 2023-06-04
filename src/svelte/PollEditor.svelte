@@ -2,8 +2,11 @@
   import { PollStatus } from '../utils/polls.ts';
   import { setSetting, settings } from '../utils/settings.ts';
   import { TJSDocument } from '@typhonjs-fvtt/runtime/svelte/store';
+  import { getConnectionManager } from '../server/connectionManager.ts';
 
   const poll = settings.getStore('currentPoll');
+  let title = '';
+  let duration = 30;
 
   function addOption() {
     if ($poll.options.length >= 5) return;
@@ -23,9 +26,11 @@
     const newPoll = $poll;
     newPoll.tally = Array(newPoll.options.length).fill(0);
     newPoll.status = PollStatus.started;
-    newPoll.duration = 30;
+    newPoll.duration = duration;
+    newPoll.createdAt = new Date();
+    newPoll.title = title ? title : 'Poll';
     await setSetting('currentPoll', newPoll);
-    //getConnectionManager().createPoll();
+    getConnectionManager().createPoll(newPoll);
   }
 
   const doc = new TJSDocument();
@@ -35,7 +40,7 @@
     try {
       await doc.setFromDataTransfer(JSON.parse(event.dataTransfer.getData('text/plain')));
       const newPoll = $poll;
-      newPoll.options[index].macro = doc.get();
+      newPoll.options[index].macro = doc.get().id;
       await setSetting('currentPoll', newPoll);
     } catch (err) {
       console.error(err);
@@ -43,7 +48,10 @@
   }
 
   function onClick(index) {
-    console.log('Not implemented');
+    const id = $poll.options[index].macro;
+    if (!id) return;
+    const currentMacro = game.macros.get(id);
+    currentMacro.sheet.render(true);
   }
 
   async function onRClick(index) {
@@ -55,6 +63,10 @@
 </script>
 
 <div class="editor">
+  <div class="config">
+    <input bind:value={title} class="title" placeholder="Title" type="text" />
+    <input bind:value={duration} class="duration" max={300} min={0} type="number" />
+  </div>
   <div class="options">
     {#each $poll.options as option, index}
       <label for={index}>{index + 1}</label>
@@ -65,7 +77,11 @@
         on:auxclick={() => onRClick(index)}
         on:drop|preventDefault|stopPropagation={(e) => onDrop(e, index)}
       >
-        {option.macro ? option.macro.name : ''}
+        {#if option.macro}
+          <section class="macro">
+            <img src={game.macros.get(option.macro).img} />
+          </section>
+        {/if}
       </section>
     {/each}
   </div>
@@ -79,6 +95,17 @@
 </div>
 
 <style lang="scss">
+  .config {
+    display: grid;
+    grid-template-columns: auto 60px;
+    align-content: flex-start;
+
+    input {
+      height: 35px;
+      font-size: 20px;
+    }
+  }
+
   .options {
     display: grid;
     grid-template-columns: 35px auto 35px;
@@ -120,6 +147,17 @@
     height: 100%;
     min-height: 100%;
     display: grid;
-    grid-template-rows: auto 35px;
+    grid-template-rows: 40px auto 35px;
+  }
+
+  .macro {
+    display: block;
+    position: relative;
+
+    img {
+      position: absolute;
+      left: 0;
+      z-index: 0;
+    }
   }
 </style>

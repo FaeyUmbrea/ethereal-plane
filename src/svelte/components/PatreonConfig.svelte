@@ -1,11 +1,13 @@
 <script>
   import InfoBox from './InfoBox.svelte';
+  import { localize } from '@typhonjs-fvtt/runtime/svelte/helper';
 
   export let settings = void 0;
   const key = settings.getStore('authentication-token');
   const features = settings.getStore('available-features');
   const status = settings.getStore('patreon-status');
   const mode = settings.getStore('mode');
+  const pollsEnabled = settings.getStore('polls-enabled');
 
   function login() {
     Hooks.call('ethereal-plane.patreon-login');
@@ -53,6 +55,14 @@
   <InfoBox variant={$status.twitch ? 'ok' : 'info'}>
     <span>{$status.twitch ? 'All good!' : 'Please connect to twitch so we know where to send your bot.'}</span>
   </InfoBox>
+
+  {#if $features.includes('twitch-polls')}
+    <hr />
+    <section class="settings">
+      <span>{localize('ethereal-plane.settings.polls-enabled.Name')}</span>
+      <input bind:checked={$pollsEnabled} type="checkbox" />
+    </section>
+  {/if}
 {:else}
   <button on:click={login}>Log in&nbsp;<i class="fa-brands fa-patreon orange" /></button>
   <InfoBox variant="error">
@@ -72,4 +82,19 @@
 
   .orange
     color: #f96854
+
+  .settings
+    display: grid
+    grid-template-columns: min-content auto
+    row-gap: 5px
+    column-gap: 2px
+    text-align: center
+    vertical-align: middle
+    white-space: nowrap
+
+    span
+      padding-top: 5px
+
+    input
+      justify-self: right
 </style>

@@ -30,6 +30,9 @@
       },
       "chat-message-template": {
         "Name": "Chat Message Template"
+      },
+      "polls-enabled": {
+        "Name": "Polls Enabled"
       }
     },
     "feature-names": {

@@ -7,5 +7,5 @@ export interface PollConnector {
 
   disconnect(): void | Promise<void>;
 
-  abortPoll(): number | Promise<number>;
+  abortPoll(): void | Promise<void>;
 }

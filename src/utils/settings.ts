@@ -47,7 +47,12 @@ class EtherealPlaneSettings extends TJSGameSettings {
         default: false,
         type: Boolean,
         scope: 'world',
-        config: true
+        config: false,
+        onChange: () => {
+          if (canvas?.activeLayer?.name === 'TokenLayer') {
+            ui?.controls?.initialize({ layer: 'tokens', tool: 'select' });
+          }
+        }
       })
     );
     settings.push(
@@ -115,7 +120,13 @@ class EtherealPlaneSettings extends TJSGameSettings {
         type: Array<string>,
         scope: 'client',
         config: false,
-        default: []
+        default: [],
+        onChange: async (features: string[]) => {
+          if (getSetting('enabled') && getSetting('mode') === Modes.patreon && getSetting('polls-enabled') && !features.includes('twitch-polls')) {
+            ui.notifications?.error('Mode set to patreon but polls are not available for the current user. Disabling Polls.');
+            await setSetting('polls-enabled', false);
+          }
+        }
       })
     );
     settings.push(

@@ -13,6 +13,7 @@
   const serverUrl = settings.getStore('server-url');
   const sendRollsToChat = settings.getStore('send-rolls-to-chat');
   const chatMessageTemplate = settings.getStore('chat-message-template');
+  const pollsEnabled = settings.getStore('polls-enabled');
 
   export let elementRoot = void 0;
 </script>
@@ -27,7 +28,7 @@
             <option value={choice}>{localize(`ethereal-plane.settings.mode.${choice}`)}</option>
           {/each}
         </select>
-        <span>{localize('ethereal-plane.settings.sendRollsToChat.Name')}</span>
+        <span>{localize('ethereal-plane.settings.send-rolls-to-chat.Name')}</span>
         <input bind:checked={$sendRollsToChat} type="checkbox" />
         {#if $sendRollsToChat}
           <span>{localize('ethereal-plane.settings.chat-message-template.Name')}</span>
@@ -46,6 +47,10 @@
         <section class="settings">
           <span>{localize(`ethereal-plane.settings.server-url.Name`)}</span>
           <input type="text" bind:value={$serverUrl} />
+          {#if $mode === Modes.localonly}
+            <span>{localize('ethereal-plane.settings.polls-enabled.Name')}</span>
+            <input bind:checked={$pollsEnabled} type="checkbox" />
+          {/if}
         </section>
       </CollapsibleSection>
     {/if}

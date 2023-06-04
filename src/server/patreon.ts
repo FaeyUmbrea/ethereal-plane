@@ -2,6 +2,7 @@ import { getSetting, setSetting, settings } from '../utils/settings.ts';
 import * as jose from 'jose';
 import type { ChatConnector, ChatMessageCallback } from './chatConnector.ts';
 import type { Poll } from '../utils/polls.js';
+import { executePollMacro, PollStatus } from '../utils/polls.js';
 import type { PollConnector } from './pollConnector.js';
 
 const publicKey = {
@@ -62,7 +63,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
       this.refresh(refreshToken);
     }
     if (this.socket) {
-      this.socket.on('connect', () => {
+      this.socket.on('connect', async () => {
         this.socket.on('features', (features: string[]) => {
           settings.getStore('available-features')?.set(features);
         });
@@ -89,6 +90,47 @@ export class PatreonConnector implements ChatConnector, PollConnector {
         this.socket.on('insufficient-level', () => {
           console.error('Ethereal Plane | Somehow your pledge was too low. Contact Faey about this.');
         });
+
+        // Polls
+        this.socket.on('create-poll', async (id: string) => {
+          const poll = getSetting('currentPoll');
+          poll.id = id;
+          await setSetting('currentPoll', poll);
+        });
+        this.socket.on('poll-update', async (choices: {
+          votes: number,
+          bits_votes: number,
+          channel_points_votes: number
+        }[]) => {
+          const poll = getSetting('currentPoll');
+          poll.tally = choices.map((e) => e.votes);
+          await setSetting('currentPoll', poll);
+        });
+        this.socket.on('poll-end', async (choices: {
+          votes: number,
+          bits_votes: number,
+          channel_points_votes: number
+        }[]) => {
+          const poll = getSetting('currentPoll');
+          poll.tally = choices.map((e) => e.votes);
+          if (poll.status == PollStatus.started) {
+            poll.status = PollStatus.stopped;
+            executePollMacro();
+          }
+          await setSetting('currentPoll', poll);
+        });
+        this.socket.on('poll-error', async () => {
+          const poll = getSetting('currentPoll');
+          poll.status = PollStatus.failed;
+          await setSetting('currentPoll', poll);
+        });
+        const poll = getSetting('currentPoll');
+        if (poll.id) {
+          if (poll.status === PollStatus.started) this.socket.emit('recover-poll', poll.id);
+        } else {
+          poll.status = PollStatus.failed;
+          await setSetting('currentPoll', poll);
+        }
       });
     }
   }
@@ -170,9 +212,9 @@ export class PatreonConnector implements ChatConnector, PollConnector {
     this.callback = callback;
   }
 
-  abortPoll(): number | Promise<number> {
-    const until = getSetting('currentPoll').until();
-    return until ? until : 0;
+  abortPoll() {
+    const poll = getSetting('currentPoll');
+    this.socket.emit('end-poll', poll.id);
   }
 
   private twitchConnect() {

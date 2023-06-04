@@ -1,3 +1,6 @@
+import { getSetting } from './settings.js';
+import { getGame } from './helpers.js';
+
 export class Poll {
   title: string;
   options: PollOption[] = [{ text: 'yes' }, { text: 'no' }];
@@ -5,12 +8,12 @@ export class Poll {
   duration?: number;
   createdAt?: Date;
   status = PollStatus.notStarted;
-  id: 'none';
+  id: string;
 }
 
 export interface PollOption {
   text: string;
-  macro?: Macro;
+  macro?: string;
 }
 
 export enum PollStatus {
@@ -18,4 +21,24 @@ export enum PollStatus {
   started = 1,
   stopped = 2,
   failed = 3,
+}
+
+export function executePollMacro() {
+  const poll = getSetting('currentPoll');
+  if (poll.status === PollStatus.stopped) {
+    let biggest = -1;
+    let biggestIndex = -1;
+    poll.tally.slice().reverse().forEach((option, index, array) => {
+      if (option >= biggest) {
+        biggest = option;
+        biggestIndex = array.length - 1 - index;
+      }
+    });
+    if (biggestIndex > -1) {
+      const macro = poll.options[biggestIndex].macro;
+      if (macro) {
+        getGame().macros?.get(macro)?.execute();
+      }
+    }
+  }
 }

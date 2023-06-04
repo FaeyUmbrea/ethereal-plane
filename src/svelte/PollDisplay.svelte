@@ -5,6 +5,8 @@
 
   const pollStore = settings.getStore('currentPoll');
 
+  let disableEnd = false;
+
   function abortPoll() {
     const poll = $pollStore;
     poll.status = PollStatus.failed;
@@ -17,10 +19,9 @@
   }
 
   function total() {
-    return $pollStore.tally.reduce((e, p) => e + p, 0);
+    const tally = $pollStore.tally.reduce((e, p) => e + p, 0);
+    return tally ? tally : 1;
   }
-
-  console.log(total());
 </script>
 
 <div class="display">
@@ -37,7 +38,7 @@
     {#if $pollStore.status <= PollStatus.started}
       <button id="abort" on:click={abortPoll}>Abort</button>
     {:else}
-      <button id="end" on:click={endPoll}>End</button>
+      <button id="end" disabled={disableEnd} on:click={endPoll}>End</button>
     {/if}
   </div>
 </div>

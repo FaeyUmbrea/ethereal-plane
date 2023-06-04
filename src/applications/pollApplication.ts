@@ -21,7 +21,7 @@ export default class PollApplication extends SvelteApplication {
       classes: ['eppolls'],
       minimizable: true,
       width: 500,
-      height: 275,
+      height: 315,
       id: 'polls-application',
       title: 'Polls',
       positionOrtho: false,
