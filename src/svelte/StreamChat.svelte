@@ -1,11 +1,6 @@
 <script>
   import { chatMessages } from './stores/chatMessages.ts';
   import ChatMessage from './ChatMessage.svelte';
-  import { scrollTop } from './stores/chatScroll.ts';
-
-  scrollTop.subscribe(() => {
-    console.warn('Scroll');
-  });
 </script>
 
 <div class="ep-chat">

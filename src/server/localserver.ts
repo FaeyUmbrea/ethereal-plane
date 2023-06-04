@@ -22,11 +22,11 @@ export class LocalServer implements ChatConnector, PollConnector {
   }
 
   disableChatListener(): void | Promise<void> {
-    return undefined;
+    this.socket.emit('stopChat');
   }
 
   enableChatListener(): void | Promise<void> {
-    return undefined;
+    this.socket.emit('startChat');
   }
 
   init() {
@@ -37,18 +37,21 @@ export class LocalServer implements ChatConnector, PollConnector {
       console.debug(tally);
       const poll = getSetting('currentPoll');
       if (!poll.createdAt || !poll.duration) return;
-      const until = poll.createdAt?.getTime() + poll.duration * 1000;
+      const until = new Date(poll.createdAt).getTime() + poll.duration * 1000;
+      console.warn(until);
       if (until && poll.status === PollStatus.started) {
-        poll.tally = tally;
-        if (Date.now() > until) poll.status = PollStatus.stopped;
+        poll.tally = tally.map((e) => e[1]);
+        if (Date.now() > until) {
+          poll.status = PollStatus.stopped;
+          executePollMacro();
+        }
         await setSetting('currentPoll', poll);
-        executePollMacro();
       }
     });
     this.socket.on('noPoll', async () => {
       const poll = getSetting('currentPoll');
       if (!poll.createdAt || !poll.duration) return;
-      const until = poll.createdAt?.getTime() + poll.duration * 1000;
+      const until = new Date(poll.createdAt).getTime() + poll.duration * 1000;
       if (until && poll.status === PollStatus.started) {
         poll.status = PollStatus.failed;
         await setSetting('currentPoll', poll);
@@ -58,23 +61,22 @@ export class LocalServer implements ChatConnector, PollConnector {
     this.socket.on('chatMessageRecieved', (user: string, message: string) => {
       if (this.callback) this.callback(message, user);
     });
-    this.socket.emit('startChat');
   }
 
   startPoll(poll: Poll): void | Promise<void> {
     this.socket.emit(
       'createPoll',
-      poll.options.map((option) => option.text),
-      poll.duration,
+      poll.options.map((_option, index) => (index + 1).toString()),
+      poll.duration ? poll.duration * 1000 : 30 * 1000,
       0
     );
   }
 
-  disconnect(): void | Promise<void> {
-    this.socket.close();
+  disconnect() {
+    this.socket.disconnect();
   }
 
-  setCallback(callback: ChatMessageCallback): void | Promise<void> {
-    return undefined;
+  setCallback(callback: ChatMessageCallback) {
+    this.callback = callback;
   }
 }

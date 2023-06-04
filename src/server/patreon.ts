@@ -184,11 +184,11 @@ export class PatreonConnector implements ChatConnector, PollConnector {
   }
 
   disableChatListener() {
-    this.socket.emit('enable-chat');
+    this.socket.emit('disable-chat');
   }
 
   enableChatListener(): void | Promise<void> {
-    this.socket.emit('disable-chat');
+    this.socket.emit('enable-chat');
   }
 
   sendMessage(message: string): void | Promise<void> {
@@ -206,6 +206,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 
   disconnect(): void | Promise<void> {
     this.socket.disconnect();
+    this.socket.removeAllListeners();
   }
 
   setCallback(callback: ChatMessageCallback): void | Promise<void> {
