@@ -33,4 +33,5 @@ declare interface PatreonStatus {
   polls: boolean;
   twitch: boolean;
   customTwitchBot: boolean;
+  youtube: boolean;
 }

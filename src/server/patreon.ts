@@ -5,12 +5,15 @@ import type { Poll } from '../utils/polls.js';
 import { executePollMacro, PollStatus } from '../utils/polls.js';
 import type { PollConnector } from './pollConnector.js';
 
-const publicKey = {
-  kty: 'EC',
-  x: 'ASCUOC6ZJAqrAmc0gH1p1_tQB_Iw4MLdenrgsmxexcDiAUV4v7Bv6DsAvSjWpPpzbzVoVR9lxyttjB2sPeQJQhE0',
-  y: 'AJFSMJTGYWBYwKdUOqqUWRHK9pS-KUHb1ZN8O5qXcmOuXjVKXFno__KX-KFLA1leYKvieCwZAhgkGFUz0ihC_AHT',
-  crv: 'P-521'
-};
+
+const publicKey =
+  {
+    kty: 'EC',
+    x: 'ASCUOC6ZJAqrAmc0gH1p1_tQB_Iw4MLdenrgsmxexcDiAUV4v7Bv6DsAvSjWpPpzbzVoVR9lxyttjB2sPeQJQhE0',
+    y: 'AJFSMJTGYWBYwKdUOqqUWRHK9pS-KUHb1ZN8O5qXcmOuXjVKXFno__KX-KFLA1leYKvieCwZAhgkGFUz0ihC_AHT',
+    crv: 'P-521'
+  };
+
 
 async function verifyToken(token) {
   const jwtPublicKey = await jose.importJWK(publicKey, 'ES512');
@@ -36,6 +39,12 @@ export class PatreonConnector implements ChatConnector, PollConnector {
     });
     Hooks.on('ethereal-plane.custom-twitch-login', () => {
       this.twitchCustomBotLogin();
+    });
+    Hooks.on('ethereal-plane.youtube-connect', () => {
+      this.youtubeConnect();
+    });
+    Hooks.on('ethereal-plane.youtube-disconnect', () => {
+      this.youtubeDisconnect();
     });
   }
 
@@ -79,6 +88,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
           console.log('Ethereal Plane | Connected Twitch Account to Patreon Service');
           this.socket.emit('status');
         });
+
         this.socket.on('unlink-twitch', () => {
           console.log('Ethereal Plane | Disconnected Twitch Account from Patreon Service');
           this.socket.emit('status');
@@ -124,13 +134,19 @@ export class PatreonConnector implements ChatConnector, PollConnector {
           poll.status = PollStatus.failed;
           await setSetting('currentPoll', poll);
         });
-        const poll = getSetting('currentPoll');
-        if (poll.id) {
-          if (poll.status === PollStatus.started) this.socket.emit('recover-poll', poll.id);
-        } else {
-          poll.status = PollStatus.failed;
-          await setSetting('currentPoll', poll);
-        }
+
+        // Youtube
+        this.socket.on('link-youtube', () => {
+          console.log('Ethereal Plane | Connected Youtube Account to Patreon Service');
+          this.socket.emit('status');
+        });
+        this.socket.on('unlink-youtube', () => {
+          console.log('Ethereal Plane | Disconnected Youtube Account from Patreon Service');
+          this.socket.emit('status');
+        });
+        this.socket.on('youtube-error', () => {
+          this.socket.emit('status');
+        });
       });
     }
   }
@@ -226,9 +242,22 @@ export class PatreonConnector implements ChatConnector, PollConnector {
     this.socket.emit('link-twitch');
   }
 
+  private youtubeConnect() {
+    console.log('Ethereal Plane | Requesting Twitch Connection Callback');
+    this.socket.once('youtube-login', (uri) => {
+      window.open(uri, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
+    });
+    this.socket.emit('link-youtube');
+  }
+
   private twitchDisconnect() {
     console.log('Ethereal Plane | Disconnecting Twitch Account from Patreon Service');
     this.socket.emit('unlink-twitch');
+  }
+
+  private youtubeDisconnect() {
+    console.log('Ethereal Plane | Disconnecting Twitch Account from Patreon Service');
+    this.socket.emit('unlink-youtube');
   }
 
   private twitchCustomBotLogin() {

@@ -25,6 +25,14 @@
     Hooks.call('ethereal-plane.twitch-disconnect');
   }
 
+  function connectYoutube() {
+    Hooks.call('ethereal-plane.youtube-connect');
+  }
+
+  function disconnectYoutube() {
+    Hooks.call('ethereal-plane.youtube-disconnect');
+  }
+
   function customTwitchLogin() {
     Hooks.call('ethereal-plane.custom-twitch-login');
   }
@@ -37,26 +45,33 @@
 {#if !!$key}
   <div class="buttons">
     <button on:click={logout}>Log out&nbsp;<i class="fa-brands fa-patreon orange" /></button>
-    {#if $features.includes('twitch-bot')}
+    {#if $features.includes('twitch-bot') && (!$status.youtube || $status.twitch)}
       {#if !$status.twitch}
         <button on:click={connectTwitch}>Connect&nbsp;<i class="fa-brands fa-twitch purple" /></button>
       {:else}
         <button on:click={disconnectTwitch}>Disconnect&nbsp;<i class="fa-brands fa-twitch purple" /></button>
       {/if}
     {/if}
-    {#if $features.includes('custom-twitch-bot') && $mode === 'patreon'}
+    {#if $features.includes('custom-twitch-bot') && $mode === 'patreon' && ($status.customTwitchBot || $status.twitch)}
       {#if !$status.customTwitchBot}
         <button on:click={customTwitchLogin}>Log In&nbsp;<i class="fas fa-robot purple" /></button>
       {:else}
         <button on:click={customTwitchLogout}>Log out&nbsp;<i class="fas fa-robot purple" /></button>
       {/if}
     {/if}
+    {#if $features.includes('youtube-chat') && ($status.youtube || !$status.twitch)}
+      {#if !$status.youtube}
+        <button on:click={connectYoutube}>Connect&nbsp;<i class="fa-brands fa-youtube red" /></button>
+      {:else}
+        <button on:click={disconnectYoutube}>Disconnect&nbsp;<i class="fa-brands fa-youtube red" /></button>
+      {/if}
+    {/if}
   </div>
-  <InfoBox variant={$status.twitch ? 'ok' : 'info'}>
-    <span>{$status.twitch ? 'All good!' : 'Please connect to twitch so we know where to send your bot.'}</span>
+  <InfoBox variant={$status.twitch || $status.youtube ? 'ok' : 'info'}>
+    <span>{$status.twitch || $status.youtube ? 'All good!' : 'Please connect to a live streaming service above.'}</span>
   </InfoBox>
 
-  {#if $features.includes('twitch-polls')}
+  {#if $features.includes('twitch-polls') || $features.includes('youtube-polls')}
     <hr />
     <section class="settings">
       <span>{localize('ethereal-plane.settings.polls-enabled.Name')}</span>
@@ -82,6 +97,9 @@
 
   .orange
     color: #f96854
+
+  .red
+    color: #FF0000
 
   .settings
     display: grid
