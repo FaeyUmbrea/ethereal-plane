@@ -1,6 +1,7 @@
 <script>
   import InfoBox from './InfoBox.svelte';
   import { localize } from '@typhonjs-fvtt/runtime/svelte/helper';
+  import { tooltip } from '@svelte-plugins/tooltips';
 
   export let settings = void 0;
   const key = settings.getStore('authentication-token');
@@ -40,6 +41,14 @@
   function customTwitchLogout() {
     Hooks.call('ethereal-plane.custom-twitch-logout');
   }
+
+  let youtubeID;
+
+  function setYoutubeID() {
+    if (youtubeID) {
+      Hooks.call('ethereal-plane.set-youtube-id', youtubeID);
+    }
+  }
 </script>
 
 {#if !!$key}
@@ -76,6 +85,29 @@
     <section class="settings">
       <span>{localize('ethereal-plane.settings.polls-enabled.Name')}</span>
       <input bind:checked={$pollsEnabled} type="checkbox" />
+    </section>
+  {/if}
+
+  {#if $status.youtube}
+    <section class="settings">
+      <span>{localize('ethereal-plane.strings.youtube-id')}</span>
+      <div
+        class="buttonbox"
+        use:tooltip={{
+          content: localize('ethereal-plane.strings.youtube-id-hint'),
+          position: 'top',
+          autoPosition: true,
+          align: 'center',
+          style: { backgroundColor: 'white', color: 'black' },
+        }}
+      >
+        <input
+          bind:value={youtubeID}
+          type="text"
+          placeholder={localize('ethereal-plane.strings.youtube-id-placeholder')}
+        />
+        <button on:click={setYoutubeID}><i class="fas fa-save" /></button>
+      </div>
     </section>
   {/if}
 {:else}
@@ -115,4 +147,13 @@
 
     input
       justify-self: right
+
+    .buttonbox
+      display: flex
+
+      button
+        width: 27px
+        height: 27px
+        padding-top: 0
+
 </style>

@@ -39,6 +39,11 @@
       "custom-twitch-bot": "Custom Twitch Bot Name",
       "twitch-bot": "Twitch Bot",
       "twitch-polls": "Twitch Polls"
+    },
+    "strings": {
+      "youtube-id": "Set Youtube ID (Optional)",
+      "youtube-id-hint": "Only use this if auto-detection fails",
+      "youtube-id-placeholder": "Please enter the Video-ID or link of your livestream"
     }
   }
 }

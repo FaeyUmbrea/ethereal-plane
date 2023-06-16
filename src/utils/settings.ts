@@ -122,7 +122,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         config: false,
         default: [],
         onChange: async (features: string[]) => {
-          if (getSetting('enabled') && getSetting('mode') === Modes.patreon && getSetting('polls-enabled') && !features.includes('twitch-polls')) {
+          if (getSetting('enabled') && getSetting('mode') === Modes.patreon && getSetting('polls-enabled') && (!features.includes('twitch-polls') && !features.includes('youtube-polls'))) {
             ui.notifications?.error('Mode set to patreon but polls are not available for the current user. Disabling Polls.');
             await setSetting('polls-enabled', false);
           }

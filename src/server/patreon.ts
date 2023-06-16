@@ -46,6 +46,9 @@ export class PatreonConnector implements ChatConnector, PollConnector {
     Hooks.on('ethereal-plane.youtube-disconnect', () => {
       this.youtubeDisconnect();
     });
+    Hooks.on('ethereal-plane.set-youtube-id', (id: string) => {
+      this.setYoutubeID(id);
+    });
   }
 
   async init() {
@@ -181,6 +184,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
   }
 
   login() {
+    console.warn('Login');
     const authSocket = window.io('wss://ep.void.monster/auth');
     authSocket.on('connect', () => {
       authSocket.once('login', (uri) => {
@@ -276,5 +280,9 @@ export class PatreonConnector implements ChatConnector, PollConnector {
     this.disconnect();
     await setSetting('refresh-token', '');
     await setSetting('authentication-token', '');
+  }
+
+  private setYoutubeID(id: string) {
+    this.socket.emit('youtube-stream-id', id);
   }
 }

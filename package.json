@@ -15,6 +15,7 @@
     "linkFoundry": "node tools/foundryLink.js"
   },
   "devDependencies": {
+    "@svelte-plugins/tooltips": "^0.1.6",
     "@sveltejs/vite-plugin-svelte": "^2.4.1",
     "@tsconfig/svelte": "^4.0.1",
     "@typescript-eslint/eslint-plugin": "^5.59.8",

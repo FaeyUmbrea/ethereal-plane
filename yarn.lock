@@ -983,6 +983,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@svelte-plugins/tooltips@npm:^0.1.6":
+  version: 0.1.6
+  resolution: "@svelte-plugins/tooltips@npm:0.1.6"
+  checksum: 316476855ba36c955f2a2457632a8369d2c8d5262178949350032c0964d0f36c5f70b015f07dd9f75890387146b621233a09004ed76894d331f19ccc3757cc6c
+  languageName: node
+  linkType: hard
+
 "@sveltejs/vite-plugin-svelte-inspector@npm:^1.0.2":
   version: 1.0.2
   resolution: "@sveltejs/vite-plugin-svelte-inspector@npm:1.0.2"
@@ -2550,6 +2557,7 @@ __metadata:
   resolution: "ethereal-plane@workspace:."
   dependencies:
     "@league-of-foundry-developers/foundry-vtt-types": "https://github.com/League-of-Foundry-Developers/foundry-vtt-types.git#commit=a54121ebd46a8128e0f4f6fd39e55722866053cc"
+    "@svelte-plugins/tooltips": ^0.1.6
     "@sveltejs/vite-plugin-svelte": ^2.4.1
     "@tsconfig/svelte": ^4.0.1
     "@typescript-eslint/eslint-plugin": ^5.59.8

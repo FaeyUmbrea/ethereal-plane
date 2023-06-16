@@ -11,7 +11,7 @@ import { nanoid } from 'nanoid';
 let polls;
 
 function buildButtons(buttons) {
-  if (!getGame().user?.isGM || !getSetting('polls-enabled')) return;
+  if (!getGame().user?.isGM || !getSetting('polls-enabled') || !getSetting('enabled')) return;
   const buttonGroup = buttons.find((element) => element.name === 'token');
   const pollsButton: SceneControlTool = {
     icon: 'fa-solid fa-square-poll-vertical',
@@ -38,8 +38,8 @@ Hooks.once('init', async () => {
 });
 Hooks.once('ready', async () => {
   if (getGame().user?.isGM) {
+    getConnectionManager();
     if (getSetting('enabled')) {
-      getConnectionManager();
       registerHanlders();
     }
     const campaignID = getSetting('campaign-id');

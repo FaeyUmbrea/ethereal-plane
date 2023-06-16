@@ -88,12 +88,15 @@ class ConnectionManager {
     }
     this.chatConnector.setCallback(this.updateChatlog);
     this.currentMode = mode;
-
-    if (getSetting('enable-chat-tab')) {
-      console.log('Enable Chat Listener');
-      this.chatConnector.enableChatListener();
-    } else {
-      this.chatConnector.disableChatListener();
+    try {
+      if (getSetting('enable-chat-tab') && getSetting('enabled')) {
+        console.log('Enable Chat Listener');
+        this.chatConnector.enableChatListener();
+      } else {
+        this.chatConnector.disableChatListener();
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 }

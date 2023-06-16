@@ -30,6 +30,7 @@ export class LocalServer implements ChatConnector, PollConnector {
   }
 
   init() {
+    if (!getSetting('enabled')) return;
     this.url = getSetting('server-url');
     this.socket = io.connect(this.url);
     this.socket.on('chatMessageRecieved', (user, message) => console.log(user, message));

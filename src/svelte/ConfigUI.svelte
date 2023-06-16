@@ -6,6 +6,7 @@
   import { Modes } from '../utils/const.ts';
   import CollapsibleSection from './components/CollapsibleSection.svelte';
   import PatreonConfig from './components/PatreonConfig.svelte';
+  import InfoBox from './components/InfoBox.svelte';
 
   export let settings = void 0;
   const mode = settings.getStore('mode');
@@ -14,12 +15,18 @@
   const sendRollsToChat = settings.getStore('send-rolls-to-chat');
   const chatMessageTemplate = settings.getStore('chat-message-template');
   const pollsEnabled = settings.getStore('polls-enabled');
+  const moduleEnabled = settings.getStore('enabled');
 
   export let elementRoot = void 0;
 </script>
 
 <ApplicationShell bind:elementRoot>
   <main>
+    {#if !$moduleEnabled}
+      <InfoBox variant="error">
+        The Module is not enabled. You can configure it, but it won't do anything until you enable it.
+      </InfoBox>
+    {/if}
     <CollapsibleSection collapsed={false} title="General">
       <section class="settings">
         <span>{localize(`ethereal-plane.settings.mode.Name`)}</span>
