@@ -24,7 +24,7 @@
   <main>
     {#if !$moduleEnabled}
       <InfoBox variant="error">
-        The Module is not enabled. You can configure it, but it won't do anything until you enable it.
+        {localize('ethereal-plane.strings.disabled')}
       </InfoBox>
     {/if}
     <CollapsibleSection collapsed={false} title="General">

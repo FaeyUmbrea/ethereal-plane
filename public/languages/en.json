@@ -43,7 +43,15 @@
     "strings": {
       "youtube-id": "Set Youtube ID (Optional)",
       "youtube-id-hint": "Only use this if auto-detection fails",
-      "youtube-id-placeholder": "Please enter the Video-ID or link of your livestream"
+      "youtube-id-placeholder": "Please enter the Video-ID or link of your livestream",
+      "disabled": "The Module is not enabled. You can configure it, but it won't do anything until you enable it. Some Options are also unavailable",
+      "patreon-ok": "All good!",
+      "patreon-disconnected": "Please connect to a live streaming service above.",
+      "patreon-logged-out": "You need to log in!",
+      "log-in": "Log in",
+      "log-out": "Log out",
+      "connect": "Connect",
+      "disconnect": "Disconnect"
     }
   }
 }
