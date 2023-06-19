@@ -5,7 +5,7 @@ If you're here, you're probably looking for a way to use this in FoundryVTT.
 Either check out the [Patreon](https://patreon.com/voidmonster) or grab the
 self-hosted [Server](https://github.com/FaeyUmbrea/ethereal-plane-server).
 
-If you have any question, leave an Issue or send me a message on Patreon. Altenatively, you can also find me on the
+If you have any questions, leave an Issue or send me a message on Patreon. Alternatively, you can also find me on the
 official FoundryVTT Discord. Just ping @faey in the module-troubleshooting channel.
 
 # Building
