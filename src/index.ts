@@ -18,7 +18,7 @@ function buildButtons(buttons) {
     name: 'openPolls',
     title: 'Open Polls',
     toggle: true,
-    onClick: () => openPolls(pollsButton)
+    onClick: () => openPolls(pollsButton),
   };
   buttonGroup?.tools.push(pollsButton);
 }
@@ -60,7 +60,7 @@ Hooks.once('getSceneControlButtons', () => {
       title: 'Stream Chat',
       tooltip: 'Stream Chat',
       svelte: {
-        class: StreamChat
-      }
+        class: StreamChat,
+      },
     });
 });

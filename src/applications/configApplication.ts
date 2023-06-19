@@ -19,8 +19,8 @@ export class ConfigApplication extends SvelteApplication {
         target: document.body,
         intro: true,
         props: {
-          settings: settings
-        }
+          settings: settings,
+        },
       },
     });
   }

@@ -45,7 +45,6 @@ export function registerHanlder() {
   });
 }
 
-
 function sendRoll(user: string, formula: string, result: string) {
   const pattern = getSetting('chat-message-template');
   const message = pattern.replace('%USER%', user).replace('%FORMULA%', formula).replace('%RESULT%', result);

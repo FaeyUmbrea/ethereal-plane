@@ -29,8 +29,8 @@ export default class PollApplication extends SvelteApplication {
       svelte: {
         class: PollApplicationUi,
         target: document.body,
-        intro: true
-      }
+        intro: true,
+      },
     });
   }
 

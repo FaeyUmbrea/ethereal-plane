@@ -20,7 +20,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
       hint: '',
       icon: 'fas fa-bars',
       restricted: true,
-      type: SettingsShell(ConfigApplication)
+      type: SettingsShell(ConfigApplication),
     });
 
     settings.push(
@@ -39,7 +39,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         config: true,
         onChange: () => {
           debouncedReload();
-        }
+        },
       })
     );
     settings.push(
@@ -52,7 +52,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
           if (canvas?.activeLayer?.name === 'TokenLayer') {
             ui?.controls?.initialize({ layer: 'tokens', tool: 'select' });
           }
-        }
+        },
       })
     );
     settings.push(
@@ -60,7 +60,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         default: true,
         type: Boolean,
         scope: 'world',
-        config: false
+        config: false,
       })
     );
     settings.push(
@@ -79,7 +79,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         default: true,
         onChange: () => {
           debouncedReload();
-        }
+        },
       })
     );
     settings.push(
@@ -104,7 +104,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         choices: Object.values(Modes).reduce((a, v) => ({ ...a, [v]: `ethereal-plane.settings.mode.${v}` }), {}),
         scope: 'world',
         config: false,
-        default: Modes.localonly
+        default: Modes.localonly,
       })
     );
     settings.push(
@@ -112,7 +112,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         type: Number,
         scope: 'world',
         config: false,
-        default: 0
+        default: 0,
       })
     );
     settings.push(
@@ -122,11 +122,19 @@ class EtherealPlaneSettings extends TJSGameSettings {
         config: false,
         default: [],
         onChange: async (features: string[]) => {
-          if (getSetting('enabled') && getSetting('mode') === Modes.patreon && getSetting('polls-enabled') && (!features.includes('twitch-polls') && !features.includes('youtube-polls'))) {
-            ui.notifications?.error('Mode set to patreon but polls are not available for the current user. Disabling Polls.');
+          if (
+            getSetting('enabled') &&
+            getSetting('mode') === Modes.patreon &&
+            getSetting('polls-enabled') &&
+            !features.includes('twitch-polls') &&
+            !features.includes('youtube-polls')
+          ) {
+            ui.notifications?.error(
+              'Mode set to patreon but polls are not available for the current user. Disabling Polls.'
+            );
             await setSetting('polls-enabled', false);
           }
-        }
+        },
       })
     );
     settings.push(
@@ -134,7 +142,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         type: Object,
         scope: 'client',
         config: false,
-        default: false
+        default: false,
       })
     );
     settings.push(
@@ -142,7 +150,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         type: String,
         scope: 'world',
         config: false,
-        default: '%USER% rolled %FORMULA% and got a %RESULT%!'
+        default: '%USER% rolled %FORMULA% and got a %RESULT%!',
       })
     );
     settings.push(
@@ -150,7 +158,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         type: String,
         scope: 'world',
         config: false,
-        default: ''
+        default: '',
       })
     );
     this.registerAll(settings, true);
@@ -165,8 +173,8 @@ function registerSetting(settingName, config, folder = '') {
     options: {
       name: `${moduleID}.settings.${settingName}.Name`,
       hint: `${moduleID}.settings.${settingName}.Hint`,
-      ...config
-    }
+      ...config,
+    },
   };
 }
 
