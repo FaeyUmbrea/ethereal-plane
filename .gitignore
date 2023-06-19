@@ -133,7 +133,7 @@ coverage/*
 /playwright-report/
 /playwright/.cache/
 
-/stats.html
+stats.html
 
 .vite-cache/
 types/
