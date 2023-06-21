@@ -41,9 +41,9 @@ export declare const appRouter: import('@trpc/server').CreateRouterInner<
         _output_out: typeof import('@trpc/server').unsetMarker;
       },
       | {
-      authToken: string;
-      refreshToken: string;
-    }
+          authToken: string;
+          refreshToken: string;
+        }
       | undefined
     >;
     onLogin: import('@trpc/server').BuildProcedure<
