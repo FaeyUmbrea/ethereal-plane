@@ -14,22 +14,24 @@
   }
 
   onDestroy(() => {
-    setSetting('lastReadNotification', notifications[0].id);
+    setSetting('last-read-notification', notifications[0].id);
   });
 </script>
 
 <ApplicationShell bind:elementRoot>
   <main>
-    {#each notifications as notification}
-      <CollapsibleSection title={notification.title} collapsed={false}>
+    {#each notifications as notification, index}
+      <CollapsibleSection title={notification.title} collapsed={!(index <= 0)}>
         <div class="news">
           {#each notification.text as block}
             <p>{block}</p>
           {/each}
           <br />
-          {#each notification.link as { url, title }}
-            <button on:click={() => openLink(url)}>{title}</button>
-          {/each}
+          {#if notification.link}
+            {#each notification.link as { url, title }}
+              <button on:click={() => openLink(url)}>{title}</button>
+            {/each}
+          {/if}
         </div>
       </CollapsibleSection>
     {/each}

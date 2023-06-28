@@ -4,18 +4,20 @@ import { getConnectionManager } from '../server/connectionManager.js';
 import { sendRollToGM } from '../utils/sockets.js';
 
 export function registerHanlder() {
-  Hooks.on('createChatMessage', (event: ChatMessage) => {
-    const msg = event;
-    if (msg.isRoll && msg.data.whisper.length === 0) {
-      const formula = msg.roll?.formula;
-      const result = msg.roll?.total;
+  if (getGame().user?.isGM) {
+    Hooks.on('createChatMessage', (event: ChatMessage) => {
+      const msg = event;
+      if (msg.isRoll && msg.data.whisper.length === 0) {
+        const formula = msg.roll?.formula;
+        const result = msg.roll?.total;
 
-      if (getSetting('send-rolls-to-chat')) {
-        if (!event.user?.name || !formula || !result) return;
-        sendRoll(event.user.name, formula, result.toString());
+        if (getSetting('send-rolls-to-chat')) {
+          if (!event.user?.name || !formula || !result) return;
+          sendRoll(event.user.name, formula, result.toString());
+        }
       }
-    }
-  });
+    });
+  }
 
   Hooks.on('midi-qol.AttackRollComplete', (workflow) => {
     const attackRoll = workflow.attackRoll;

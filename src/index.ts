@@ -32,17 +32,14 @@ function openPolls(button) {
   if (!polls.rendered) polls.render(true);
   else polls.close();
 }
-
-Hooks.once('init', async () => {
-  settings.init();
-});
 Hooks.once('ready', async () => {
-  showNotifications();
+  settings.init();
+  if (getSetting('enabled')) {
+    registerHanlders();
+  }
   if (getGame().user?.isGM) {
+    showNotifications();
     getConnectionManager();
-    if (getSetting('enabled')) {
-      registerHanlders();
-    }
     const campaignID = getSetting('campaign-id');
     if (!campaignID) await setSetting('campaign-id', nanoid(64));
   }

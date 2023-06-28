@@ -44,17 +44,17 @@
           <textarea bind:value={$chatMessageTemplate} />
         {/if}
         <span>{localize('ethereal-plane.settings.allow-socket.Name')}</span>
-        <input
-          bind:checked={$allowSocket}
-          type="checkbox"
+        <div
           use:tooltip={{
             content: localize('ethereal-plane.settings.allow-socket.Hint'),
-            position: 'top',
+            position: 'left',
             autoPosition: true,
             align: 'center',
             style: { backgroundColor: 'white', color: 'black' },
           }}
-        />
+        >
+          <input bind:checked={$allowSocket} type="checkbox" />
+        </div>
       </section>
     </CollapsibleSection>
     {#if $mode === Modes.patreon || $mode === Modes.localchat}
@@ -92,6 +92,9 @@
       padding-top: 5px
 
     input
+      justify-self: right
+
+    div
       justify-self: right
 
     textarea

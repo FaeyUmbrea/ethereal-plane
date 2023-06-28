@@ -37,7 +37,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
       registerSetting('enabled', {
         default: false,
         type: Boolean,
-        scope: 'client',
+        scope: 'world',
         config: true,
         onChange: () => {
           debouncedReload();
@@ -174,12 +174,12 @@ class EtherealPlaneSettings extends TJSGameSettings {
     settings.push(
       registerSetting('allow-socket', {
         type: Boolean,
-        scope: 'server',
+        scope: 'world',
         config: false,
         default: false
       })
     );
-    this.registerAll(settings, true);
+    this.registerAll(settings, getGame().user?.isGM ?? false);
   }
 }
 
@@ -240,7 +240,6 @@ export const settings = new EtherealPlaneSettings();
 const debouncedReload = foundry.utils.debounce(() => window.location.reload(), 100);
 
 export function showNotifications() {
-  if (!getGame().user?.isGM) return;
   const lastRead = getSetting('last-read-notification');
   if (lastRead < notifications[0].id) {
     //@ts-ignore
