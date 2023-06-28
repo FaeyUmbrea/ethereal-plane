@@ -1,6 +1,7 @@
 import { getSetting } from '../utils/settings.ts';
 import { getGame } from '../utils/helpers.js';
 import { getConnectionManager } from '../server/connectionManager.js';
+import { sendRollToGM } from '../utils/sockets.js';
 
 export function registerHanlder() {
   Hooks.on('createChatMessage', (event: ChatMessage) => {
@@ -26,7 +27,11 @@ export function registerHanlder() {
     if (message.data.whisper.length === 0 && getSetting('send-rolls-to-chat')) {
       const name = getGame().user?.name;
       if (!name) return;
-      sendRoll(name, formula, result);
+      if (getGame().user?.isGM) {
+        sendRoll(name, formula, result);
+      } else {
+        sendRollToGM(name, formula, result);
+      }
     }
   });
 
@@ -40,13 +45,16 @@ export function registerHanlder() {
     if (message.data.whisper.length === 0 && getSetting('send-rolls-to-chat')) {
       const name = getGame().user?.name;
       if (!name) return;
-      sendRoll(name, formula, result);
+      if (getGame().user?.isGM) {
+        sendRoll(name, formula, result);
+      } else {
+        sendRollToGM(name, formula, result);
+      }
     }
   });
 }
 
-
-function sendRoll(user: string, formula: string, result: string) {
+export function sendRoll(user: string, formula: string, result: string) {
   const pattern = getSetting('chat-message-template');
   const message = pattern.replace('%USER%', user).replace('%FORMULA%', formula).replace('%RESULT%', result);
   getConnectionManager().sendMessage(message);

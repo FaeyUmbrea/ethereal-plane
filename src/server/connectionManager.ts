@@ -20,7 +20,7 @@ class ConnectionManager {
   }
 
   updateChatlog = (message: string, user: string) => {
-    chatMessages.set([...(get(chatMessages)), [user, message]]);
+    chatMessages.set([...get(chatMessages), [user, message]]);
   };
 
   sendMessage(message) {

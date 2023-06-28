@@ -5,15 +5,12 @@ import type { Poll } from '../utils/polls.js';
 import { executePollMacro, PollStatus } from '../utils/polls.js';
 import type { PollConnector } from './pollConnector.js';
 
-
-const publicKey =
-  {
-    kty: 'EC',
-    x: 'ASCUOC6ZJAqrAmc0gH1p1_tQB_Iw4MLdenrgsmxexcDiAUV4v7Bv6DsAvSjWpPpzbzVoVR9lxyttjB2sPeQJQhE0',
-    y: 'AJFSMJTGYWBYwKdUOqqUWRHK9pS-KUHb1ZN8O5qXcmOuXjVKXFno__KX-KFLA1leYKvieCwZAhgkGFUz0ihC_AHT',
-    crv: 'P-521'
-  };
-
+const publicKey = {
+  kty: 'EC',
+  x: 'ASCUOC6ZJAqrAmc0gH1p1_tQB_Iw4MLdenrgsmxexcDiAUV4v7Bv6DsAvSjWpPpzbzVoVR9lxyttjB2sPeQJQhE0',
+  y: 'AJFSMJTGYWBYwKdUOqqUWRHK9pS-KUHb1ZN8O5qXcmOuXjVKXFno__KX-KFLA1leYKvieCwZAhgkGFUz0ihC_AHT',
+  crv: 'P-521'
+};
 
 async function verifyToken(token) {
   const jwtPublicKey = await jose.importJWK(publicKey, 'ES512');
@@ -55,7 +52,9 @@ export class PatreonConnector implements ChatConnector, PollConnector {
     console.log('Ethereal Plane | Connecting to Patreon Server');
     const apiVersion = await (await fetch('https://ep.void.monster/version')).text();
     if (apiVersion !== '1') {
-      ui.notifications?.error('Ethereal Plane API version does not match the installed Module. Please Update. Patreon Features Disabled.');
+      ui.notifications?.error(
+        'Ethereal Plane API version does not match the installed Module. Please Update. Patreon Features Disabled.'
+      );
       return;
     } else {
       this.apiOk = true;
@@ -110,28 +109,38 @@ export class PatreonConnector implements ChatConnector, PollConnector {
           poll.id = id;
           await setSetting('currentPoll', poll);
         });
-        this.socket.on('poll-update', async (choices: {
-          votes: number,
-          bits_votes: number,
-          channel_points_votes: number
-        }[]) => {
-          const poll = getSetting('currentPoll');
-          poll.tally = choices.map((e) => e.votes);
-          await setSetting('currentPoll', poll);
-        });
-        this.socket.on('poll-end', async (choices: {
-          votes: number,
-          bits_votes: number,
-          channel_points_votes: number
-        }[]) => {
-          const poll = getSetting('currentPoll');
-          poll.tally = choices.map((e) => e.votes);
-          if (poll.status == PollStatus.started) {
-            poll.status = PollStatus.stopped;
-            executePollMacro();
+        this.socket.on(
+          'poll-update',
+          async (
+            choices: {
+              votes: number;
+              bits_votes: number;
+              channel_points_votes: number;
+            }[]
+          ) => {
+            const poll = getSetting('currentPoll');
+            poll.tally = choices.map((e) => e.votes);
+            await setSetting('currentPoll', poll);
           }
-          await setSetting('currentPoll', poll);
-        });
+        );
+        this.socket.on(
+          'poll-end',
+          async (
+            choices: {
+              votes: number;
+              bits_votes: number;
+              channel_points_votes: number;
+            }[]
+          ) => {
+            const poll = getSetting('currentPoll');
+            poll.tally = choices.map((e) => e.votes);
+            if (poll.status == PollStatus.started) {
+              poll.status = PollStatus.stopped;
+              executePollMacro();
+            }
+            await setSetting('currentPoll', poll);
+          }
+        );
         this.socket.on('poll-error', async () => {
           const poll = getSetting('currentPoll');
           poll.status = PollStatus.failed;

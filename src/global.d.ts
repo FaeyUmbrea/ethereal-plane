@@ -4,6 +4,14 @@ import type { Poll } from './utils/polls.js';
 import type { Modes } from './utils/const.js';
 
 declare global {
+  interface Window {
+    socketlib: {
+      registerModule(string): {
+        executeAsGM(string, ...args): void;
+        register(string): void;
+      };
+    };
+  }
   interface ModuleConfig {
     'obs-utils': {
       api: {
@@ -25,6 +33,7 @@ declare global {
       'ethereal-plane.mode': Modes;
       'ethereal-plane.patreon-status': PatreonStatus;
       'ethereal-plane.chat-message-template': string;
+      'ethereal-plane.last-read-notification': number;
     }
   }
 }

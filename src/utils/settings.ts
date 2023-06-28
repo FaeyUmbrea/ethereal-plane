@@ -3,6 +3,8 @@ import { type GameSetting, TJSGameSettings } from '@typhonjs-fvtt/svelte-standar
 import { ConfigApplication } from '../applications/configApplication.js';
 import { getGame } from './helpers.js';
 import { Modes } from './const.js';
+import NotificationCenter from '../applications/notificationCenter.js';
+import notifications from './notifications.json';
 
 const moduleID = 'ethereal-plane';
 
@@ -39,7 +41,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         config: true,
         onChange: () => {
           debouncedReload();
-        }
+        },
       })
     );
     settings.push(
@@ -52,7 +54,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
           if (canvas?.activeLayer?.name === 'TokenLayer') {
             ui?.controls?.initialize({ layer: 'tokens', tool: 'select' });
           }
-        }
+        },
       })
     );
     settings.push(
@@ -79,7 +81,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         default: true,
         onChange: () => {
           debouncedReload();
-        }
+        },
       })
     );
     settings.push(
@@ -122,11 +124,19 @@ class EtherealPlaneSettings extends TJSGameSettings {
         config: false,
         default: [],
         onChange: async (features: string[]) => {
-          if (getSetting('enabled') && getSetting('mode') === Modes.patreon && getSetting('polls-enabled') && (!features.includes('twitch-polls') && !features.includes('youtube-polls'))) {
-            ui.notifications?.error('Mode set to patreon but polls are not available for the current user. Disabling Polls.');
+          if (
+            getSetting('enabled') &&
+            getSetting('mode') === Modes.patreon &&
+            getSetting('polls-enabled') &&
+            !features.includes('twitch-polls') &&
+            !features.includes('youtube-polls')
+          ) {
+            ui.notifications?.error(
+              'Mode set to patreon but polls are not available for the current user. Disabling Polls.'
+            );
             await setSetting('polls-enabled', false);
           }
-        }
+        },
       })
     );
     settings.push(
@@ -153,6 +163,22 @@ class EtherealPlaneSettings extends TJSGameSettings {
         default: ''
       })
     );
+    settings.push(
+      registerSetting('last-read-notification', {
+        type: Number,
+        scope: 'client',
+        config: false,
+        default: 0
+      })
+    );
+    settings.push(
+      registerSetting('allow-socket', {
+        type: Boolean,
+        scope: 'server',
+        config: false,
+        default: false
+      })
+    );
     this.registerAll(settings, true);
   }
 }
@@ -166,7 +192,7 @@ function registerSetting(settingName, config, folder = '') {
       name: `${moduleID}.settings.${settingName}.Name`,
       hint: `${moduleID}.settings.${settingName}.Hint`,
       ...config
-    }
+    },
   };
 }
 
@@ -212,3 +238,12 @@ function SettingsShell(Application) {
 
 export const settings = new EtherealPlaneSettings();
 const debouncedReload = foundry.utils.debounce(() => window.location.reload(), 100);
+
+export function showNotifications() {
+  if (!getGame().user?.isGM) return;
+  const lastRead = getSetting('last-read-notification');
+  if (lastRead < notifications[0].id) {
+    //@ts-ignore
+    new NotificationCenter().render(true);
+  }
+}

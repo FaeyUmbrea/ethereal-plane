@@ -20,7 +20,7 @@ export class ConfigApplication extends SvelteApplication {
         intro: true,
         props: {
           settings: settings
-        }
+        },
       },
     });
   }

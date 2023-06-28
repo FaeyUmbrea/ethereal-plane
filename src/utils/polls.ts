@@ -28,12 +28,15 @@ export function executePollMacro() {
   if (poll.status === PollStatus.stopped) {
     let biggest = -1;
     let biggestIndex = -1;
-    poll.tally.slice().reverse().forEach((option, index, array) => {
-      if (option >= biggest) {
-        biggest = option;
-        biggestIndex = array.length - 1 - index;
-      }
-    });
+    poll.tally
+      .slice()
+      .reverse()
+      .forEach((option, index, array) => {
+        if (option >= biggest) {
+          biggest = option;
+          biggestIndex = array.length - 1 - index;
+        }
+      });
     if (biggestIndex > -1) {
       const macro = poll.options[biggestIndex].macro;
       if (macro) {

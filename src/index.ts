@@ -1,6 +1,6 @@
 import PollApplication from './applications/pollApplication.js';
 import { registerHanlders } from './handlers/index.js';
-import { getSetting, setSetting, settings } from './utils/settings.js';
+import { getSetting, setSetting, settings, showNotifications } from './utils/settings.js';
 import { registerOverlay } from './utils/overlay.js';
 import { FVTTSidebarControl } from '@typhonjs-fvtt/svelte-standard/application';
 import StreamChat from './svelte/StreamChat.svelte';
@@ -37,6 +37,7 @@ Hooks.once('init', async () => {
   settings.init();
 });
 Hooks.once('ready', async () => {
+  showNotifications();
   if (getGame().user?.isGM) {
     getConnectionManager();
     if (getSetting('enabled')) {
@@ -61,6 +62,6 @@ Hooks.once('getSceneControlButtons', () => {
       tooltip: 'Stream Chat',
       svelte: {
         class: StreamChat
-      }
+      },
     });
 });

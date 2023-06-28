@@ -7,6 +7,7 @@
   import CollapsibleSection from './components/CollapsibleSection.svelte';
   import PatreonConfig from './components/PatreonConfig.svelte';
   import InfoBox from './components/InfoBox.svelte';
+  import { tooltip } from '@svelte-plugins/tooltips';
 
   export let settings = void 0;
   const mode = settings.getStore('mode');
@@ -16,6 +17,7 @@
   const chatMessageTemplate = settings.getStore('chat-message-template');
   const pollsEnabled = settings.getStore('polls-enabled');
   const moduleEnabled = settings.getStore('enabled');
+  const allowSocket = settings.getStore('allow-socket');
 
   export let elementRoot = void 0;
 </script>
@@ -41,6 +43,18 @@
           <span>{localize('ethereal-plane.settings.chat-message-template.Name')}</span>
           <textarea bind:value={$chatMessageTemplate} />
         {/if}
+        <span>{localize('ethereal-plane.settings.allow-socket.Name')}</span>
+        <input
+          bind:checked={$allowSocket}
+          type="checkbox"
+          use:tooltip={{
+            content: localize('ethereal-plane.settings.allow-socket.Hint'),
+            position: 'top',
+            autoPosition: true,
+            align: 'center',
+            style: { backgroundColor: 'white', color: 'black' },
+          }}
+        />
       </section>
     </CollapsibleSection>
     {#if $mode === Modes.patreon || $mode === Modes.localchat}

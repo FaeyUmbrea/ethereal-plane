@@ -1,0 +1,31 @@
+[
+  {
+    "id": 1,
+    "title": "Welcome to Ethereal Plane",
+    "text": [
+      "Hello and thank you so much for using OBS Utils!",
+      "This right here is the notification panel.",
+      "You will only see this if there is any news that are worth sharing.",
+      "If you have any Questions, do not hesitate to contact me. Either open an Issue on Github or join the Foundry Discord and ping me there @faey.",
+      "Finally, this module supports a local mode of operation, but it works best for Patreon Supporters. You can find all the info you need and my Patreon below."
+    ],
+    "link": [
+      {
+        "title": "Patreon",
+        "url": "https://www.patreon.com/voidmonster"
+      },
+      {
+        "title": "Github",
+        "url": "https://github.com/FaeyUmbrea/ethereal-plane"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "What's new?",
+    "text": [
+      "This release adds this Notification Panel and improves upon MidiQOL Support",
+      "Previously, Send-to-Chat did not work for non-GM rolls while using MidiQOL. This has now been fixed."
+    ]
+  }
+]

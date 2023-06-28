@@ -9,6 +9,7 @@
     "allowJs": true,
     "rootDir": "src/",
     "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
     "types": [
       "@league-of-foundry-developers/foundry-vtt-types"
     ],
