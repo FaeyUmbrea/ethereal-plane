@@ -20,8 +20,8 @@
 
 <ApplicationShell bind:elementRoot>
   <main>
-    {#each notifications as notification, index}
-      <CollapsibleSection title={notification.title} collapsed={!(index <= 0)}>
+    {#each notifications as notification}
+      <CollapsibleSection title={notification.title} collapsed={false}>
         <div class="news">
           {#each notification.text as block}
             <p>{block}</p>
