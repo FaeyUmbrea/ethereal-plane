@@ -116,12 +116,12 @@ export class PatreonConnector implements ChatConnector, PollConnector {
               votes: number;
               bits_votes: number;
               channel_points_votes: number;
-            }[]
+            }[],
           ) => {
             const poll = getSetting('currentPoll');
             poll.tally = choices.map((e) => e.votes);
             await setSetting('currentPoll', poll);
-          }
+          },
         );
         this.socket.on(
           'poll-end',
@@ -130,7 +130,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
               votes: number;
               bits_votes: number;
               channel_points_votes: number;
-            }[]
+            }[],
           ) => {
             const poll = getSetting('currentPoll');
             poll.tally = choices.map((e) => e.votes);
@@ -139,7 +139,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
               executePollMacro();
             }
             await setSetting('currentPoll', poll);
-          }
+          },
         );
         this.socket.on('poll-error', async () => {
           const poll = getSetting('currentPoll');

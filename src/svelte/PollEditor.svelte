@@ -1,7 +1,7 @@
 <script>
   import { PollStatus } from '../utils/polls.ts';
   import { setSetting, settings } from '../utils/settings.ts';
-  import { TJSDocument } from '@typhonjs-fvtt/runtime/svelte/store';
+  import { TJSDocument } from '@typhonjs-fvtt/runtime/svelte/store/fvtt/document';
   import { getConnectionManager } from '../server/connectionManager.ts';
 
   const poll = settings.getStore('currentPoll');
@@ -79,7 +79,7 @@
       >
         {#if option.macro}
           <section class="macro">
-            <img src={game.macros.get(option.macro).img} />
+            <img alt="Macro Icon" src={game.macros.get(option.macro).img} />
           </section>
         {/if}
       </section>

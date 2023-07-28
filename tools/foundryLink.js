@@ -32,7 +32,7 @@ function askQuestion(query) {
     rl.question(query, (ans) => {
       rl.close();
       resolve(ans);
-    })
+    }),
   );
 }
 

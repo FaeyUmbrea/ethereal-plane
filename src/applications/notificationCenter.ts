@@ -13,7 +13,7 @@ export default class NotificationCenter extends SvelteApplication {
       svelte: {
         class: NotificationCenterUI,
         target: document.body
-      }
+      },
     });
   }
 }

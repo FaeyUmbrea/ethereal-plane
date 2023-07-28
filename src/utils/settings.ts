@@ -1,10 +1,10 @@
 import { Poll } from './polls.js';
-import { type GameSetting, TJSGameSettings } from '@typhonjs-fvtt/svelte-standard/store';
 import { ConfigApplication } from '../applications/configApplication.js';
 import { getGame } from './helpers.js';
 import { Modes } from './const.js';
 import NotificationCenter from '../applications/notificationCenter.js';
 import notifications from './notifications.json';
+import { type GameSetting, TJSGameSettings } from '@typhonjs-fvtt/runtime/svelte/store/fvtt/settings';
 
 const moduleID = 'ethereal-plane';
 
@@ -31,7 +31,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         type: String,
         scope: 'client',
         config: false,
-      })
+      }),
     );
     settings.push(
       registerSetting('enabled', {
@@ -42,7 +42,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         onChange: () => {
           debouncedReload();
         },
-      })
+      }),
     );
     settings.push(
       registerSetting('polls-enabled', {
@@ -55,7 +55,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
             ui?.controls?.initialize({ layer: 'tokens', tool: 'select' });
           }
         },
-      })
+      }),
     );
     settings.push(
       registerSetting('send-rolls-to-chat', {
@@ -63,7 +63,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         type: Boolean,
         scope: 'world',
         config: false
-      })
+      }),
     );
     settings.push(
       registerSetting('currentPoll', {
@@ -71,7 +71,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         scope: 'world',
         config: false,
         default: new Poll(),
-      })
+      }),
     );
     settings.push(
       registerSetting('enable-chat-tab', {
@@ -82,7 +82,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         onChange: () => {
           debouncedReload();
         },
-      })
+      }),
     );
     settings.push(
       registerSetting('authentication-token', {
@@ -90,7 +90,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         scope: 'client',
         config: false,
         default: '',
-      })
+      }),
     );
     settings.push(
       registerSetting('refresh-token', {
@@ -98,7 +98,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         scope: 'client',
         config: false,
         default: '',
-      })
+      }),
     );
     settings.push(
       registerSetting('mode', {
@@ -107,7 +107,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         scope: 'world',
         config: false,
         default: Modes.localonly
-      })
+      }),
     );
     settings.push(
       registerSetting('version', {
@@ -115,7 +115,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         scope: 'world',
         config: false,
         default: 0
-      })
+      }),
     );
     settings.push(
       registerSetting('available-features', {
@@ -137,7 +137,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
             await setSetting('polls-enabled', false);
           }
         },
-      })
+      }),
     );
     settings.push(
       registerSetting('patreon-status', {
@@ -145,7 +145,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         scope: 'client',
         config: false,
         default: false
-      })
+      }),
     );
     settings.push(
       registerSetting('chat-message-template', {
@@ -153,7 +153,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         scope: 'world',
         config: false,
         default: '%USER% rolled %FORMULA% and got a %RESULT%!'
-      })
+      }),
     );
     settings.push(
       registerSetting('campaign-id', {
@@ -161,7 +161,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         scope: 'world',
         config: false,
         default: ''
-      })
+      }),
     );
     settings.push(
       registerSetting('last-read-notification', {
@@ -169,7 +169,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         scope: 'client',
         config: false,
         default: 0
-      })
+      }),
     );
     settings.push(
       registerSetting('allow-socket', {
@@ -177,9 +177,9 @@ class EtherealPlaneSettings extends TJSGameSettings {
         scope: 'world',
         config: false,
         default: false
-      })
+      }),
     );
-    this.registerAll(settings, getGame().user?.isGM ?? false);
+    this.registerAll(settings, true);
   }
 }
 

@@ -33,7 +33,6 @@ function openPolls(button) {
   else polls.close();
 }
 Hooks.once('ready', async () => {
-  settings.init();
   if (getSetting('enabled')) {
     registerHanlders();
   }
@@ -46,6 +45,8 @@ Hooks.once('ready', async () => {
 });
 
 Hooks.on('getSceneControlButtons', buildButtons);
+
+Hooks.on('init', () => settings.init());
 
 Hooks.on('obsUtilsInit', registerOverlay);
 
