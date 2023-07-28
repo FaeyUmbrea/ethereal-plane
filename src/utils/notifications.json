@@ -1,5 +1,27 @@
 [
   {
+    "id": 3,
+    "title": "Twitch Service now Free!",
+    "text": [
+      "Thanks for using Ethereal Plane. The time has finally come!",
+      "The Etheral Plane's basic functionality is now available free of charge for Twitch Streamers, without requiring the standalone server.",
+      "It will still be required to have a Patreon account in order to use the server for the time being, but you no longer need to be supporting the campaign to use chat and polls on Twitch.",
+      "The custom Bot name still requires you to be subscribed to the 5$ Tier.",
+      "For now, I will keep a close eye on server costs for EP and I might have to change this if they grow uncontrollably.",
+      "Please consider subscribing to the Patreon to support the project!"
+    ],
+    "link": [
+      {
+        "title": "Patreon",
+        "url": "https://www.patreon.com/voidmonster"
+      },
+      {
+        "title": "Github",
+        "url": "https://github.com/FaeyUmbrea/ethereal-plane"
+      }
+    ]
+  },
+  {
     "id": 1,
     "title": "Welcome to Ethereal Plane",
     "text": [
