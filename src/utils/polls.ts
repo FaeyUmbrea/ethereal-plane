@@ -2,13 +2,13 @@ import { getSetting } from './settings.js';
 import { getGame } from './helpers.js';
 
 export class Poll {
-  title: string;
+  title!: string;
   options: PollOption[] = [{ text: 'yes' }, { text: 'no' }];
   tally: Array<number> = [0, 0];
   duration?: number;
   createdAt?: Date;
   status = PollStatus.notStarted;
-  id: string;
+  id!: string;
 }
 
 export interface PollOption {

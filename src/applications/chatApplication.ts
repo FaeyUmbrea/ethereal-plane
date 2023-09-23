@@ -10,6 +10,7 @@ export class ChatApplication extends SvelteApplication {
   }
 
   static get defaultOptions() {
+    // @ts-ignore
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['epchat'],
       minimizable: true,
@@ -28,8 +29,9 @@ export class ChatApplication extends SvelteApplication {
     });
   }
 
-  async close(options) {
-    await super.close(options);
+  async close() {
+    //@ts-ignore
+    await super.close();
     $('[data-tool=openStreamDirector]').removeClass('active');
     this.sidebarButton.active = false;
   }

@@ -2,6 +2,7 @@ import 'svelte';
 import { SvelteComponent } from 'svelte';
 import type { Poll } from './utils/polls.js';
 import type { Modes } from './utils/const.js';
+import type { ChatCommand } from './utils/chatCommands.js';
 
 declare global {
   interface Window {
@@ -34,6 +35,10 @@ declare global {
       'ethereal-plane.patreon-status': PatreonStatus;
       'ethereal-plane.chat-message-template': string;
       'ethereal-plane.last-read-notification': number;
+      'ethereal-plane.authentication-token': string;
+      'ethereal-plane.chat-commands': ChatCommand[];
+      'ethereal-plane.chat-commands-active': boolean;
+
     }
   }
 }

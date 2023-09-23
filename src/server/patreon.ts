@@ -4,6 +4,7 @@ import type { ChatConnector, ChatMessageCallback } from './chatConnector.ts';
 import type { Poll } from '../utils/polls.js';
 import { executePollMacro, PollStatus } from '../utils/polls.js';
 import type { PollConnector } from './pollConnector.js';
+import type { Socket } from 'socket.io-client';
 
 const publicKey = {
   kty: 'EC',
@@ -12,15 +13,16 @@ const publicKey = {
   crv: 'P-521'
 };
 
-async function verifyToken(token) {
+async function verifyToken(token: string) {
   const jwtPublicKey = await jose.importJWK(publicKey, 'ES512');
   return await jose.jwtVerify(token, jwtPublicKey);
 }
 
 export class PatreonConnector implements ChatConnector, PollConnector {
-  socket: ReturnType<typeof window.io>;
+  socket!: Socket;
   private callback?: ChatMessageCallback;
   apiOk = false;
+  chatActive = false;
 
   constructor() {
     Hooks.on('ethereal-plane.patreon-login', () => this.login());
@@ -66,7 +68,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
       try {
         await verifyToken(token);
         console.log('Ethereal Plane | Connected to Patreon Server');
-        this.socket = window.io('ep.void.monster', { auth: { token } });
+        this.socket = window.io('ep.void.monster', { auth: { token } }) as unknown as Socket;
       } catch (e) {
         this.refresh(refreshToken);
       }
@@ -75,6 +77,9 @@ export class PatreonConnector implements ChatConnector, PollConnector {
     }
     if (this.socket) {
       this.socket.on('connect', async () => {
+        if (this.chatActive && !this.socket?.recovered) {
+          this.socket.emit('enable-chat');
+        }
         this.socket.on('features', (features: string[]) => {
           settings.getStore('available-features')?.set(features);
         });
@@ -214,10 +219,12 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 
   disableChatListener() {
     this.socket.emit('disable-chat');
+    this.chatActive = false;
   }
 
   enableChatListener(): void | Promise<void> {
     this.socket.emit('enable-chat');
+    this.chatActive = true;
   }
 
   sendMessage(message: string): void | Promise<void> {

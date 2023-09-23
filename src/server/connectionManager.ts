@@ -7,23 +7,41 @@ import { LocalServer } from './localserver.js';
 import type { Poll } from '../utils/polls.js';
 import { chatMessages } from '../svelte/stores/chatMessages.js';
 import { get } from 'svelte/store';
+import { processChat } from '../utils/chatCommands.js';
 
 class ConnectionManager {
   private currentMode?: Modes;
-  private chatConnector: ChatConnector;
-  private pollConnector: PollConnector;
+  private chatConnector!: ChatConnector;
+  private pollConnector!: PollConnector;
+  private messageListeners: Array<(message: string, user: string) => void>;
 
   constructor() {
     settings.getStore('mode')?.subscribe((mode) => {
       this.onChangeMode(mode);
     });
+    this.messageListeners = new Array<(message: string, user: string) => void>();
+    this.messageListeners.push((message, user) => {
+      chatMessages.set([...get(chatMessages), [user, message]]);
+    });
+    this.messageListeners.push(processChat);
   }
 
-  updateChatlog = (message: string, user: string) => {
-    chatMessages.set([...get(chatMessages), [user, message]]);
+  addMessageListener(listener: (message: string, user: string) => void) {
+    this.messageListeners.push(listener);
+  }
+
+  removeMessageListener(listener: (message: string, user: string) => void) {
+    const index = this.messageListeners.indexOf(listener);
+    this.messageListeners = this.messageListeners.splice(index, 1);
+  }
+
+  handleMessages = (message: string, user: string) => {
+    this.messageListeners.forEach((listener) => {
+      listener(message, user);
+    });
   };
 
-  sendMessage(message) {
+  sendMessage(message: string) {
     this.chatConnector.sendMessage(message);
   }
 
@@ -43,7 +61,7 @@ class ConnectionManager {
           if (mode === Modes.patreon) {
             this.chatConnector.disconnect();
             this.chatConnector = this.pollConnector as PatreonConnector;
-            this.chatConnector.setCallback(this.updateChatlog);
+            this.chatConnector.setCallback(this.handleMessages);
           } else {
             this.pollConnector.disconnect();
             this.pollConnector = this.chatConnector as LocalServer;
@@ -86,7 +104,7 @@ class ConnectionManager {
         }
       }
     }
-    this.chatConnector.setCallback(this.updateChatlog);
+    this.chatConnector.setCallback(this.handleMessages);
     this.currentMode = mode;
     try {
       if (getSetting('enable-chat-tab') && getSetting('enabled')) {

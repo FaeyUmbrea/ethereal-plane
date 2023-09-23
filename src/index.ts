@@ -8,9 +8,9 @@ import { getGame } from './utils/helpers.js';
 import { getConnectionManager } from './server/connectionManager.js';
 import { nanoid } from 'nanoid';
 
-let polls;
+let polls: PollApplication;
 
-function buildButtons(buttons) {
+function buildButtons(buttons: SceneControl[]) {
   if (!getGame().user?.isGM || !getSetting('polls-enabled') || !getSetting('enabled')) return;
   const buttonGroup = buttons.find((element) => element.name === 'token');
   const pollsButton: SceneControlTool = {
@@ -23,12 +23,9 @@ function buildButtons(buttons) {
   buttonGroup?.tools.push(pollsButton);
 }
 
-/**
- *
- * @param {SceneControl} button
- */
-function openPolls(button) {
+function openPolls(button: SceneControlTool) {
   if (!polls) polls = new PollApplication(button);
+  //@ts-ignore
   if (!polls.rendered) polls.render(true);
   else polls.close();
 }

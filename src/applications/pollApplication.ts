@@ -2,21 +2,15 @@ import PollApplicationUi from '../svelte/PollApplicationUI.svelte';
 import { SvelteApplication } from '@typhonjs-fvtt/runtime/svelte/application';
 
 export default class PollApplication extends SvelteApplication {
-  /**
-   * @type {SceneControlTool}
-   */
-  sidebarButton;
+  sidebarButton: SceneControlTool;
 
-  /**
-   *
-   * @param {SceneControlTool} sidebarButton
-   */
-  constructor(sidebarButton) {
+  constructor(sidebarButton: SceneControlTool) {
     super();
     this.sidebarButton = sidebarButton;
   }
 
   static get defaultOptions() {
+    //@ts-ignore
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['eppolls'],
       minimizable: true,
@@ -34,12 +28,9 @@ export default class PollApplication extends SvelteApplication {
     });
   }
 
-  /**
-   * @param {any} options
-   * @returns {Promise<void>}
-   */
-  async close(options) {
-    await super.close(options);
+  async close() {
+    //@ts-ignore
+    await super.close();
     $('[data-tool=openStreamDirector]').removeClass('active');
     this.sidebarButton.active = false;
   }
