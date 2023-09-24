@@ -25,8 +25,6 @@ export class PatreonConnector {
   callback = undefined;
   /** @default false */
   apiOk = false;
-  /** @default false */
-  chatActive = false;
 
   constructor() {
     Hooks.on("ethereal-plane.patreon-login", () => this.login());
@@ -84,7 +82,11 @@ export class PatreonConnector {
     }
     if (this.socket) {
       this.socket.on("connect", async () => {
-        if (this.chatActive && !this.socket?.recovered) {
+        if (
+          getSetting("enable-chat-tab") &&
+          getSetting("enabled") &&
+          !this.socket?.recovered
+        ) {
           this.socket.emit("enable-chat");
         }
         this.socket.on("features", (features) => {
@@ -137,7 +139,7 @@ export class PatreonConnector {
         this.socket.on("poll-end", async (choices) => {
           const poll = getSetting("currentPoll");
           poll.tally = choices.map((e) => e.votes);
-          if (poll.status == PollStatus.started) {
+          if (poll.status === PollStatus.started) {
             poll.status = PollStatus.stopped;
             executePollMacro();
           }

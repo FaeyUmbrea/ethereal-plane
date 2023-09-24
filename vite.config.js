@@ -19,7 +19,7 @@ const s_SVELTE_HASH_ID = "ethpla";
 const s_TERSER = false; // Set to true to use terser
 const s_SOURCEMAPS = true; // Generate sourcemaps for the bundle (recommended).
 const s_MINIFY = true; // Set to true to compress the module bundle.
-const s_TYPESCRIPT = true; // Set to true if using index.ts instead of index.js
+const s_TYPESCRIPT = false; // Set to true if using index.ts instead of index.js
 
 // Used in bundling particularly during development. If you npm-link packages to your project add them here.
 /*const s_RESOLVE_CONFIG = {
