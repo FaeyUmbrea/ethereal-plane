@@ -5,6 +5,7 @@ import { Modes } from "./const.js";
 import NotificationCenter from "../applications/notificationCenter.js";
 import notifications from "./notifications.json";
 import { TJSGameSettings } from "@typhonjs-fvtt/runtime/svelte/store/fvtt/settings";
+import { ChatCommandApplication } from "../applications/chatCommandApplication.js";
 
 const moduleID = "ethereal-plane";
 
@@ -25,6 +26,15 @@ class EtherealPlaneSettings extends TJSGameSettings {
       icon: "fas fa-bars",
       restricted: true,
       type: SettingsShell(ConfigApplication),
+    });
+
+    getGame().settings.registerMenu(moduleID, "chat-commands", {
+      name: `${moduleID}.settings.chat-commands.Name`,
+      label: `${moduleID}.settings.chat-commands.Label`,
+      hint: "",
+      icon: "fas fa-bars",
+      restricted: true,
+      type: SettingsShell(ChatCommandApplication),
     });
 
     settings.push(
@@ -196,8 +206,11 @@ class EtherealPlaneSettings extends TJSGameSettings {
       registerSetting("chat-commands-active", {
         type: Boolean,
         scope: "world",
-        config: false,
+        config: true,
         default: false,
+        onChange: () => {
+          debouncedReload();
+        },
       }),
     );
     this.registerAll(settings, true);
@@ -258,9 +271,7 @@ function SettingsShell(Application) {
       this.close();
     }
 
-    async _updateObject() {
-      return;
-    }
+    async _updateObject() {}
   };
 }
 

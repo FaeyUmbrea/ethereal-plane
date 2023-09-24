@@ -18,7 +18,7 @@
   {/if}
 </div>
 
-<style lang="sass">
+<style lang="stylus">
   .header
     display: flex
     border: #2b2d42 1px solid

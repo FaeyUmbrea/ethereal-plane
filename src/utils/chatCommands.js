@@ -63,7 +63,7 @@ function processCommand(command, message, user) {
 export function processChat(message, user) {
   if (getSetting("chat-commands-active")) {
     const commandPrefix = message.split(" ")[0];
-    const commandArguments = message.substring(commandPrefix.length);
+    const commandArguments = message.substring(commandPrefix.length + 1);
     const commands = getSetting("chat-commands");
     commands.forEach((command) => {
       if (command.commandPrefix === commandPrefix && command.active) {
@@ -73,12 +73,14 @@ export function processChat(message, user) {
   }
 }
 
-/** @typedef {Object} ChatCommand
- * @property {string} commandPrefix
- * @property {string} commandTemplate
- * @property {number} perUserCooldown
- * @property {number} perTargetCooldown
- * @property {string} targetIdentifier
- * @property {string} macro
- * @property {boolean} active
- */
+export class ChatCommand {
+  constructor() {
+    this.commandPrefix = "";
+    this.commandTemplate = "";
+    this.perUserCooldown = 0;
+    this.perTargetCooldown = 0;
+    this.targetIdentifier = "";
+    this.macro = "";
+    this.active = false;
+  }
+}

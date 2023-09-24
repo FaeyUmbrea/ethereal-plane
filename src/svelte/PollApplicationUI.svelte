@@ -26,7 +26,7 @@
   </main>
 </ApplicationShell>
 
-<style lang="scss">
+<style lang="stylus">
   main {
     text-align: center;
     display: flex;

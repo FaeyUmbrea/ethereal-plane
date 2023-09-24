@@ -110,7 +110,7 @@
   </div>
 </div>
 
-<style lang="scss">
+<style lang="stylus">
   .config {
     display: grid;
     grid-template-columns: auto 60px;

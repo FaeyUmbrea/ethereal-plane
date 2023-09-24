@@ -87,7 +87,7 @@
   </main>
 </ApplicationShell>
 
-<style lang="sass">
+<style lang="stylus">
   .settings
     display: grid
     grid-template-columns: min-content auto

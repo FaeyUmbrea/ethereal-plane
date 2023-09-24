@@ -6,7 +6,7 @@
   <slot />
 </div>
 
-<style lang="sass">
+<style lang="stylus">
   .infobox
     border: #ffffff90 1px solid
     border-radius: 5px

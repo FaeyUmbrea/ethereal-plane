@@ -45,7 +45,7 @@
   </div>
 </div>
 
-<style lang="scss">
+<style lang="stylus">
   .display {
     height: 100%;
     min-height: 100%;

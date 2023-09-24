@@ -14,7 +14,6 @@
   export let elementRoot = void 0;
 
   function add() {
-    console.log(new ChatCommand());
     const commandArray = $commands;
     commandArray.push(new ChatCommand());
     $commands = commandArray;
@@ -26,6 +25,10 @@
     await setSetting("chat-commands", $commands);
     context.application.close();
   }
+
+  async function remove(index) {
+    $commands.splice(index, 1);
+  }
 </script>
 
 <ApplicationShell bind:elementRoot="{elementRoot}">
@@ -34,6 +37,7 @@
       <span class="config">Base Config</span>
       <span class="cooldown">Cooldown (seconds)</span>
       <span class="macro"></span>
+      <span></span>
       <span>Active</span>
       <span>Name</span>
       <span>Template</span>
@@ -41,8 +45,13 @@
       <span>Target</span>
       <span>Target identifier</span>
       <span class="macro">Macro</span>
-      {#each $commands as command}
-        <ChatCommandConfig bind:command="{command}"></ChatCommandConfig>
+      <span></span>
+      {#each $commands as command, index}
+        <ChatCommandConfig bind:command="{command}" index="{index}"
+        ></ChatCommandConfig>
+        <button on:click="{() => remove(index)}"
+          ><i class="fas fa-trash"></i></button
+        >
       {/each}
     </div>
     <hr />
@@ -65,7 +74,7 @@
   .command-section
     height calc(100% - 50px)
     display grid
-    grid-template-columns 40px 2fr 3fr 40px 40px 3fr 40px
+    grid-template-columns 40px 2fr 3fr 40px 40px 3fr 40px 35px
     grid-template-rows 15px 20px
     grid-auto-rows 35px;
 

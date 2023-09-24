@@ -9,6 +9,10 @@
         "Name": "Enable Module",
         "Hint": "If this is not checked, the module will not connect to the server"
       },
+      "chat-commands-active": {
+        "Name": "Enable Chat Commands",
+        "Hint": "If this is not checked, the module will not run chat commands"
+      },
       "send-rolls-to-chat": {
         "Name": "Send Rolls to Chat",
         "Hint": "If this is checked, public rolls will be forwarded to stream chat"
@@ -27,6 +31,10 @@
         "Name": "Setup",
         "Hint": "Base Setup",
         "Label": "Open Setup Menu"
+      },
+      "chat-commands": {
+        "Name": "Chat Commands",
+        "Label": "Open Chat Command Setup"
       },
       "chat-message-template": {
         "Name": "Chat Message Template"

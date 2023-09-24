@@ -41,7 +41,7 @@
   </main>
 </ApplicationShell>
 
-<style lang="sass">
+<style lang="stylus">
   .news
     font-size: 17px
 </style>

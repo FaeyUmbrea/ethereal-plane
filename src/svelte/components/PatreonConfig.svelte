@@ -164,7 +164,7 @@
   </InfoBox>
 {/if}
 
-<style lang="sass">
+<style lang="stylus">
   .buttons
     display: flex
 

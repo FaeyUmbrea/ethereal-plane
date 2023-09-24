@@ -138,7 +138,10 @@ class ConnectionManager {
     this.chatConnector.setCallback(this.handleMessages);
     this.currentMode = mode;
     try {
-      if (getSetting("enable-chat-tab") && getSetting("enabled")) {
+      if (
+        (getSetting("enable-chat-tab") || getSetting("")) &&
+        getSetting("enabled")
+      ) {
         console.log("Enable Chat Listener");
         this.chatConnector.enableChatListener();
       } else {

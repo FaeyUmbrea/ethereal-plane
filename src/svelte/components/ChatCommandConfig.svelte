@@ -5,6 +5,7 @@
    * @type {import("../../utils/chatCommands.js").ChatCommand}
    */
   export let command;
+  export let index;
 
   function openMacro() {
     if (command.macro) {
@@ -30,10 +31,14 @@
   }
 </script>
 
-<label for="active">
+<label for="active-checkbox-{index}">
   {#if command.active}<i class="fas fa-check"></i>{/if}
 </label>
-<input bind:checked="{command.active}" id="active" type="checkbox" />
+<input
+  bind:checked="{command.active}"
+  id="active-checkbox-{index}"
+  type="checkbox"
+/>
 <input bind:value="{command.commandPrefix}" type="text" />
 <input bind:value="{command.commandTemplate}" type="text" />
 <input bind:value="{command.perUserCooldown}" type="number" />

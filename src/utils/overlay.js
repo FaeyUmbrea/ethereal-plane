@@ -1,6 +1,6 @@
 import PollOverlay from "../svelte/overlays/PollOverlay.svelte";
 
-import "../css/overlay.scss";
+import "../css/overlay.styl";
 import { getGame } from "./helpers.js";
 
 /** @returns {Promise<void>} */
