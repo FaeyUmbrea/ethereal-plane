@@ -27,7 +27,9 @@
   }
 
   async function remove(index) {
-    $commands.splice(index, 1);
+    const commandArray = $commands;
+    commandArray.splice(index, 1);
+    $commands = commandArray;
   }
 </script>
 
@@ -84,9 +86,6 @@
   span
     text-align center
     border-left 1px solid grey
-
-  .macro
-    border-right 1px solid grey
 
   .config
     grid-column 1 / 4
