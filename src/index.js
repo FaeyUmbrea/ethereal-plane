@@ -8,7 +8,7 @@ import {
 } from "./utils/settings.js";
 import { registerOverlay } from "./utils/overlay.js";
 import { FVTTSidebarControl } from "@typhonjs-fvtt/svelte-standard/application";
-import StreamChat from "./svelte/StreamChat.svelte";
+import StreamChat from "./svelte/components/StreamChat.svelte";
 import { getGame } from "./utils/helpers.js";
 import { getConnectionManager } from "./server/connectionManager.js";
 import { nanoid } from "nanoid";

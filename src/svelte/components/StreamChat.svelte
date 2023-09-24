@@ -1,5 +1,5 @@
 <script>
-  import { chatMessages } from "./stores/chatMessages.js";
+  import { chatMessages } from "../stores/chatMessages.js";
   import ChatMessage from "./ChatMessage.svelte";
 </script>
 

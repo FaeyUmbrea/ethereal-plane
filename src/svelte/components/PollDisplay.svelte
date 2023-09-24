@@ -1,7 +1,7 @@
 <script>
-  import { Poll, PollStatus } from "../utils/polls.js";
-  import { setSetting, settings } from "../utils/settings.js";
-  import { getConnectionManager } from "../server/connectionManager.js";
+  import { Poll, PollStatus } from "../../utils/polls.js";
+  import { setSetting, settings } from "../../utils/settings.js";
+  import { getConnectionManager } from "../../server/connectionManager.js";
 
   const pollStore = settings.getStore("currentPoll");
 

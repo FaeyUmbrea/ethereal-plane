@@ -1,4 +1,4 @@
-import PollOverlay from "../svelte/PollOverlay.svelte";
+import PollOverlay from "../svelte/overlays/PollOverlay.svelte";
 
 import "../css/overlay.scss";
 import { getGame } from "./helpers.js";

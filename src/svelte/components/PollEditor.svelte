@@ -1,8 +1,8 @@
 <script>
-  import { PollStatus } from "../utils/polls.js";
-  import { setSetting, settings } from "../utils/settings.js";
+  import { PollStatus } from "../../utils/polls.js";
+  import { setSetting, settings } from "../../utils/settings.js";
   import { TJSDocument } from "@typhonjs-fvtt/runtime/svelte/store/fvtt/document";
-  import { getConnectionManager } from "../server/connectionManager.js";
+  import { getConnectionManager } from "../../server/connectionManager.js";
 
   const poll = settings.getStore("currentPoll");
   let title = "";

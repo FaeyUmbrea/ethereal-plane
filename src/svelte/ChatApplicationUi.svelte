@@ -2,7 +2,7 @@
 
 <script>
   import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
-  import StreamChat from "./StreamChat.svelte";
+  import StreamChat from "./components/StreamChat.svelte";
 
   export let elementRoot = void 0;
 </script>

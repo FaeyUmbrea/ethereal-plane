@@ -1,7 +1,7 @@
 <script>
-  import { getSetting } from "../utils/settings.js";
+  import { getSetting } from "../../utils/settings.js";
   import { onDestroy } from "svelte";
-  import { PollStatus } from "../utils/polls.js";
+  import { PollStatus } from "../../utils/polls.js";
 
   let poll = getSetting("currentPoll");
   let total = tallyTotal();
