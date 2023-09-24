@@ -12,6 +12,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@adobe/css-tools@npm:~4.2.0":
+  version: 4.2.0
+  resolution: "@adobe/css-tools@npm:4.2.0"
+  checksum: dc5cc92ba3d562e7ffddb79d6d222c7e00b65f255fd2725b3d71490ff268844be322f917415d8c4ab39eca646343b632058db8bd5b1d646193fcc94d1d3e420b
+  languageName: node
+  linkType: hard
+
 "@ampproject/remapping@npm:^2.2.1":
   version: 2.2.1
   resolution: "@ampproject/remapping@npm:2.2.1"
@@ -2379,6 +2386,7 @@ __metadata:
     prettier-plugin-svelte: ^3.0.3
     rollup-plugin-visualizer: ^5.9.2
     socket.io-client: 4.6.1
+    stylus: ^0.60.0
     svelte: ^4.2.1
     svelte-check: ^3.5.2
     svelte-preprocess: ^5.0.4
@@ -2632,7 +2640,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^7.1.3, glob@npm:^7.1.4":
+"glob@npm:^7.1.3, glob@npm:^7.1.4, glob@npm:^7.1.6":
   version: 7.2.3
   resolution: "glob@npm:7.2.3"
   dependencies:
@@ -4731,6 +4739,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sax@npm:~1.2.4":
+  version: 1.2.4
+  resolution: "sax@npm:1.2.4"
+  checksum: d3df7d32b897a2c2f28e941f732c71ba90e27c24f62ee918bd4d9a8cfb3553f2f81e5493c7f0be94a11c1911b643a9108f231dd6f60df3fa9586b5d2e3e9e1fe
+  languageName: node
+  linkType: hard
+
 "semver@npm:^7.3.5":
   version: 7.5.1
   resolution: "semver@npm:7.5.1"
@@ -4864,7 +4879,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map@npm:^0.7.4":
+"source-map@npm:^0.7.3, source-map@npm:^0.7.4":
   version: 0.7.4
   resolution: "source-map@npm:0.7.4"
   checksum: 01cc5a74b1f0e1d626a58d36ad6898ea820567e87f18dfc9d24a9843a351aaa2ec09b87422589906d6ff1deed29693e176194dc88bcae7c9a852dc74b311dbf5
@@ -4975,6 +4990,21 @@ __metadata:
   peerDependencies:
     postcss: ^8.2.15
   checksum: b6071ab5f4451576e3a445f7304b41c43329f84d7a7987a91442febaabc1de51e62f1e37c4f37fad21990d3f573a8110bd31e09f9df7b8628465e19b1cdc702b
+  languageName: node
+  linkType: hard
+
+"stylus@npm:^0.60.0":
+  version: 0.60.0
+  resolution: "stylus@npm:0.60.0"
+  dependencies:
+    "@adobe/css-tools": ~4.2.0
+    debug: ^4.3.2
+    glob: ^7.1.6
+    sax: ~1.2.4
+    source-map: ^0.7.3
+  bin:
+    stylus: bin/stylus
+  checksum: 08975a755904e60f98c56f1b298d85afe0a1672c816cc0a7c07d043e9818f82eba3d5370a12ca17da2d3c8212fe973d0e4d325899190396825bedfe23700934f
   languageName: node
   linkType: hard
 

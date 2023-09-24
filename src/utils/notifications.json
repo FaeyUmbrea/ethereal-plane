@@ -1,5 +1,23 @@
 [
   {
+    "id": 4,
+    "title": "Youtube Service available via Patreon",
+    "text": [
+      "Thank you for using Ethereal Plane! If you are a Youtube Streamer you can now use the official Ethereal Plane servers instead of the locally hosted one!",
+      "Due to API limitations, for now Youtube Integration is limited to 5€+ Patreon subscribers!"
+    ],
+    "link": [
+      {
+        "title": "Patreon",
+        "url": "https://www.patreon.com/voidmonster"
+      },
+      {
+        "title": "Github",
+        "url": "https://github.com/FaeyUmbrea/ethereal-plane"
+      }
+    ]
+  },
+  {
     "id": 3,
     "title": "Twitch Service now Free!",
     "text": [

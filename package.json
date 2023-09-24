@@ -29,6 +29,7 @@
     "prettier-plugin-svelte": "^3.0.3",
     "rollup-plugin-visualizer": "^5.9.2",
     "socket.io-client": "4.6.1",
+    "stylus": "^0.60.0",
     "svelte-check": "^3.5.2",
     "svelte-preprocess": "^5.0.4",
     "vite": "^4.4.9"
