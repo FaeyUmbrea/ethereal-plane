@@ -10,7 +10,7 @@ const executionLocks = new Map();
  */
 function processCommand(command, message, user) {
   const templateParts = command.commandTemplate.split(" ");
-  const messageParts = message.split(" ");
+  const messageParts = message ? message.split(" ") : [];
   const macroArguments = {};
   let target = "";
 
