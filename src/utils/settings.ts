@@ -185,7 +185,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         scope: 'world',
         config: false,
         default: []
-      })
+      }),
     );
     settings.push(
       registerSetting('chat-commands-active', {
@@ -193,7 +193,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
         scope: 'world',
         config: false,
         default: false
-      })
+      }),
     );
     this.registerAll(settings, true);
   }

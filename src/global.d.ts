@@ -38,7 +38,6 @@ declare global {
       'ethereal-plane.authentication-token': string;
       'ethereal-plane.chat-commands': ChatCommand[];
       'ethereal-plane.chat-commands-active': boolean;
-
     }
   }
 }
