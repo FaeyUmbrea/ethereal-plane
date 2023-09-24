@@ -1,26 +1,28 @@
-import * as fs from 'fs';
-import * as process from 'process';
-import * as readline from 'readline';
-import * as path from 'path';
+import * as fs from "fs";
+import * as process from "process";
+import * as readline from "readline";
+import * as path from "path";
 
-const winPath = process.env['LOCALAPPDATA'] + '/FoundryVTT/Config/options.json';
-const distDir = '/dist';
-const moduleDir = '/Data/modules/';
-const moduleJsonPath = '/public/module.json';
+const winPath = process.env["LOCALAPPDATA"] + "/FoundryVTT/Config/options.json";
+const distDir = "/dist";
+const moduleDir = "/Data/modules/";
+const moduleJsonPath = "/public/module.json";
 
-let moduleJsonPathFull = '';
+let moduleJsonPathFull = "";
 let cwd = process.cwd();
 while (cwd) {
   if (fs.existsSync(cwd + moduleJsonPath)) {
     moduleJsonPathFull = cwd + moduleJsonPath;
     break;
   }
-  const newcwd = path.resolve(cwd + '/..');
-  if (newcwd === cwd) cwd = '';
+  const newcwd = path.resolve(cwd + "/..");
+  if (newcwd === cwd) cwd = "";
   cwd = newcwd;
 }
-if (!moduleJsonPathFull) throw new Error('This has to be run in a project');
-const name = JSON.parse((await fs.promises.readFile(moduleJsonPathFull)).toString()).id;
+if (!moduleJsonPathFull) throw new Error("This has to be run in a project");
+const name = JSON.parse(
+  (await fs.promises.readFile(moduleJsonPathFull)).toString(),
+).id;
 
 function askQuestion(query) {
   const rl = readline.createInterface({
@@ -36,28 +38,44 @@ function askQuestion(query) {
   );
 }
 
-let dataPath = '';
-if (process.platform === 'win32') {
+let dataPath = "";
+if (process.platform === "win32") {
   if (!fs.existsSync(winPath))
-    dataPath = await askQuestion('Please enter the path to your Foundry Modules Directory \n');
+    dataPath = await askQuestion(
+      "Please enter the path to your Foundry Modules Directory \n",
+    );
   else {
-    const options = JSON.parse((await fs.promises.readFile(winPath)).toString());
+    const options = JSON.parse(
+      (await fs.promises.readFile(winPath)).toString(),
+    );
     dataPath = options?.dataPath;
   }
 } else {
-  dataPath = await askQuestion('Please enter the path to your Foundry modules directory');
+  dataPath = await askQuestion(
+    "Please enter the path to your Foundry modules directory",
+  );
 }
 if (dataPath) {
   if (fs.existsSync(dataPath + moduleDir + name)) {
-    console.log('The file is already present in the detected modules directory:');
+    console.log(
+      "The file is already present in the detected modules directory:",
+    );
     console.log(dataPath + moduleDir + name);
-    const otherDir = await askQuestion('Do you want to write to a different directory? Y/N (Default:N)');
-    if (otherDir === 'y' || otherDir === 'Y') {
-      dataPath = await askQuestion('Please enter the full path you want to link to \n');
-      fs.symlinkSync(cwd + distDir, dataPath, process.platform === 'win32' ? 'junction' : 'dir');
+    const otherDir = await askQuestion(
+      "Do you want to write to a different directory? Y/N (Default:N)",
+    );
+    if (otherDir === "y" || otherDir === "Y") {
+      dataPath = await askQuestion(
+        "Please enter the full path you want to link to \n",
+      );
+      fs.symlinkSync(
+        cwd + distDir,
+        dataPath,
+        process.platform === "win32" ? "junction" : "dir",
+      );
     }
   } else {
-    fs.symlinkSync(cwd + distDir, dataPath + moduleDir + name, 'junction');
+    fs.symlinkSync(cwd + distDir, dataPath + moduleDir + name, "junction");
   }
 }
-console.log('All good! You seem to be set up correctly!');
+console.log("All good! You seem to be set up correctly!");

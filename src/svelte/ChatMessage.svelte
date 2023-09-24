@@ -4,6 +4,8 @@
 </script>
 
 <div class="chat-message message flexcol">
-  <header class="message-header flexrow"><h4 class="message-sender">{user}</h4></header>
+  <header class="message-header flexrow">
+    <h4 class="message-sender">{user}</h4>
+  </header>
   <div class="message-content" id>{message}</div>
 </div>

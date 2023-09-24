@@ -1,20 +1,20 @@
-import { svelte } from '@sveltejs/vite-plugin-svelte';
-import preprocess from 'svelte-preprocess';
-import { postcssConfig, terserConfig } from '@typhonjs-fvtt/runtime/rollup';
-import { visualizer } from 'rollup-plugin-visualizer';
-import { transform } from 'esbuild';
+import { svelte } from "@sveltejs/vite-plugin-svelte";
+import preprocess from "svelte-preprocess";
+import { postcssConfig, terserConfig } from "@typhonjs-fvtt/runtime/rollup";
+import { visualizer } from "rollup-plugin-visualizer";
+import { transform } from "esbuild";
 
 // ATTENTION!
 // Please modify the below variables: s_PACKAGE_ID and s_SVELTE_HASH_ID appropriately.
 
 // For convenience, you just need to modify the package ID below as it is used to fill in default proxy settings for
 // the dev server.
-const s_PACKAGE_ID = 'modules/ethereal-plane';
+const s_PACKAGE_ID = "modules/ethereal-plane";
 
 // A short additional string to add to Svelte CSS hash values to make yours unique. This reduces the amount of
 // duplicated framework CSS overlap between many TRL packages enabled on Foundry VTT at the same time. 'ese' is chosen
 // by shortening 'essential-svelte-esm'.
-const s_SVELTE_HASH_ID = 'ethpla';
+const s_SVELTE_HASH_ID = "ethpla";
 
 const s_TERSER = false; // Set to true to use terser
 const s_SOURCEMAPS = true; // Generate sourcemaps for the bundle (recommended).
@@ -30,15 +30,15 @@ const s_TYPESCRIPT = true; // Set to true if using index.ts instead of index.js
 export default () =>
   /** @type {import('vite').UserConfig} */
   ({
-    root: 'src/', // Source location / esbuild root.
+    root: "src/", // Source location / esbuild root.
     base: `/${s_PACKAGE_ID}/`, // Base module path that 30001 / served dev directory.
-    publicDir: '../public', // No public resources to copy.
-    cacheDir: '../.vite-cache', // Relative from root directory.
+    publicDir: "../public", // No public resources to copy.
+    cacheDir: "../.vite-cache", // Relative from root directory.
 
-    resolve: { conditions: ['import', 'browser'] },
+    resolve: { conditions: ["import", "browser"] },
 
     esbuild: {
-      target: ['es2022'],
+      target: ["es2022"],
     },
 
     css: {
@@ -57,29 +57,30 @@ export default () =>
     // static resources / project.
     server: {
       port: 30001,
-      open: '/game',
+      open: "/game",
       proxy: {
         // Serves static files from main Foundry server.
-        [`^(/${s_PACKAGE_ID}/(assets|lang|packs|style.css))`]: 'http://localhost:30000',
+        [`^(/${s_PACKAGE_ID}/(assets|lang|packs|style.css))`]:
+          "http://localhost:30000",
 
         // All other paths besides package ID path are served from main Foundry server.
-        [`^(?!/${s_PACKAGE_ID}/)`]: 'http://localhost:30000',
+        [`^(?!/${s_PACKAGE_ID}/)`]: "http://localhost:30000",
 
         // Enable socket.io from main Foundry server.
-        '/socket.io': { target: 'ws://localhost:30000', ws: true },
+        "/socket.io": { target: "ws://localhost:30000", ws: true },
       },
     },
     build: {
-      outDir: '../dist',
+      outDir: "../dist",
       emptyOutDir: false,
       sourcemap: s_SOURCEMAPS,
       brotliSize: true,
-      minify: s_TERSER ? 'terser' : 'esbuild',
-      target: ['es2022'],
+      minify: s_TERSER ? "terser" : "esbuild",
+      target: ["es2022"],
       terserOptions: s_TERSER ? { ...terserConfig(), ecma: 2022 } : void 0,
       lib: {
-        entry: './index',
-        formats: ['es'],
+        entry: "./index",
+        formats: ["es"],
         fileName: `index`,
       },
     },
@@ -106,12 +107,15 @@ export default () =>
 
 function minifyEs() {
   return {
-    name: 'minifyEs',
+    name: "minifyEs",
     renderChunk: {
-      order: 'post',
+      order: "post",
       async handler(code) {
         if (s_MINIFY) {
-          return await transform(code, { minify: true, sourcemap: s_SOURCEMAPS });
+          return await transform(code, {
+            minify: true,
+            sourcemap: s_SOURCEMAPS,
+          });
         }
         return code;
       },
@@ -120,10 +124,10 @@ function minifyEs() {
 }
 
 const ReplaceJS = {
-  name: 'replace-js-plugin',
+  name: "replace-js-plugin",
   configureServer(server) {
     server.middlewares.use(`/${s_PACKAGE_ID}/`, (req, res, next) => {
-      if (req.url === '/index.js' && s_TYPESCRIPT) req.url = '/index.ts';
+      if (req.url === "/index.js" && s_TYPESCRIPT) req.url = "/index.ts";
       next();
     });
   },

@@ -1,20 +1,20 @@
 <script>
-  import { getSetting } from '../utils/settings.ts';
-  import { onDestroy } from 'svelte';
-  import { PollStatus } from '../utils/polls.ts';
+  import { getSetting } from "../utils/settings.js";
+  import { onDestroy } from "svelte";
+  import { PollStatus } from "../utils/polls.js";
 
-  let poll = getSetting('currentPoll');
+  let poll = getSetting("currentPoll");
   let total = tallyTotal();
 
-  let hook = Hooks.on('updateSetting', (setting, change) => {
-    if (setting.key === 'ethereal-plane.currentPoll' && change != null) {
+  let hook = Hooks.on("updateSetting", (setting, change) => {
+    if (setting.key === "ethereal-plane.currentPoll" && change != null) {
       poll = JSON.parse(change.value);
       total = tallyTotal();
     }
   });
 
   onDestroy(() => {
-    Hooks.off('updateSettings', hook);
+    Hooks.off("updateSettings", hook);
   });
 
   function tallyTotal() {
@@ -27,9 +27,12 @@
     <div class="tally">
       {#if poll.tally}
         {#each poll.tally as tally, index}
-          <span class="tally-entry" id={'entry' + index}>{poll.options[Number.fromString(tally[0])]}</span>
-          <progress value={tally[1]} max={total} id={'bar' + index} />
-          <span class="tally-value" id={'value' + index}>{tally[1]} </span>
+          <span class="tally-entry" id="{'entry' + index}"
+            >{poll.options[Number.fromString(tally[0])]}</span
+          >
+          <progress value="{tally[1]}" max="{total}" id="{'bar' + index}"
+          ></progress>
+          <span class="tally-value" id="{'value' + index}">{tally[1]} </span>
         {/each}
         <span class="tally-total">{tallyTotal()}</span>
         <span class="poll-status">{poll.status}</span>

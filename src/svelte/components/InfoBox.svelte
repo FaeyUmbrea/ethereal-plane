@@ -2,7 +2,7 @@
   export let variant;
 </script>
 
-<div class={'infobox ' + variant}>
+<div class="{'infobox ' + variant}">
   <slot />
 </div>
 

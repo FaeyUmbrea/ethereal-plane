@@ -1,57 +1,36 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:svelte/prettier",
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
+  "plugins": [
     "prettier"
   ],
-  "plugins": [
-    "prettier",
-    "@typescript-eslint"
+  "extends": [
+    "eslint:recommended",
+    "@typhonjs-fvtt/eslint-config-foundry.js",
+    "plugin:prettier/recommended",
+    "plugin:svelte/prettier"
   ],
   "rules": {
-    "prettier/prettier": [
-      "error"
-    ],
-    "@typescript-eslint/ban-ts-comment": "warn"
+    "prettier/prettier": "error"
   },
-  "ignorePatterns": [
-    "dist/*"
-  ],
-  "parserOptions": {
-    "sourceType": "module",
-    "ecmaVersion": "latest",
-    "extraFileExtensions": [
-      ".svelte"
-    ],
-    "project": "./tsconfig.json"
-  },
-  "env": {
-    "browser": true
-  },
-  "globals": {
-    "game": true,
-    "io": true,
-    "Hooks": true,
-    "ui": true,
-    "foundry": true,
-    "$": true,
-    "FormApplication": true
-  },
-  "parser": "@typescript-eslint/parser",
-  "root": true,
   "overrides": [
     {
       "files": [
-        "*.svelte"
+        "tests/**/*",
+        "playwright*"
       ],
-      "parser": "svelte-eslint-parser",
-      "parserOptions": {
-        // Specify a parser for each lang.
-        "ts": "@typescript-eslint/parser",
-        "js": "espree",
-        "typescript": "@typescript-eslint/parser"
+      "env": {
+        "node": true
       }
     }
-  ]
+  ],
+  "globals": {
+    "$": true
+  }
 }

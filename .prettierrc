@@ -1,7 +1,18 @@
 {
-  "singleQuote": true,
-  "printWidth": 120,
   "plugins": [
     "prettier-plugin-svelte"
+  ],
+  "svelteSortOrder": "options-scripts-markup-styles",
+  "svelteStrictMode": true,
+  "svelteBracketNewLine": true,
+  "svelteAllowShorthand": false,
+  "svelteIndentScriptAndStyle": true,
+  "overrides": [
+    {
+      "files": "*.svelte",
+      "options": {
+        "parser": "svelte"
+      }
+    }
   ]
 }

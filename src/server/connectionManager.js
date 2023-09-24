@@ -1,84 +1,112 @@
-import { getSetting, settings } from '../utils/settings.js';
-import { Modes } from '../utils/const.js';
-import type { ChatConnector } from './chatConnector.js';
-import type { PollConnector } from './pollConnector.js';
-import { PatreonConnector } from './patreon.js';
-import { LocalServer } from './localserver.js';
-import type { Poll } from '../utils/polls.js';
-import { chatMessages } from '../svelte/stores/chatMessages.js';
-import { get } from 'svelte/store';
-import { processChat } from '../utils/chatCommands.js';
+import { getSetting, settings } from "../utils/settings.js";
+import { Modes } from "../utils/const.js";
+import { PatreonConnector } from "./patreon.js";
+import { LocalServer } from "./localserver.js";
+import { chatMessages } from "../svelte/stores/chatMessages.js";
+import { get } from "svelte/store";
+import { processChat } from "../utils/chatCommands.js";
 
+/** */
 class ConnectionManager {
-  private currentMode?: Modes;
-  private chatConnector!: ChatConnector;
-  private pollConnector!: PollConnector;
-  private messageListeners: Array<(message: string, user: string) => void>;
+  /** @private */
+  currentMode = undefined;
+  /** @private */
+  chatConnector = undefined;
+  /** @private */
+  pollConnector = undefined;
+  /** @private */
+  messageListeners = undefined;
 
   constructor() {
-    settings.getStore('mode')?.subscribe((mode) => {
+    settings.getStore("mode")?.subscribe((mode) => {
       this.onChangeMode(mode);
     });
-    this.messageListeners = new Array<(message: string, user: string) => void>();
+    this.messageListeners = [];
     this.messageListeners.push((message, user) => {
       chatMessages.set([...get(chatMessages), [user, message]]);
     });
     this.messageListeners.push(processChat);
   }
 
-  addMessageListener(listener: (message: string, user: string) => void) {
+  /** @param {(message: string, user: string) => void} listener
+   * @returns {void}
+   */
+  addMessageListener(listener) {
     this.messageListeners.push(listener);
   }
 
-  removeMessageListener(listener: (message: string, user: string) => void) {
+  /** @param {(message: string, user: string) => void} listener
+   * @returns {void}
+   */
+  removeMessageListener(listener) {
     const index = this.messageListeners.indexOf(listener);
     this.messageListeners = this.messageListeners.splice(index, 1);
   }
 
-  handleMessages = (message: string, user: string) => {
+  /**
+   * @default (message: string, user: string) => {
+   *     this.messageListeners.forEach((listener) => {
+   *       listener(message, user);
+   *     });
+   *   }
+   */
+  handleMessages = (message, user) => {
     this.messageListeners.forEach((listener) => {
       listener(message, user);
     });
   };
 
-  sendMessage(message: string) {
+  /** @param {string} message
+   * @returns {void}
+   */
+  sendMessage(message) {
     this.chatConnector.sendMessage(message);
   }
 
-  createPoll(poll: Poll) {
+  /** @param {Poll} poll
+   * @returns {void}
+   */
+  createPoll(poll) {
     this.pollConnector.startPoll(poll);
   }
 
+  /** @returns {void} */
   abortPoll() {
     this.pollConnector.abortPoll();
   }
 
-  private async onChangeMode(mode: Modes) {
-    console.log('Ethereal Plane | Starting connection manager in ' + mode + ' mode.');
+  /** @private
+   * @param {Modes} mode
+   * @returns {Promise<void>}
+   */
+  async onChangeMode(mode) {
+    console.log(
+      "Ethereal Plane | Starting connection manager in " + mode + " mode.",
+    );
     if (this.currentMode) {
       if (this.currentMode !== mode) {
         if (this.currentMode === Modes.localchat) {
           if (mode === Modes.patreon) {
             this.chatConnector.disconnect();
-            this.chatConnector = this.pollConnector as PatreonConnector;
+            this.chatConnector = this.pollConnector;
             this.chatConnector.setCallback(this.handleMessages);
           } else {
             this.pollConnector.disconnect();
-            this.pollConnector = this.chatConnector as LocalServer;
+            this.pollConnector = this.chatConnector;
           }
         } else if (this.currentMode === Modes.patreon) {
           this.chatConnector = new LocalServer();
           await this.chatConnector.init();
           if (mode === Modes.localonly) {
             this.pollConnector.disconnect();
-            this.pollConnector = this.chatConnector as LocalServer;
+            this.pollConnector = this.chatConnector;
           }
         } else {
           this.pollConnector = new PatreonConnector();
           await this.pollConnector.init();
           if (mode === Modes.patreon) {
             this.chatConnector.disconnect();
-            this.chatConnector = this.pollConnector as PatreonConnector;
+            this.chatConnector = this.pollConnector;
           }
         }
       }
@@ -94,7 +122,10 @@ class ConnectionManager {
         this.pollConnector = local;
         await this.pollConnector.init();
       } else {
-        if (this.chatConnector instanceof PatreonConnector || !this.chatConnector) {
+        if (
+          this.chatConnector instanceof PatreonConnector ||
+          !this.chatConnector
+        ) {
           this.chatConnector = new LocalServer();
           await this.chatConnector.init();
         }
@@ -107,8 +138,8 @@ class ConnectionManager {
     this.chatConnector.setCallback(this.handleMessages);
     this.currentMode = mode;
     try {
-      if (getSetting('enable-chat-tab') && getSetting('enabled')) {
-        console.log('Enable Chat Listener');
+      if (getSetting("enable-chat-tab") && getSetting("enabled")) {
+        console.log("Enable Chat Listener");
         this.chatConnector.enableChatListener();
       } else {
         this.chatConnector.disableChatListener();
@@ -119,8 +150,9 @@ class ConnectionManager {
   }
 }
 
-let connectionManager: ConnectionManager | undefined;
+let connectionManager;
 
+/** @returns {ConnectionManager} */
 export function getConnectionManager() {
   if (connectionManager) return connectionManager;
   connectionManager = new ConnectionManager();

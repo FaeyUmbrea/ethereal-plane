@@ -1,46 +1,46 @@
 <script>
-  import InfoBox from './InfoBox.svelte';
-  import { localize } from '@typhonjs-fvtt/runtime/svelte/helper';
-  import { tooltip } from '@svelte-plugins/tooltips';
+  import InfoBox from "./InfoBox.svelte";
+  import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
+  import { tooltip } from "@svelte-plugins/tooltips";
 
   export let settings = void 0;
-  const key = settings.getStore('authentication-token');
-  const features = settings.getStore('available-features');
-  const status = settings.getStore('patreon-status');
-  const mode = settings.getStore('mode');
-  const pollsEnabled = settings.getStore('polls-enabled');
-  const moduleEnabled = settings.getStore('enabled');
+  const key = settings.getStore("authentication-token");
+  const features = settings.getStore("available-features");
+  const status = settings.getStore("patreon-status");
+  const mode = settings.getStore("mode");
+  const pollsEnabled = settings.getStore("polls-enabled");
+  const moduleEnabled = settings.getStore("enabled");
 
   function login() {
-    Hooks.call('ethereal-plane.patreon-login');
+    Hooks.call("ethereal-plane.patreon-login");
   }
 
   function logout() {
-    Hooks.call('ethereal-plane.patreon-logout');
+    Hooks.call("ethereal-plane.patreon-logout");
   }
 
   function connectTwitch() {
-    Hooks.call('ethereal-plane.twitch-connect');
+    Hooks.call("ethereal-plane.twitch-connect");
   }
 
   function disconnectTwitch() {
-    Hooks.call('ethereal-plane.twitch-disconnect');
+    Hooks.call("ethereal-plane.twitch-disconnect");
   }
 
   function connectYoutube() {
-    Hooks.call('ethereal-plane.youtube-connect');
+    Hooks.call("ethereal-plane.youtube-connect");
   }
 
   function disconnectYoutube() {
-    Hooks.call('ethereal-plane.youtube-disconnect');
+    Hooks.call("ethereal-plane.youtube-disconnect");
   }
 
   function customTwitchLogin() {
-    Hooks.call('ethereal-plane.custom-twitch-login');
+    Hooks.call("ethereal-plane.custom-twitch-login");
   }
 
   function customTwitchLogout() {
-    Hooks.call('ethereal-plane.custom-twitch-logout');
+    Hooks.call("ethereal-plane.custom-twitch-logout");
   }
 
   /**
@@ -52,53 +52,67 @@
 
   function setYoutubeID() {
     const id = youtubeID.match(ytRegex);
-    youtubeID = id.length >= 4 ? id[3] : '';
+    youtubeID = id.length >= 4 ? id[3] : "";
     if (youtubeID) {
-      Hooks.call('ethereal-plane.set-youtube-id', youtubeID);
+      Hooks.call("ethereal-plane.set-youtube-id", youtubeID);
     }
   }
 </script>
 
 {#if !!$key}
   <div class="buttons">
-    <button on:click={logout}
-      >{localize('ethereal-plane.strings.log-out')}&nbsp;<i class="fa-brands fa-patreon orange" /></button
+    <button on:click="{logout}"
+      >{localize("ethereal-plane.strings.log-out")}&nbsp;<i
+        class="fa-brands fa-patreon orange"
+      ></i></button
     >
-    {#if $features.includes('twitch-bot') && (!$status.youtube || $status.twitch)}
+    {#if $features.includes("twitch-bot") && (!$status.youtube || $status.twitch)}
       {#if !$status.twitch}
-        <button on:click={connectTwitch}
-          >{localize('ethereal-plane.strings.connect')}&nbsp;<i class="fa-brands fa-twitch purple" /></button
+        <button on:click="{connectTwitch}"
+          >{localize("ethereal-plane.strings.connect")}&nbsp;<i
+            class="fa-brands fa-twitch purple"
+          ></i></button
         >
       {:else}
-        <button on:click={disconnectTwitch}
-          >{localize('ethereal-plane.strings.disconnect')}&nbsp;<i class="fa-brands fa-twitch purple" /></button
+        <button on:click="{disconnectTwitch}"
+          >{localize("ethereal-plane.strings.disconnect")}&nbsp;<i
+            class="fa-brands fa-twitch purple"
+          ></i></button
         >
       {/if}
     {/if}
-    {#if $features.includes('custom-twitch-bot') && $mode === 'patreon' && ($status.customTwitchBot || $status.twitch)}
+    {#if $features.includes("custom-twitch-bot") && $mode === "patreon" && ($status.customTwitchBot || $status.twitch)}
       {#if !$status.customTwitchBot}
-        <button on:click={customTwitchLogin}
-          >{localize('ethereal-plane.strings.log-in')}&nbsp;<i class="fas fa-robot purple" /></button
+        <button on:click="{customTwitchLogin}"
+          >{localize("ethereal-plane.strings.log-in")}&nbsp;<i
+            class="fas fa-robot purple"
+          ></i></button
         >
       {:else}
-        <button on:click={customTwitchLogout}
-          >{localize('ethereal-plane.strings.log-out')}&nbsp;<i class="fas fa-robot purple" /></button
+        <button on:click="{customTwitchLogout}"
+          >{localize("ethereal-plane.strings.log-out")}&nbsp;<i
+            class="fas fa-robot purple"
+          ></i></button
         >
       {/if}
     {/if}
-    {#if $features.includes('youtube-chat') && ($status.youtube || !$status.twitch)}
+    {#if $features.includes("youtube-chat") && ($status.youtube || !$status.twitch)}
       {#if !$status.youtube}
-        <button on:click={connectYoutube}
-          >{localize('ethereal-plane.strings.connect')}&nbsp;<i class="fa-brands fa-youtube red" /></button
+        <button on:click="{connectYoutube}"
+          >{localize("ethereal-plane.strings.connect")}&nbsp;<i
+            class="fa-brands fa-youtube red"
+          ></i></button
         >
       {:else}
-        <button on:click={disconnectYoutube}
-          >{localize('ethereal-plane.strings.disconnect')}&nbsp;<i class="fa-brands fa-youtube red" /></button
+        <button on:click="{disconnectYoutube}"
+          >{localize("ethereal-plane.strings.disconnect")}&nbsp;<i
+            class="fa-brands fa-youtube red"
+          ></i></button
         >
       {/if}
     {/if}
   </div>
-  <InfoBox variant={$status.twitch || $status.youtube ? 'ok' : 'info'}>
+  <InfoBox variant="{$status.twitch || $status.youtube ? 'ok' : 'info'}">
     <span
       >{$status.twitch || $status.youtube
         ? localize(`ethereal-plane.strings.patreon-ok`)
@@ -106,43 +120,47 @@
     >
   </InfoBox>
   {#if $moduleEnabled}
-    {#if $features.includes('twitch-polls') || $features.includes('youtube-polls')}
+    {#if $features.includes("twitch-polls") || $features.includes("youtube-polls")}
       <hr />
       <section class="settings">
-        <span>{localize('ethereal-plane.settings.polls-enabled.Name')}</span>
-        <input bind:checked={$pollsEnabled} type="checkbox" />
+        <span>{localize("ethereal-plane.settings.polls-enabled.Name")}</span>
+        <input bind:checked="{$pollsEnabled}" type="checkbox" />
       </section>
     {/if}
 
     {#if $status.youtube}
       <section class="settings">
-        <span>{localize('ethereal-plane.strings.youtube-id')}</span>
+        <span>{localize("ethereal-plane.strings.youtube-id")}</span>
         <div
           class="buttonbox"
-          use:tooltip={{
+          use:tooltip="{{
             content: localize('ethereal-plane.strings.youtube-id-hint'),
             position: 'top',
             autoPosition: true,
             align: 'center',
             style: { backgroundColor: 'white', color: 'black' },
-          }}
+          }}"
         >
           <input
-            bind:value={youtubeID}
+            bind:value="{youtubeID}"
             type="text"
-            placeholder={localize('ethereal-plane.strings.youtube-id-placeholder')}
+            placeholder="{localize(
+              'ethereal-plane.strings.youtube-id-placeholder',
+            )}"
           />
-          <button on:click={setYoutubeID}><i class="fas fa-save" /></button>
+          <button on:click="{setYoutubeID}"><i class="fas fa-save"></i></button>
         </div>
       </section>
     {/if}
   {/if}
 {:else}
-  <button on:click={login}
-    >{localize('ethereal-plane.strings.log-in')}&nbsp;<i class="fa-brands fa-patreon orange" />
+  <button on:click="{login}"
+    >{localize("ethereal-plane.strings.log-in")}&nbsp;<i
+      class="fa-brands fa-patreon orange"
+    ></i>
   </button>
   <InfoBox variant="error">
-    <span>{localize('ethereal-plane.strings.patreon-logged-out')}</span>
+    <span>{localize("ethereal-plane.strings.patreon-logged-out")}</span>
   </InfoBox>
 {/if}
 

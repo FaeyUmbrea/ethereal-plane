@@ -1,8 +1,8 @@
 <script>
-  import { slide } from 'svelte/transition';
+  import { slide } from "svelte/transition";
 
   export let collapsed = true;
-  export let title = 'Section';
+  export let title = "Section";
 
   function click() {
     collapsed = !collapsed;
@@ -10,9 +10,9 @@
 </script>
 
 <div class="collapsable-section">
-  <section class="header" on:click={click}>▼<span>{title}</span>▼</section>
+  <section class="header" on:click="{click}">▼<span>{title}</span>▼</section>
   {#if !collapsed}
-    <section class={`content`} in:slide out:slide>
+    <section class="{`content`}" in:slide out:slide>
       <slot />
     </section>
   {/if}

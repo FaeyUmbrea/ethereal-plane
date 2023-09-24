@@ -1,21 +1,21 @@
 <script>
-  import { Poll, PollStatus } from '../utils/polls.ts';
-  import { setSetting, settings } from '../utils/settings.ts';
-  import { getConnectionManager } from '../server/connectionManager.ts';
+  import { Poll, PollStatus } from "../utils/polls.js";
+  import { setSetting, settings } from "../utils/settings.js";
+  import { getConnectionManager } from "../server/connectionManager.js";
 
-  const pollStore = settings.getStore('currentPoll');
+  const pollStore = settings.getStore("currentPoll");
 
   let disableEnd = false;
 
   function abortPoll() {
     const poll = $pollStore;
     poll.status = PollStatus.failed;
-    setSetting('currentPoll', poll);
+    setSetting("currentPoll", poll);
     getConnectionManager().abortPoll();
   }
 
   function endPoll() {
-    setSetting('currentPoll', new Poll());
+    setSetting("currentPoll", new Poll());
   }
 
   function total() {
@@ -29,16 +29,18 @@
     {#if $pollStore.tally}
       {#each $pollStore.tally as tally, index}
         <span class="tally-entry">{$pollStore.options[index].text}</span>
-        <progress value={tally} max={total(tally)} />
-        <span class="tally-entry">{tally} / {Math.round((tally / total()) * 100)}%</span>
+        <progress value="{tally}" max="{total(tally)}"></progress>
+        <span class="tally-entry"
+          >{tally} / {Math.round((tally / total()) * 100)}%</span
+        >
       {/each}
     {/if}
   </div>
   <div class="buttons">
     {#if $pollStore.status <= PollStatus.started}
-      <button id="abort" on:click={abortPoll}>Abort</button>
+      <button id="abort" on:click="{abortPoll}">Abort</button>
     {:else}
-      <button id="end" disabled={disableEnd} on:click={endPoll}>End</button>
+      <button id="end" disabled="{disableEnd}" on:click="{endPoll}">End</button>
     {/if}
   </div>
 </div>
