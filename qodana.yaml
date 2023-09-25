@@ -4,3 +4,5 @@ bootstrap: yarn install
 
 include:
   - name: Eslint
+  - name: VulnerableLibrariesGlobal
+  - name: CheckDependencyLicenses
