@@ -9,8 +9,8 @@ const executionLocks = new Map();
  * @returns {void}
  */
 function processCommand(command, message, user) {
-  const templateParts = command.commandTemplate.split(" ");
-  const messageParts = message ? message.split(" ") : [];
+  const templateParts = command.commandTemplate.split(/\s/);
+  const messageParts = message ? message.split(/\s/) : [];
   const macroArguments = {};
   let target = "";
 
@@ -62,7 +62,7 @@ function processCommand(command, message, user) {
  */
 export function processChat(message, user) {
   if (getSetting("chat-commands-active")) {
-    const commandPrefix = message.split(" ")[0];
+    const commandPrefix = message.split(/\s/)[0];
     const commandArguments = message.substring(commandPrefix.length + 1);
     const commands = getSetting("chat-commands");
     commands.forEach((command) => {
