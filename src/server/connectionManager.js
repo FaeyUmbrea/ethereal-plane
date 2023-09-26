@@ -50,9 +50,9 @@ class ConnectionManager {
    *     });
    *   }
    */
-  handleMessages = (message, user) => {
+  handleMessages = (message, user, subscribed) => {
     this.messageListeners.forEach((listener) => {
-      listener(message, user);
+      listener(message, user, subscribed);
     });
   };
 

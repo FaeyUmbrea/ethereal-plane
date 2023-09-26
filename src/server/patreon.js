@@ -93,8 +93,8 @@ export class PatreonConnector {
           settings.getStore("available-features")?.set(features);
         });
         this.socket.emit("features");
-        this.socket.on("chat-message", (message, user) => {
-          if (this.callback) this.callback(message, user);
+        this.socket.on("chat-message", (message, user, subscribed) => {
+          if (this.callback) this.callback(message, user, subscribed);
         });
         this.socket.on("status", (status) => {
           settings.getStore("patreon-status")?.set(status);
