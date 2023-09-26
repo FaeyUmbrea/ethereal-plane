@@ -1,12 +1,7 @@
-# Welcome
 
-If you're here, you're probably looking for a way to use this in FoundryVTT.
+# Looking for a guide? Check out the [Wiki](https://github.com/FaeyUmbrea/ethereal-plane/wiki).
 
-Either check out the [Patreon](https://patreon.com/voidmonster) or grab the
-self-hosted [Server](https://github.com/FaeyUmbrea/ethereal-plane-server).
-
-If you have any questions, leave an Issue or send me a message on Patreon. Alternatively, you can also find me on the
-official FoundryVTT Discord. Just ping @faey in the module-troubleshooting channel.
+## Want to support the Module? Check the [Patreon](https://patreon.com/voidmonster)
 
 # Building
 
