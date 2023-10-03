@@ -1,15 +1,6 @@
-\[data-custom-class='body'\],\[data-custom-class='body'\] \*{background: transparent !important;
-}\[data-custom-class='title'\],\[data-custom-class='title'\] \*{font-family: Arial !important; font-size: 26px !
-important; color: #000000 !important; }\[data-custom-class='subtitle'\],\[data-custom-class='subtitle'\] \*{font-family:
-Arial !important; color: #595959 !important; font-size: 14px !important; }\[data-custom-class='heading1'
-\],\[data-custom-class='heading1'\] \*{font-family: Arial !important; font-size: 19px !important; color: #000000 !
-important; }\[data-custom-class='heading2'\],\[data-custom-class='heading2'\] \*{font-family: Arial !important;
-font-size: 17px !important; color: #000000 !important; }\[data-custom-class='bodytext'
-\],\[data-custom-class='bodytext'\] \*{color: #595959 !important; font-size: 14px !important; font-family: Arial !
-important; }\[data-custom-class='link'\],\[data-custom-class='link'\] \*{color: #3030F1 !important; font-size: 14px !
-important; font-family: Arial !important; word-break: break-word !important; }
+This Document is the Privacy Policy for the Ethereal Plane hosted Service
 
-**PRIVACY NOTICE**
+**PRIVACY POLICY**
 
 **Last updated October 01, 2023**
 
@@ -18,41 +9,40 @@ share ("**process**") your information when you use our services ("**Services**"
 
 **Questions or concerns?**Reading this privacy notice will help you understand your privacy rights and choices. If you
 do not agree with our policies and practices, please do not use our Services. If you still have any questions or
-concerns, please contact us at .
+concerns, please contact us at privacy@void.monster.
 
 **SUMMARY OF KEY POINTS**
 
 **_This summary provides key points from our privacy notice, but you can find out more details about any of these topics
-by clicking the link following each key point or by using our_**[**_table of contents_**](#toc)*
+by clicking the link following each key point or by using our **[**_table of contents_**](#toc)*
 *_below to find the section you are looking for._**
 
 **What personal information do we process?** When you visit, use, or navigate our Services, we may process personal
 information depending on how you interact with us and the Services, the choices you make, and the products and features
-you use. Learn more about[personal information you disclose to us](#personalinfo).
+you use. Learn more about [personal information you disclose to us](#personalinfo).
 
 **Do we process any sensitive personal information?** We do not process sensitive personal information.
 
 **Do we receive any information from third parties?** We may receive information from public databases, marketing
 partners, social media platforms, and other outside sources. Learn more
-about[information collected from other sources](#othersources).
+about [information collected from other sources](#othersources).
 
 **How do we process your information?** We process your information to provide, improve, and administer our Services,
 communicate with you, for security and fraud prevention, and to comply with law. We may also process your information
 for other purposes with your consent. We process your information only when we have a valid legal reason to do so. Learn
-more about[how we process your information](#infouse).
+more about [how we process your information](#infouse).
 
 **In what situations and with which parties do we share personal information?** We may share information in specific
 situations and with specific third parties. Learn more
-about[when and with whom we share your personal information](#whoshare).
+about [when and with whom we share your personal information](#whoshare).
 
 **What are your rights?** Depending on where you are located geographically, the applicable privacy law may mean you
-have certain rights regarding your personal information. Learn more about[your privacy rights](#privacyrights).
+have certain rights regarding your personal information. Learn more about [your privacy rights](#privacyrights).
 
-**How do you exercise your rights?** The easiest way to exercise your rights is by submitting
-a[data subject access request](https://app.termly.io/notify/332c961e-4f74-404b-badf-5148f9dadba7), or by contacting us.
+**How do you exercise your rights?** The easiest way to exercise your rights is by submitting by contacting us.
 We will consider and act upon any request in accordance with applicable data protection laws.
 
-Want to learn more about what we do with any information we collect?[Review the privacy notice in full](#toc).
+Want to learn more about what we do with any information we collect? [Review the privacy notice in full](#toc).
 
 **TABLE OF CONTENTS**
 
@@ -250,11 +240,4 @@ If you have questions or comments about this notice, you may email us at or cont
 
 Based on the applicable laws of your country, you may have the right to request access to the personal information we
 collect from you, change that information, or delete it. To request to review, update, or delete your personal
-information, please fill out and submit
-a[data subject access request](https://app.termly.io/notify/332c961e-4f74-404b-badf-5148f9dadba7).
-
-ul { list-style-type: square; } ul > li > ul { list-style-type: circle; } ul > li > ul > li > ul { list-style-type:
-square; } ol li { font-family: Arial ; }
-
-This privacy policy was created using
-Termly's [Privacy Policy Generator](https://termly.io/products/privacy-policy-generator/).
+information, please contact us at privacy@void.monster.
