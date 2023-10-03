@@ -66,13 +66,13 @@
       </section>
     </CollapsibleSection>
     {#if $mode === Modes.patreon || $mode === Modes.localchat}
-      <CollapsibleSection title="Patreon">
+      <CollapsibleSection collapsed="{false}" title="Patreon">
         <PatreonConfig settings="{settings}" />
       </CollapsibleSection>
     {/if}
 
     {#if $mode === Modes.localonly || $mode === Modes.localchat}
-      <CollapsibleSection title="Local Server">
+      <CollapsibleSection collapsed="{false}" title="Local Server">
         <section class="settings">
           <span>{localize(`ethereal-plane.settings.server-url.Name`)}</span>
           <input type="text" bind:value="{$serverUrl}" />

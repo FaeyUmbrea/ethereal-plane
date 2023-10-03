@@ -1,21 +1,21 @@
 This Document is the Privacy Policy for the Ethereal Plane hosted Service
 
-**PRIVACY POLICY**
+# PRIVACY POLICY
 
 **Last updated October 01, 2023**
 
 This privacy notice for  ("**we**," "**us**," or "**our**"), describes how and why we might collect, store, use, and/or
 share ("**process**") your information when you use our services ("**Services**"), such as when you:
 
-**Questions or concerns?**Reading this privacy notice will help you understand your privacy rights and choices. If you
+**Questions or concerns?** Reading this privacy notice will help you understand your privacy rights and choices. If you
 do not agree with our policies and practices, please do not use our Services. If you still have any questions or
 concerns, please contact us at privacy@void.monster.
 
 **SUMMARY OF KEY POINTS**
 
-**_This summary provides key points from our privacy notice, but you can find out more details about any of these topics
+*_This summary provides key points from our privacy notice, but you can find out more details about any of these topics
 by clicking the link following each key point or by using our **[**_table of contents_**](#toc)*
-*_below to find the section you are looking for._**
+below to find the section you are looking for._*
 
 **What personal information do we process?** When you visit, use, or navigate our Services, we may process personal
 information depending on how you interact with us and the Services, the choices you make, and the products and features
@@ -46,35 +46,35 @@ Want to learn more about what we do with any information we collect? [Review the
 
 **TABLE OF CONTENTS**
 
-[1\. WHAT INFORMATION DO WE COLLECT?](#infocollect)
+[1. WHAT INFORMATION DO WE COLLECT?](#infocollect)
 
-[2\. HOW DO WE PROCESS YOUR INFORMATION?](#infouse)
+[2. HOW DO WE PROCESS YOUR INFORMATION?](#infouse)
 
-[3\. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?](#whoshare)
+[3. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?](#whoshare)
 
-[4\. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?](#cookies)
+[4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?](#cookies)
 
-[5\. HOW DO WE HANDLE YOUR SOCIAL LOGINS?](#sociallogins)
+[5. HOW DO WE HANDLE YOUR SOCIAL LOGINS?](#sociallogins)
 
-[6\. IS YOUR INFORMATION TRANSFERRED INTERNATIONALLY?](#intltransfers)
+[6. IS YOUR INFORMATION TRANSFERRED INTERNATIONALLY?](#intltransfers)
 
-[7\. HOW LONG DO WE KEEP YOUR INFORMATION?](#inforetain)
+[7. HOW LONG DO WE KEEP YOUR INFORMATION?](#inforetain)
 
-[8\. DO WE COLLECT INFORMATION FROM MINORS?](#infominors)
+[8. DO WE COLLECT INFORMATION FROM MINORS?](#infominors)
 
-[9\. WHAT ARE YOUR PRIVACY RIGHTS?](#privacyrights)
+[9. WHAT ARE YOUR PRIVACY RIGHTS?](#privacyrights)
 
-[10\. CONTROLS FOR DO-NOT-TRACK FEATURES](#DNT)
+[10. CONTROLS FOR DO-NOT-TRACK FEATURES](#DNT)
 
-[](#DNT)
+[11. DO WE MAKE UPDATES TO THIS NOTICE?](#policyupdates)
 
-[](#DNT)[11\. DO WE MAKE UPDATES TO THIS NOTICE?](#policyupdates)
+[12. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?](#contact)
 
-[12\. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?](#contact)
+[13. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?](#request)
 
-[13\. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?](#request)
+[14. YOUTUBE SERVICE](#youtube)
 
-**1\. WHAT INFORMATION DO WE COLLECT?**
+# 1\. WHAT INFORMATION DO WE COLLECT?
 
 **Personal information you disclose to us**
 
@@ -103,7 +103,7 @@ and reporting purposes.
 
 Like many businesses, we also collect information through cookies and similar technologies.
 
-**2\. HOW DO WE PROCESS YOUR INFORMATION?**
+# 2\. HOW DO WE PROCESS YOUR INFORMATION?
 
 **_In Short:_**_We process your information to provide, improve, and administer our Services, communicate with you, for
 security and fraud prevention, and to comply with law. We may also process your information for other purposes with your
@@ -112,7 +112,7 @@ consent._
 **We process your personal information for a variety of reasons, depending on how you interact with our Services,
 including:**
 
-**3\. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?**
+# 3\. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?
 
 **_In Short:_**_We may share information in specific situations described in this section and/or with the following
 third parties._
@@ -129,7 +129,7 @@ We may need to share your personal information in the following situations:
 * **Business Partners.** We may share your information with our business partners to offer you certain products,
   services, or promotions.
 
-**4\. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?**
+# 4\. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?
 
 **_In Short:_**_We may use cookies and other tracking technologies to collect and store your information._
 
@@ -137,9 +137,9 @@ We may use cookies and similar tracking technologies (like web beacons and pixel
 Specific information about how we use such technologies and how you can refuse certain cookies is set out in our Cookie
 Notice.
 
-**5\. HOW DO WE HANDLE YOUR SOCIAL LOGINS?**
+# 5\. HOW DO WE HANDLE YOUR SOCIAL LOGINS?
 
-**_In Short:_**_If you choose to register or log in to our Services using a social media account, we may have access to
+**_In Short:_** _If you choose to register or log in to our Services using a social media account, we may have access to
 certain information about you._
 
 Our Services offer you the ability to register and log in using your third-party social media account details (like your
@@ -154,7 +154,7 @@ other uses of your personal information by your third-party social media provide
 privacy notice to understand how they collect, use, and share your personal information, and how you can set your
 privacy preferences on their sites and apps.
 
-**6\. IS YOUR INFORMATION TRANSFERRED INTERNATIONALLY?**
+# 6\. IS YOUR INFORMATION TRANSFERRED INTERNATIONALLY?
 
 **_In Short:_**_We may transfer, store, and process your information in countries other than your own._
 
@@ -168,7 +168,7 @@ not necessarily have data protection laws or other similar laws as comprehensive
 will take all necessary measures to protect your personal information in accordance with this privacy notice and
 applicable law.
 
-**7\. HOW LONG DO WE KEEP YOUR INFORMATION?**
+# 7\. HOW LONG DO WE KEEP YOUR INFORMATION?
 
 **_In Short:_**_We keep your information for as long as necessary to fulfill the purposes outlined in this privacy
 notice unless otherwise required by law._
@@ -182,9 +182,9 @@ anonymize such information, or, if this is not possible (for example, because yo
 in backup archives), then we will securely store your personal information and isolate it from any further processing
 until deletion is possible.
 
-**8\. DO WE COLLECT INFORMATION FROM MINORS?**
+# 8\. DO WE COLLECT INFORMATION FROM MINORS?
 
-**_In Short:_**_We do not knowingly collect data from or market to children under 18 years of age._
+**_In Short:_** _We do not knowingly collect data from or market to children under 18 years of age._
 
 We do not knowingly solicit data from or market to children under 18 years of age. By using the Services, you represent
 that you are at least 18 or that you are the parent or guardian of such a minor and consent to such minor dependent’s
@@ -192,9 +192,9 @@ use of the Services. If we learn that personal information from users less than 
 will deactivate the account and take reasonable measures to promptly delete such data from our records. If you become
 aware of any data we may have collected from children under age 18, please contact us at .
 
-**9\. WHAT ARE YOUR PRIVACY RIGHTS?**
+# 9\. WHAT ARE YOUR PRIVACY RIGHTS?
 
-**_In Short:_**_You may review, change, or terminate your account at any time._
+**_In Short:_** _You may review, change, or terminate your account at any time._
 
 **Withdrawing your consent:** If we are relying on your consent to process your personal information, which may be
 express and/or implied consent depending on the applicable law, you have the right to withdraw your consent at any time.
@@ -213,7 +213,7 @@ Upon your request to terminate your account, we will deactivate or delete your a
 databases. However, we may retain some information in our files to prevent fraud, troubleshoot problems, assist with any
 investigations, enforce our legal terms and/or comply with applicable legal requirements.
 
-**10\. CONTROLS FOR DO-NOT-TRACK FEATURES**
+# 10\. CONTROLS FOR DO-NOT-TRACK FEATURES
 
 Most web browsers and some mobile operating systems and mobile applications include a Do-Not-Track ("DNT") feature or
 setting you can activate to signal your privacy preference not to have data about your online browsing activities
@@ -222,9 +222,9 @@ been finalized. As such, we do not currently respond to DNT browser signals or a
 communicates your choice not to be tracked online. If a standard for online tracking is adopted that we must follow in
 the future, we will inform you about that practice in a revised version of this privacy notice.
 
-**11\. DO WE MAKE UPDATES TO THIS NOTICE?**
+# 11\. DO WE MAKE UPDATES TO THIS NOTICE?
 
-_**In Short:**Yes, we will update this notice as necessary to stay compliant with relevant laws._
+_**In Short:** Yes, we will update this notice as necessary to stay compliant with relevant laws._
 
 We may update this privacy notice from time to time. The updated version will be indicated by an updated "Revised" date
 and the updated version will be effective as soon as it is accessible. If we make material changes to this privacy
@@ -232,12 +232,18 @@ notice, we may notify you either by prominently posting a notice of such changes
 notification. We encourage you to review this privacy notice frequently to be informed of how we are protecting your
 information.
 
-**12\. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?**
+# 12\. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?
 
 If you have questions or comments about this notice, you may email us at or contact us by post at:
 
-**13\. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?**
+# 13\. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?
 
 Based on the applicable laws of your country, you may have the right to request access to the personal information we
 collect from you, change that information, or delete it. To request to review, update, or delete your personal
 information, please contact us at privacy@void.monster.
+
+# 14 YOUTUBE SERVICE
+
+You can delete the YouTube Data we collect at any time by disconnecting your YouTube account in the Interface or by
+contacting us at privacy@void.monster.
+Further, you can revoke our access to your YouTube Account at  https://security.google.com/settings/.

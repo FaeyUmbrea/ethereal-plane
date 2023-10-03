@@ -153,18 +153,39 @@
       </section>
     {/if}
   {/if}
+  <InfoBox variant="info">
+    <span>{localize("ethereal-plane.strings.youtube")} </span><a
+      href="https://www.youtube.com/t/terms"
+      >{localize("ethereal-plane.strings.tos")}</a
+    ><br />
+    <span>{localize("ethereal-plane.strings.twitch")} </span><a
+      href="https://www.twitch.tv/p/terms-of-service"
+      >{localize("ethereal-plane.strings.tos")}</a
+    ><br />
+  </InfoBox>
 {:else}
+  <InfoBox variant="error">
+    <span>{localize("ethereal-plane.strings.patreon-logged-out")}</span><br />
+    <span>{localize("ethereal-plane.strings.accept-text")}</span><a
+      href="https://github.com/FaeyUmbrea/ethereal-plane/blob/main/TERM_OF_USE.md"
+      >{localize("ethereal-plane.strings.tos")}</a
+    >
+    &
+    <a
+      href="https://github.com/FaeyUmbrea/ethereal-plane/blob/main/PRIVACY_POLICY.md"
+      >{localize("ethereal-plane.strings.privacy-policy")}</a
+    >
+  </InfoBox>
   <button on:click="{login}"
     >{localize("ethereal-plane.strings.log-in")}&nbsp;<i
       class="fa-brands fa-patreon orange"
     ></i>
   </button>
-  <InfoBox variant="error">
-    <span>{localize("ethereal-plane.strings.patreon-logged-out")}</span>
-  </InfoBox>
 {/if}
 
 <style lang="stylus">
+  a
+    color: darkred
   .buttons
     display: flex
 

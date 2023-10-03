@@ -9,8 +9,8 @@ export class ConfigApplication extends SvelteApplication {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["eppolls"],
       minimizable: true,
-      width: 500,
-      height: 320,
+      width: 550,
+      height: 460,
       id: "config-application",
       title: "Ethereal Plane Config",
       resizable: true,
