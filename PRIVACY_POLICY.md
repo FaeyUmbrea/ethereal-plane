@@ -2,7 +2,7 @@ This Document is the Privacy Policy for the Ethereal Plane hosted Service
 
 # PRIVACY POLICY
 
-**Last updated October 01, 2023**
+**Last updated October 05, 2023**
 
 This privacy notice for  ("**we**," "**us**," or "**our**"), describes how and why we might collect, store, use, and/or
 share ("**process**") your information when you use our services ("**Services**"), such as when you:
@@ -242,7 +242,7 @@ Based on the applicable laws of your country, you may have the right to request 
 collect from you, change that information, or delete it. To request to review, update, or delete your personal
 information, please contact us at privacy@void.monster.
 
-# 14 YOUTUBE SERVICE
+# 14. YOUTUBE SERVICE
 
 This Software uses the YouTube API to facilitate its functionality. If you log in using your youtube account, data transmitted to and from the software may be processed by YouTube. You may find their Privacy Policy [here](https://www.google.com/policies/privacy).
 
