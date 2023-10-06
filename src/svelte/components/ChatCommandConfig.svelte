@@ -56,7 +56,7 @@
 >
   {#if command.macro}
     <section class="macro">
-      <img alt="Macro Icon" src="{game.macros.get(command.macro).img}" />
+      <img alt="Macro Icon" src="{game.macros.get(command.macro)?.img ?? ''}" />
     </section>
   {/if}
 </section>

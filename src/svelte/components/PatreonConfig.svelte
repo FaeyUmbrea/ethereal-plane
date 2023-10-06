@@ -63,20 +63,20 @@
   <div class="buttons">
     <button on:click="{logout}"
       >{localize("ethereal-plane.strings.log-out")}&nbsp;<i
-        class="fa-brands fa-patreon orange"
+        class="fa-brands fa-patreon orange valignmid"
       ></i></button
     >
     {#if $features.includes("twitch-bot") && (!$status.youtube || $status.twitch)}
       {#if !$status.twitch}
         <button on:click="{connectTwitch}"
           >{localize("ethereal-plane.strings.connect")}&nbsp;<i
-            class="fa-brands fa-twitch purple"
+            class="fa-brands fa-twitch purple valignmid"
           ></i></button
         >
       {:else}
         <button on:click="{disconnectTwitch}"
           >{localize("ethereal-plane.strings.disconnect")}&nbsp;<i
-            class="fa-brands fa-twitch purple"
+            class="fa-brands fa-twitch purple valignmid"
           ></i></button
         >
       {/if}
@@ -85,13 +85,13 @@
       {#if !$status.customTwitchBot}
         <button on:click="{customTwitchLogin}"
           >{localize("ethereal-plane.strings.log-in")}&nbsp;<i
-            class="fas fa-robot purple"
+            class="fas fa-robot purple valignmid"
           ></i></button
         >
       {:else}
         <button on:click="{customTwitchLogout}"
           >{localize("ethereal-plane.strings.log-out")}&nbsp;<i
-            class="fas fa-robot purple"
+            class="fas fa-robot purple valignmid"
           ></i></button
         >
       {/if}
@@ -100,7 +100,7 @@
       {#if !$status.youtube}
         <button on:click="{connectYoutube}"
           >{localize("ethereal-plane.strings.connect")}&nbsp;<i
-            class="fa-brands fa-youtube red"
+            class="fa-brands fa-youtube red valign"
           ></i></button
         >
       {:else}
@@ -189,6 +189,10 @@
   .buttons
     display: flex
 
+    button
+      i
+        font-size 18px
+
   .green
     color: green
 
@@ -200,6 +204,12 @@
 
   .red
     color: #FF0000
+
+  .valignmid
+    vertical-align text-top
+
+  .valign
+    vertical-align baseline
 
   .settings
     display: grid
