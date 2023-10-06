@@ -244,7 +244,7 @@ information, please contact us at privacy@void.monster.
 
 # 14. YOUTUBE SERVICE
 
-This Software uses the YouTube API to facilitate its functionality. If you log in using your youtube account, data transmitted to and from the software may be processed by YouTube. You may find their Privacy Policy [here](https://www.google.com/policies/privacy).
+This Software uses the YouTube API to facilitate its functionality. If you log in using your youtube account, data transmitted to and from the software may be processed by YouTube. You may review their Privacy Policy on the [Google Privacy Policy Page](https://www.google.com/policies/privacy).
 
 You can delete the YouTube Data we collect at any time by disconnecting your YouTube account in the Interface or by
 contacting us at privacy@void.monster.
