@@ -10,9 +10,18 @@ const executionLocks = new Map();
  * @returns {void}
  */
 async function processCommand(command, message, user, subscribed) {
-  const regex = /(?:["'«»‘’‚‛“”„‟‹›](.*?)["'«»‘’‚‛“”„‟‹›])|(?:\s?(.*?)\s)/gm;
+  const regex = /(["'«»‘’‚‛“”„‟‹›](?<a>.*?)["'«»‘’‚‛“”„‟‹›])|(?<b>\w+)/gm;
   const templateParts = command.commandTemplate.split(/\s/);
-  const messageParts = message ? message.match(regex) : [];
+  const matches = message.matchAll(regex);
+  const messageParts = [];
+  for (const match of matches) {
+    if (match.groups.a) {
+      messageParts.push(match.groups.a);
+    }
+    if (match.groups.b) {
+      messageParts.push(match.groups.b);
+    }
+  }
   const macroArguments = {};
   let target = "";
 
@@ -34,6 +43,7 @@ async function processCommand(command, message, user, subscribed) {
     messageParts.length > templateParts.length
       ? messageParts.slice(templateParts.length)
       : [];
+  macroArguments["messageParts"] = messageParts;
 
   if (command.perTargetCooldown > 0) {
     const lock = executionLocks.get(`${command.commandPrefix}:${target}`);
