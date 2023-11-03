@@ -10,8 +10,9 @@ const executionLocks = new Map();
  * @returns {void}
  */
 async function processCommand(command, message, user, subscribed) {
+  const regex = /(?:["'«»‘’‚‛“”„‟‹›](.*?)["'«»‘’‚‛“”„‟‹›])|(?:\s?(.*?)\s)/gm;
   const templateParts = command.commandTemplate.split(/\s/);
-  const messageParts = message ? message.split(/\s/) : [];
+  const messageParts = message ? message.match(regex) : [];
   const macroArguments = {};
   let target = "";
 
@@ -28,6 +29,11 @@ async function processCommand(command, message, user, subscribed) {
       }
     }
   });
+  macroArguments["rawMessage"] = message;
+  macroArguments["messageOverflow"] =
+    messageParts.length > templateParts.length
+      ? messageParts.slice(templateParts.length)
+      : [];
 
   if (command.perTargetCooldown > 0) {
     const lock = executionLocks.get(`${command.commandPrefix}:${target}`);
