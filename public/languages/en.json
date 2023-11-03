@@ -67,7 +67,8 @@
       "log-in": "Log in",
       "log-out": "Log out",
       "connect": "Connect",
-      "disconnect": "Disconnect"
+      "disconnect": "Disconnect",
+      "accept-text": "By connecting you accept the "
     }
   }
 }

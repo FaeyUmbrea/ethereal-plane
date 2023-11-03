@@ -24,7 +24,7 @@ export class ChatApplication extends SvelteApplication {
   static get defaultOptions() {
     // @ts-ignore
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["epchat"],
+      classes: ["epchat", "flexcol"],
       minimizable: true,
       width: 300,
       height: 700,

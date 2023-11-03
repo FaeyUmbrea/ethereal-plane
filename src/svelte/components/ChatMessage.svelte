@@ -3,9 +3,16 @@
   export let message;
 </script>
 
-<div class="chat-message message flexcol">
+<li class="chat-message message flexcol">
   <header class="message-header flexrow">
     <h4 class="message-sender">{user}</h4>
   </header>
   <div class="message-content" id>{message}</div>
-</div>
+</li>
+
+<style lang="stylus">
+  .chat-message
+    height fit-content
+    min-height fit-content
+    overflow-anchor none
+</style>

@@ -9,7 +9,7 @@ const executionLocks = new Map();
  * @param {boolean} subscribed
  * @returns {void}
  */
-function processCommand(command, message, user, subscribed) {
+async function processCommand(command, message, user, subscribed) {
   const templateParts = command.commandTemplate.split(/\s/);
   const messageParts = message ? message.split(/\s/) : [];
   const macroArguments = {};
@@ -43,7 +43,7 @@ function processCommand(command, message, user, subscribed) {
   }
   macroArguments["user"] = user;
   macroArguments["isSubscribed"] = subscribed;
-  getGame().macros?.get(command.macro)?.execute(macroArguments);
+  await getGame().macros?.get(command.macro)?.execute(macroArguments);
 
   if (command.perTargetCooldown > 0) {
     executionLocks.set(
@@ -64,16 +64,16 @@ function processCommand(command, message, user, subscribed) {
  * @param {boolean} subscribed
  * @returns {void}
  */
-export function processChat(message, user, subscribed) {
+export async function processChat(message, user, subscribed) {
   if (getSetting("chat-commands-active")) {
     const commandPrefix = message.split(/\s/)[0];
     const commandArguments = message.substring(commandPrefix.length + 1);
     const commands = getSetting("chat-commands");
-    commands.forEach((command) => {
+    for (const command of commands) {
       if (command.commandPrefix === commandPrefix && command.active) {
-        processCommand(command, commandArguments, user, subscribed);
+        await processCommand(command, commandArguments, user, subscribed);
       }
-    });
+    }
   }
 }
 

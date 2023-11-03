@@ -72,7 +72,8 @@ Hooks.once("getSceneControlButtons", () => {
   )
     FVTTSidebarControl.add({
       beforeId: "combat",
-      id: "epchat",
+      classes: ["flexcol"],
+      id: "directory epchat",
       icon: "fas fa-message-bot",
       title: "Stream Chat",
       tooltip: "Stream Chat",

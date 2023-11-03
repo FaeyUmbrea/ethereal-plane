@@ -50,7 +50,7 @@ class ConnectionManager {
    *     });
    *   }
    */
-  handleMessages = (message, user, subscribed) => {
+  handleMessages = async (message, user, subscribed) => {
     this.messageListeners.forEach((listener) => {
       listener(message, user, subscribed);
     });
