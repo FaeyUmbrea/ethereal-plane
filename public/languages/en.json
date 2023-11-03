@@ -45,6 +45,10 @@
       "allow-socket": {
         "Name": "Allow Sockets",
         "Hint": "WARNING! This will allow player clients to send roll messages. This can be exploited to send anything to chat."
+      },
+      "allow-api": {
+        "Name": "Allow API Usage",
+        "Hint": "WARNING! This will allow any macro or module to send any messages to chat."
       }
     },
     "feature-names": {

@@ -18,6 +18,7 @@
   const pollsEnabled = settings.getStore("polls-enabled");
   const moduleEnabled = settings.getStore("enabled");
   const allowSocket = settings.getStore("allow-socket");
+  const allowAPI = settings.getStore("allow-api");
 
   export let elementRoot = void 0;
 </script>
@@ -62,6 +63,18 @@
           }}"
         >
           <input bind:checked="{$allowSocket}" type="checkbox" />
+        </div>
+        <span>{localize("ethereal-plane.settings.allow-api.Name")}</span>
+        <div
+          use:tooltip="{{
+            content: localize('ethereal-plane.settings.allow-api.Hint'),
+            position: 'left',
+            autoPosition: true,
+            align: 'center',
+            style: { backgroundColor: 'white', color: 'black' },
+          }}"
+        >
+          <input bind:checked="{$allowAPI}" type="checkbox" />
         </div>
       </section>
     </CollapsibleSection>

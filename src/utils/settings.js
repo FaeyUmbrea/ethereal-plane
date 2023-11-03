@@ -195,6 +195,14 @@ class EtherealPlaneSettings extends TJSGameSettings {
       }),
     );
     settings.push(
+      registerSetting("allow-api", {
+        type: Boolean,
+        scope: "world",
+        config: false,
+        default: false,
+      }),
+    );
+    settings.push(
       registerSetting("chat-commands", {
         type: Object,
         scope: "world",

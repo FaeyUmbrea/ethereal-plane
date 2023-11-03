@@ -12,6 +12,7 @@ import StreamChat from "./svelte/components/StreamChat.svelte";
 import { getGame } from "./utils/helpers.js";
 import { getConnectionManager } from "./server/connectionManager.js";
 import { nanoid } from "nanoid";
+import "./utils/api.js";
 
 let polls;
 
