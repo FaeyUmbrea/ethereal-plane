@@ -10,7 +10,7 @@ const executionLocks = new Map();
  * @returns {void}
  */
 async function processCommand(command, message, user, subscribed) {
-  const regex = /(["'«»‘’‚‛“”„‟‹›](?<a>.*?)["'«»‘’‚‛“”„‟‹›])|(?<b>\w+)/gm;
+  const regex = /(["'«»‘’‚‛“”„‟‹›](?<a>.*?)["'«»‘’‚‛“”„‟‹›])|(?<b>[^\s]+)/gm;
   const templateParts = command.commandTemplate.split(/\s/);
   const matches = message.matchAll(regex);
   const messageParts = [];
