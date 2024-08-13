@@ -6,7 +6,7 @@
     "library": "false",
     "manifestPlusVersion": "1.2.0",
     "compatibility": {
-      "maximum": 11,
+      "maximum": 12,
       "verified": 11,
       "minimum": 10
     },
