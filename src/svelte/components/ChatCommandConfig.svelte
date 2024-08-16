@@ -49,6 +49,7 @@
   type="text"
 />
 <section
+  role="none"
   class="macro"
   on:auxclick="{deleteMacro}"
   on:click="{openMacro}"

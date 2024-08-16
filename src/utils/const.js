@@ -6,3 +6,5 @@ export var Modes;
   Modes["localonly"] = "localonly";
   Modes["localchat"] = "localchat";
 })(Modes || (Modes = {}));
+
+export const PATREON_URL = "https://localhost:7242/";

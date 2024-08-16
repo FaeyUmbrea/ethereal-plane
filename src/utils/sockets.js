@@ -1,14 +1,17 @@
-import { MODULE_ID } from "./const.js";
 import { sendRoll } from "../handlers/rollHandler.js";
 import { getSetting } from "./settings.js";
 
-let modulesocket;
-
-Hooks.once("socketlib.ready", () => {
-  modulesocket = window.socketlib.registerModule(MODULE_ID);
-
-  modulesocket.register("roll", sendRollIfAllowed);
+Hooks.once("init", () => {
+  game.socket.on("event.ethereal-plane", handleEvent);
 });
+
+async function handleEvent({ eventType, targetUser, payload }) {
+  if (!!targetUser && game.userId !== targetUser) return;
+
+  if (eventType === "roll" && game.user?.isGM) {
+    sendRollIfAllowed(payload.user, payload.formula, payload.result);
+  }
+}
 
 /** @param {string} user
  * @param {string} formula
@@ -17,7 +20,11 @@ Hooks.once("socketlib.ready", () => {
  */
 export function sendRollToGM(user, formula, result) {
   if (getSetting("allow-socket")) {
-    modulesocket.executeAsGM("roll", user, formula, result);
+    const eventData = {
+      eventType: "roll",
+      payload: { user: user, formula: formula, result: result },
+    };
+    game.socket.emit("event.ethereal-plane", eventData);
   }
 }
 

@@ -31,7 +31,9 @@ async function processCommand(command, message, user, subscribed) {
         .substring(2, part.length - 2)
         .split("??");
       const value =
-        messageParts.length > index ? messageParts[index] : defaultValue ?? "";
+        messageParts.length > index
+          ? messageParts[index]
+          : (defaultValue ?? "");
       macroArguments[name] = value;
       if (name === command.targetIdentifier) {
         target = value;

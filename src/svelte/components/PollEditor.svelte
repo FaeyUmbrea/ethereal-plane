@@ -80,6 +80,7 @@
       <label for="{index}">{index + 1}</label>
       <input id="{index}" type="text" bind:value="{option.text}" />
       <section
+        role="none"
         class="macro"
         on:click="{() => onClick(index)}"
         on:auxclick="{() => onRClick(index)}"

@@ -1,268 +1,199 @@
-import { getSetting, setSetting, settings } from "../utils/settings.js";
-import * as jose from "jose";
+import { getSetting, setSetting } from "../utils/settings.js";
 import { executePollMacro, PollStatus } from "../utils/polls.js";
+import {
+  disableChatListeners,
+  disconnectChatAPI,
+  enableChatListeners,
+  initChatAPI,
+  sendChatMessage,
+  setYoutubeId,
+} from "./chat_api.js";
+import { PATREON_URL } from "../utils/const.js";
+import {
+  connectClient,
+  disconnectClient,
+  patreonLogin,
+  refresh,
+  waitForPatreonVerification,
+} from "./patreon_auth.js";
+import {
+  abortPoll,
+  createPoll,
+  disconnectPollAPI,
+  initPollAPI,
+} from "./poll_api.js";
 
-const publicKey = {
-  kty: "EC",
-  x: "ASCUOC6ZJAqrAmc0gH1p1_tQB_Iw4MLdenrgsmxexcDiAUV4v7Bv6DsAvSjWpPpzbzVoVR9lxyttjB2sPeQJQhE0",
-  y: "AJFSMJTGYWBYwKdUOqqUWRHK9pS-KUHb1ZN8O5qXcmOuXjVKXFno__KX-KFLA1leYKvieCwZAhgkGFUz0ihC_AHT",
-  crv: "P-521",
-};
-
-/** @param {string} token
- * @returns {Promise<any>}
- */
-async function verifyToken(token) {
-  const jwtPublicKey = await jose.importJWK(publicKey, "ES512");
-  return await jose.jwtVerify(token, jwtPublicKey);
-}
-
-/** */
 export class PatreonConnector {
-  /** */
-  socket = undefined;
-  /** @private */
-  callback = undefined;
-  /** @default false */
-  apiOk = false;
+  /**
+   * @type {ChatMessageCallback}
+   */
+  callback;
 
   constructor() {
     Hooks.on("ethereal-plane.patreon-login", () => this.login());
     Hooks.on("ethereal-plane.patreon-logout", () => this.logout());
-    Hooks.on("ethereal-plane.twitch-connect", () => {
-      this.twitchConnect();
-    });
-    Hooks.on("ethereal-plane.twitch-disconnect", () => {
-      this.twitchDisconnect();
-    });
-    Hooks.on("ethereal-plane.custom-twitch-logout", () => {
-      this.twitchCustomBotLogout();
-    });
-    Hooks.on("ethereal-plane.custom-twitch-login", () => {
-      this.twitchCustomBotLogin();
-    });
-    Hooks.on("ethereal-plane.youtube-connect", () => {
-      this.youtubeConnect();
-    });
-    Hooks.on("ethereal-plane.youtube-disconnect", () => {
-      this.youtubeDisconnect();
-    });
+    Hooks.on("ethereal-plane.patreon-connect", () => this.connect());
+    Hooks.on("ethereal-plane.patreon-disconnect", () => this.deleteClient());
     Hooks.on("ethereal-plane.set-youtube-id", (id) => {
       this.setYoutubeID(id);
     });
+  }
+
+  connect() {
+    connectClient().then();
   }
 
   /** @returns {Promise<void>} */
   async init() {
     console.log("Ethereal Plane | Connecting to Patreon Server");
     const apiVersion = await (
-      await fetch("https://ep.void.monster/version")
+      await fetch("https://localhost:7242/version")
     ).text();
-    if (apiVersion !== "1") {
+    if (apiVersion !== "2") {
       ui.notifications?.error(
         "Ethereal Plane API version does not match the installed Module. Please Update. Patreon Features Disabled.",
       );
       return;
-    } else {
-      this.apiOk = true;
     }
     console.log("Ethereal Plane | Api Version OK");
+
+    const clientConnected = foundry.utils.fetchWithTimeout(
+      `${window.location.protocol}//${window.location.host}/modules/ethereal-plane/storage/client_id.txt`,
+    );
+
+    if (!clientConnected) {
+      console.log("Ethereal Plane | No client connected, please connect");
+      ui.notifications?.warn("Please log in to use Ethereal Plane");
+      return;
+    }
+    console.log("Ethereal Plane | Client OK");
+
     const token = getSetting("authentication-token");
     const refreshToken = getSetting("refresh-token");
-    if (token) {
-      try {
-        await verifyToken(token);
-        console.log("Ethereal Plane | Connected to Patreon Server");
-        this.socket = window.io("ep.void.monster", { auth: { token } });
-      } catch (e) {
-        this.refresh(refreshToken);
+
+    if (token === "" || refreshToken === "") {
+      console.log("No credentials present, please log in");
+      ui.notifications?.warn("Please log in to use Ethereal Plane");
+      return;
+    }
+
+    try {
+      await initChatAPI(
+        token,
+        this.getHandleChatMessageReceived(),
+        PATREON_URL,
+      );
+      await initPollAPI(token, this.getPollUpdateCallback(), PATREON_URL);
+    } catch {
+      let tokens = await refresh(refreshToken);
+      await setSetting("authentication-token", tokens.access_token);
+      await setSetting("refresh-token", tokens.refresh_token);
+
+      await initChatAPI(
+        tokens.access_token,
+        this.getHandleChatMessageReceived(),
+        PATREON_URL,
+      );
+      await initPollAPI(
+        tokens.access_token,
+        this.getPollUpdateCallback(),
+        PATREON_URL,
+      );
+    }
+    console.log("Ethereal Plane | Connected");
+  }
+
+  getHandleChatMessageReceived() {
+    return (message) => {
+      this.callback(
+        message.messageContent,
+        message.displayName,
+        message.isMember,
+      );
+    };
+  }
+
+  getPollUpdateCallback() {
+    return async (pollUpdate) => {
+      /**
+       * @type {Poll}
+       */
+      const poll = getSetting("currentPoll");
+      let wasRunning = false;
+      if (poll.status === PollStatus.started) {
+        wasRunning = true;
       }
-    } else {
-      this.refresh(refreshToken);
-    }
-    if (this.socket) {
-      this.socket.on("connect", async () => {
-        if (
-          getSetting("enable-chat-tab") &&
-          getSetting("enabled") &&
-          !this.socket?.recovered
-        ) {
-          this.socket.emit("enable-chat");
-        }
-        this.socket.on("features", (features) => {
-          settings.getStore("available-features")?.set(features);
-        });
-        this.socket.emit("features");
-        this.socket.on("chat-message", (message, user, subscribed) => {
-          if (this.callback) this.callback(message, user, subscribed);
-        });
-        this.socket.on("status", (status) => {
-          settings.getStore("patreon-status")?.set(status);
-        });
-        this.socket.emit("status");
-        this.socket.on("link-twitch", () => {
-          console.log(
-            "Ethereal Plane | Connected Twitch Account to Patreon Service",
-          );
-          this.socket.emit("status");
-        });
-
-        this.socket.on("unlink-twitch", () => {
-          console.log(
-            "Ethereal Plane | Disconnected Twitch Account from Patreon Service",
-          );
-          this.socket.emit("status");
-        });
-        this.socket.on("twitch-bot-logout", () => {
-          console.log(
-            "Ethereal Plane | Disconnected Custom Bot Account from Patreon Service",
-          );
-          this.socket.emit("status");
-        });
-        this.socket.on("insufficient-level", () => {
-          console.error(
-            "Ethereal Plane | Somehow your pledge was too low. Contact Faey about this.",
-          );
-        });
-
-        // Polls
-        this.socket.on("create-poll", async (id) => {
-          const poll = getSetting("currentPoll");
-          poll.id = id;
-          await setSetting("currentPoll", poll);
-        });
-        this.socket.on("poll-update", async (choices) => {
-          const poll = getSetting("currentPoll");
-          poll.tally = choices.map((e) => e.votes);
-          await setSetting("currentPoll", poll);
-        });
-        this.socket.on("poll-end", async (choices) => {
-          const poll = getSetting("currentPoll");
-          poll.tally = choices.map((e) => e.votes);
-          if (poll.status === PollStatus.started) {
-            poll.status = PollStatus.stopped;
-            executePollMacro();
-          }
-          await setSetting("currentPoll", poll);
-        });
-        this.socket.on("poll-error", async () => {
-          const poll = getSetting("currentPoll");
-          poll.status = PollStatus.failed;
-          await setSetting("currentPoll", poll);
-        });
-
-        // Youtube
-        this.socket.on("link-youtube", () => {
-          console.log(
-            "Ethereal Plane | Connected Youtube Account to Patreon Service",
-          );
-          this.socket.emit("status");
-        });
-        this.socket.on("unlink-youtube", () => {
-          console.log(
-            "Ethereal Plane | Disconnected Youtube Account from Patreon Service",
-          );
-          this.socket.emit("status");
-        });
-        this.socket.on("youtube-error", () => {
-          this.socket.emit("status");
-        });
+      poll.status = pollUpdate.aborted
+        ? PollStatus.failed
+        : pollUpdate.finalized
+          ? PollStatus.stopped
+          : PollStatus.started;
+      poll.tally = pollUpdate.options.map((entry) => {
+        return entry.count;
       });
-    }
-  }
-
-  /** @param {string} refreshToken
-   * @returns {void}
-   */
-  refresh(refreshToken) {
-    if (!refreshToken || !this.apiOk) return;
-    console.log("Ethereal Plane | Token Expired - Refreshing");
-    const authSocket = window.io("ep.void.monster/auth");
-    authSocket.on("connect", () => {
-      console.log("refreshing with", refreshToken);
-      authSocket.emit("refresh", refreshToken);
-      authSocket.on("tokens", async (authToken, refreshToken) => {
-        console.log("Refreshed Tokens");
-        await setSetting("authentication-token", authToken);
-        await setSetting("refresh-token", refreshToken);
-        await this.init();
-        authSocket.close();
-      });
-      authSocket.on("invalid-token", async () => {
-        console.error("invalid-token");
-        await setSetting("authentication-token", "");
-        await setSetting("refresh-token", "");
-        authSocket.close();
-      });
-      authSocket.on("patreon-error", async () => {
-        console.error("patreon-error");
-        await setSetting("authentication-token", "");
-        await setSetting("refresh-token", "");
-        authSocket.close();
-      });
-    });
+      if (wasRunning && poll.status === PollStatus.stopped) {
+        executePollMacro();
+      }
+      await setSetting("currentPoll", poll);
+    };
   }
 
   /** @returns {void} */
-  login() {
+  async login() {
     console.warn("Login");
-    const authSocket = window.io("wss://ep.void.monster/auth");
-    authSocket.on("connect", () => {
-      authSocket.once("login", (uri) => {
-        console.info(uri);
-        window.open(
-          uri,
-          "_blank",
-          "location=yes,height=570,width=520,scrollbars=yes,status=yes",
-        );
-      });
-      authSocket.emit("login");
-      authSocket.on("tokens", async (authToken, refreshToken) => {
-        console.log(authToken);
-        console.log(refreshToken);
-        await setSetting("authentication-token", authToken);
-        await setSetting("refresh-token", refreshToken);
-        await this.init();
-        authSocket.close();
-      });
-    });
+    const { device_code, verification_uri_complete: uri } =
+      await patreonLogin();
+    console.info(uri);
+    window.open(
+      uri,
+      "_blank",
+      "location=yes,height=570,width=520,scrollbars=yes,status=yes",
+    );
+    const { access_token, refresh_token } =
+      await waitForPatreonVerification(device_code);
+    await setSetting("authentication-token", access_token);
+    await setSetting("refresh-token", refresh_token);
+    await this.init();
   }
 
   /** @returns {void} */
-  disableChatListener() {
-    this.socket.emit("disable-chat");
-    this.chatActive = false;
+  async disableChatListener() {
+    await disableChatListeners();
   }
 
-  /** @returns {void | Promise<void>} */
-  enableChatListener() {
-    this.socket.emit("enable-chat");
-    this.chatActive = true;
+  /** @returns {Promise<void>} */
+  async enableChatListener() {
+    await enableChatListeners();
   }
 
   /** @param {string} message
    * @returns {void | Promise<void>}
    */
-  sendMessage(message) {
-    this.socket.emit("send-message", message);
+  async sendMessage(message) {
+    await sendChatMessage(message);
   }
 
   /** @param {Poll} poll
    * @returns {void | Promise<void>}
    */
-  startPoll(poll) {
-    const pollCreateData = {
-      choices: poll.options.map((option) => option.text),
-      duration: poll.duration,
-      title: poll.title,
-    };
-    this.socket.emit("create-poll", pollCreateData);
+  async startPoll(poll) {
+    const pollId = await createPoll(
+      poll.duration * 1000,
+      poll.options.map((option) => {
+        return { name: option.text, title: option.text };
+      }),
+      "!vote",
+      poll.title,
+    );
+    const currentPoll = getSetting("currentPoll");
+    currentPoll.id = pollId;
+    await setSetting("currentPoll", poll);
   }
 
   /** @returns {void | Promise<void>} */
-  disconnect() {
-    this.socket.disconnect();
-    this.socket.removeAllListeners();
+  async disconnect() {
+    await disconnectPollAPI();
+    await disconnectChatAPI();
   }
 
   /** @param {ChatMessageCallback} callback
@@ -273,81 +204,9 @@ export class PatreonConnector {
   }
 
   /** @returns {void} */
-  abortPoll() {
+  async abortPoll() {
     const poll = getSetting("currentPoll");
-    this.socket.emit("end-poll", poll.id);
-  }
-
-  /** @private
-   * @returns {void}
-   */
-  twitchConnect() {
-    console.log("Ethereal Plane | Requesting Twitch Connection Callback");
-    this.socket.once("twitch-login", (uri) => {
-      window.open(
-        uri,
-        "_blank",
-        "location=yes,height=570,width=520,scrollbars=yes,status=yes",
-      );
-    });
-    this.socket.emit("link-twitch");
-  }
-
-  /** @private
-   * @returns {void}
-   */
-  youtubeConnect() {
-    console.log("Ethereal Plane | Requesting Twitch Connection Callback");
-    this.socket.once("youtube-login", (uri) => {
-      window.open(
-        uri,
-        "_blank",
-        "location=yes,height=570,width=520,scrollbars=yes,status=yes",
-      );
-    });
-    this.socket.emit("link-youtube");
-  }
-
-  /** @private
-   * @returns {void}
-   */
-  twitchDisconnect() {
-    console.log(
-      "Ethereal Plane | Disconnecting Twitch Account from Patreon Service",
-    );
-    this.socket.emit("unlink-twitch");
-  }
-
-  /** @private
-   * @returns {void}
-   */
-  youtubeDisconnect() {
-    console.log(
-      "Ethereal Plane | Disconnecting Twitch Account from Patreon Service",
-    );
-    this.socket.emit("unlink-youtube");
-  }
-
-  /** @private
-   * @returns {void}
-   */
-  twitchCustomBotLogin() {
-    console.log("Ethereal Plane | Logging into Custom Bot Acount");
-    this.socket.once("twitch-login", (uri) => {
-      window.open(
-        uri,
-        "_blank",
-        "location=yes,height=570,width=520,scrollbars=yes,status=yes",
-      );
-    });
-    this.socket.emit("twitch-bot-login");
-  }
-
-  /** @private
-   * @returns {void}
-   */
-  twitchCustomBotLogout() {
-    this.socket.emit("twitch-bot-logout");
+    await abortPoll(poll.id);
   }
 
   /** @private
@@ -363,7 +222,11 @@ export class PatreonConnector {
    * @param {string} id
    * @returns {void}
    */
-  setYoutubeID(id) {
-    this.socket.emit("youtube-stream-id", id);
+  async setYoutubeID(id) {
+    await setYoutubeId(id);
+  }
+
+  async deleteClient() {
+    await disconnectClient();
   }
 }

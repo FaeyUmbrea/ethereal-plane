@@ -8,9 +8,19 @@ export function registerHanlder() {
   if (getGame().user?.isGM) {
     Hooks.on("createChatMessage", (event) => {
       const msg = event;
-      if (msg.isRoll && msg.data.whisper.length === 0) {
-        const formula = msg.roll?.formula;
-        const result = msg.roll?.total;
+      if (msg.isRoll && msg.whisper.length === 0) {
+        const formula = msg.rolls.reduce(
+          (accumulator, currentValue) =>
+            accumulator
+              ? accumulator + " + "
+              : accumulator + currentValue.formula,
+          "",
+        );
+        const result = msg.rolls.reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.total),
+          0,
+        );
 
         if (getSetting("send-rolls-to-chat")) {
           if (!event.user?.name || !formula || !result) return;

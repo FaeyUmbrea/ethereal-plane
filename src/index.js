@@ -13,6 +13,7 @@ import { getGame } from "./utils/helpers.js";
 import { getConnectionManager } from "./server/connectionManager.js";
 import { nanoid } from "nanoid";
 import "./utils/api.js";
+import "./server/patreon_auth.js";
 
 let polls;
 

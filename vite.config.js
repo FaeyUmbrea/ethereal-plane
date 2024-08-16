@@ -11,11 +11,6 @@ import { transform } from "esbuild";
 // the dev server.
 const s_PACKAGE_ID = "modules/ethereal-plane";
 
-// A short additional string to add to Svelte CSS hash values to make yours unique. This reduces the amount of
-// duplicated framework CSS overlap between many TRL packages enabled on Foundry VTT at the same time. 'ese' is chosen
-// by shortening 'essential-svelte-esm'.
-const s_SVELTE_HASH_ID = "ethpla";
-
 const s_TERSER = false; // Set to true to use terser
 const s_SOURCEMAPS = true; // Generate sourcemaps for the bundle (recommended).
 const s_MINIFY = true; // Set to true to compress the module bundle.
@@ -60,7 +55,7 @@ export default () =>
       open: "/game",
       proxy: {
         // Serves static files from main Foundry server.
-        [`^(/${s_PACKAGE_ID}/(assets|lang|packs|style.css))`]:
+        [`^(/${s_PACKAGE_ID}/(assets|languages|templates|packs|storage|style.css))`]:
           "http://localhost:30000",
 
         // All other paths besides package ID path are served from main Foundry server.
@@ -87,13 +82,6 @@ export default () =>
 
     plugins: [
       svelte({
-        compilerOptions: {
-          // Provides a custom hash adding the string defined in `s_SVELTE_HASH_ID` to scoped Svelte styles;
-          // This is reasonable to do as the framework styles in TRL compiled across `n` different packages will
-          // be the same. Slightly modifying the hash ensures that your package has uniquely scoped styles for all
-          // TRL components and makes it easier to review styles in the browser debugger.
-          cssHash: ({ hash, css }) => `svelte-${s_SVELTE_HASH_ID}-${hash(css)}`,
-        },
         preprocess: preprocess(),
       }),
 

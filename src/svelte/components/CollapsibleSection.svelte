@@ -10,7 +10,9 @@
 </script>
 
 <div class="collapsable-section">
-  <section class="header" on:click="{click}">▼<span>{title}</span>▼</section>
+  <section class="header" on:click="{click}" role="none">
+    ▼<span>{title}</span>▼
+  </section>
   {#if !collapsed}
     <section class="{`content`}" in:slide out:slide>
       <slot />

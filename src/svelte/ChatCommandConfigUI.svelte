@@ -80,9 +80,6 @@
     grid-template-rows 15px 20px
     grid-auto-rows 35px;
 
-  .title
-    grid-column 1 / span 7
-
   span
     text-align center
     border-left 1px solid grey
