@@ -24,11 +24,18 @@
     youtube: false,
     polls: pollsEnabled,
   };
-  fetch(`${PATREON_URL}api/v2/Features`, {
-    headers: { Authorization: `Bearer ${$key}` },
-  }).then(async (v) => {
-    features = JSON.parse(await v.text());
-  });
+
+  fetchFeatures();
+
+  function fetchFeatures() {
+    if ($key === undefined || $key === "") return;
+
+    fetch(`${PATREON_URL}api/v2/Features`, {
+      headers: { Authorization: `Bearer ${$key}` },
+    }).then(async (v) => {
+      features = JSON.parse(await v.text());
+    });
+  }
 
   function login() {
     Hooks.call("ethereal-plane.patreon-login");
@@ -52,6 +59,10 @@
         `${window.location.protocol}//${window.location.host}/modules/ethereal-plane/storage/client_id.txt`,
       )
     ).text());
+  }
+
+  async function profile() {
+    window.open(PATREON_URL + "Account/Manage", "_blank");
   }
 
   const hook1 = Hooks.on("ethereal-plane.patreon-connected", refreshClient);
@@ -82,6 +93,9 @@
 {#if clientIdExists}
   {#if !!$key}
     <div class="buttons">
+      <button on:click="{profile}"
+        >{localize("ethereal-plane.strings.profile")}</button
+      >
       <button on:click="{logout}"
         >{localize("ethereal-plane.strings.log-out")}&nbsp;<i
           class="fa-brands fa-patreon orange valignmid"

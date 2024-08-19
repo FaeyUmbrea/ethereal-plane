@@ -46,9 +46,7 @@ export class PatreonConnector {
   /** @returns {Promise<void>} */
   async init() {
     console.log("Ethereal Plane | Connecting to Patreon Server");
-    const apiVersion = await (
-      await fetch("https://localhost:7242/version")
-    ).text();
+    const apiVersion = await (await fetch(`${PATREON_URL}version`)).text();
     if (apiVersion !== "2") {
       ui.notifications?.error(
         "Ethereal Plane API version does not match the installed Module. Please Update. Patreon Features Disabled.",
@@ -63,7 +61,9 @@ export class PatreonConnector {
 
     if (!clientConnected) {
       console.log("Ethereal Plane | No client connected, please connect");
-      ui.notifications?.warn("Please log in to use Ethereal Plane");
+      ui.notifications?.warn(
+        "Ethereal Plane | Please log in to use Ethereal Plane",
+      );
       return;
     }
     console.log("Ethereal Plane | Client OK");
@@ -72,8 +72,10 @@ export class PatreonConnector {
     const refreshToken = getSetting("refresh-token");
 
     if (token === "" || refreshToken === "") {
-      console.log("No credentials present, please log in");
-      ui.notifications?.warn("Please log in to use Ethereal Plane");
+      console.log("Ethereal Plane | No credentials present, please log in");
+      ui.notifications?.warn(
+        "Ethereal Plane | Please log in to use Ethereal Plane",
+      );
       return;
     }
 
@@ -85,20 +87,31 @@ export class PatreonConnector {
       );
       await initPollAPI(token, this.getPollUpdateCallback(), PATREON_URL);
     } catch {
-      let tokens = await refresh(refreshToken);
-      await setSetting("authentication-token", tokens.access_token);
-      await setSetting("refresh-token", tokens.refresh_token);
+      try {
+        let tokens = await refresh(refreshToken);
+        await setSetting("authentication-token", tokens.access_token);
+        await setSetting("refresh-token", tokens.refresh_token);
 
-      await initChatAPI(
-        tokens.access_token,
-        this.getHandleChatMessageReceived(),
-        PATREON_URL,
-      );
-      await initPollAPI(
-        tokens.access_token,
-        this.getPollUpdateCallback(),
-        PATREON_URL,
-      );
+        await initChatAPI(
+          tokens.access_token,
+          this.getHandleChatMessageReceived(),
+          PATREON_URL,
+        );
+        await initPollAPI(
+          tokens.access_token,
+          this.getPollUpdateCallback(),
+          PATREON_URL,
+        );
+      } catch {
+        await setSetting("authentication-token", "");
+        await setSetting("refresh-token", "");
+        ui.notifications?.error(
+          "Ethereal Plane | Credentials Invalid, please log in again",
+        );
+        throw Error(
+          "Ethereal Plane | Credentials Invalid, please log in again",
+        );
+      }
     }
     console.log("Ethereal Plane | Connected");
   }
@@ -141,14 +154,29 @@ export class PatreonConnector {
   /** @returns {void} */
   async login() {
     console.warn("Login");
-    const { device_code, verification_uri_complete: uri } =
-      await patreonLogin();
-    console.info(uri);
-    window.open(
-      uri,
-      "_blank",
-      "location=yes,height=570,width=520,scrollbars=yes,status=yes",
-    );
+    const {
+      device_code,
+      verification_uri_complete: uri,
+      user_code,
+    } = await patreonLogin();
+    let d = new Dialog({
+      title: "Device Code",
+      content: `The login Device Code is ${user_code}. <br> Either manually enter it or press open to open the login dialog. Pressing any button will close this window, please note down the code beforehand.`,
+      buttons: {
+        open: {
+          label: "Open",
+          callback: () =>
+            window.open(
+              uri,
+              "_blank",
+              "location=yes,height=570,width=520,scrollbars=yes,status=yes",
+            ),
+        },
+        close: { label: "Close" },
+      },
+      default: "two",
+    });
+    d.render(true);
     const { access_token, refresh_token } =
       await waitForPatreonVerification(device_code);
     await setSetting("authentication-token", access_token);

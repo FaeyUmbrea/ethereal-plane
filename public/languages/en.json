@@ -71,8 +71,10 @@
       "log-in": "Log in",
       "log-out": "Log out",
       "connect": "Connect",
+      "profile": "Show User Profile",
       "disconnect": "Disconnect",
-      "accept-text": "By connecting you accept the "
+      "accept-text": "By connecting you accept the ",
+      "notification-prefix": "Ethereal Plane | "
     }
   }
 }
