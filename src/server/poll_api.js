@@ -14,7 +14,7 @@ let connection = null;
  * @property {Date} startTimeStamp - Start Time Stamp
  * @property {boolean} aborted - Is Poll Aborted
  * @property {boolean} finalized - Is Poll Finalized
- * @property {Array<{count:int}>} options - List of Poll Options
+ * @property {Array<{count:int,name:string}>} options - List of Poll Options
  */
 
 /**

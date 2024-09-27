@@ -3,19 +3,22 @@ import { getGame } from "./helpers.js";
 
 /** */
 export class Poll {
-  /** */
+  /** @type string */
   title = undefined;
-  /** @default [{ text: 'yes' }, { text: 'no' }] */
-  options = [{ text: "yes" }, { text: "no" }];
-  /** @default [0, 0] */
+  /** @type Array<PollOption> */
+  options = [
+    { text: "yes", name: "1" },
+    { text: "no", name: "2" },
+  ];
+  /** @type Array<number> @default [0, 0] */
   tally = [0, 0];
-  /** */
+  /** @type number */
   duration = undefined;
-  /** */
+  /** @type Date */
   createdAt = undefined;
   /** @default PollStatus.notStarted */
   status = PollStatus.notStarted;
-  /** */
+  /** @type string */
   id = undefined;
 }
 
@@ -53,5 +56,6 @@ export function executePollMacro() {
 
 /** @typedef {Object} PollOption
  * @property {string} text
+ * @property {string} name
  * @property {string} [macro]
  */

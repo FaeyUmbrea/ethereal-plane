@@ -4,6 +4,9 @@
   import { TJSDocument } from "@typhonjs-fvtt/runtime/svelte/store/fvtt/document";
   import { getConnectionManager } from "../../server/connectionManager.js";
 
+  /**
+   * @type {Poll}
+   */
   const poll = settings.getStore("currentPoll");
   let title = "";
   let duration = 30;
@@ -11,7 +14,10 @@
   function addOption() {
     if ($poll.options.length >= 5) return;
     const newPoll = $poll;
-    newPoll.options.push({ key: "new option" });
+    newPoll.options.push({
+      text: "",
+      name: ($poll.options.length + 1).toString(),
+    });
     setSetting("currentPoll", newPoll);
   }
 

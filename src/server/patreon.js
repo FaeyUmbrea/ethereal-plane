@@ -126,6 +126,9 @@ export class PatreonConnector {
     };
   }
 
+  /**
+   * @returns {(function(*): Promise<void>)|*}
+   */
   getPollUpdateCallback() {
     return async (pollUpdate) => {
       /**
@@ -141,8 +144,9 @@ export class PatreonConnector {
         : pollUpdate.finalized
           ? PollStatus.stopped
           : PollStatus.started;
-      poll.tally = pollUpdate.options.map((entry) => {
-        return entry.count;
+      poll.tally = poll.options.map((entry) => {
+        return pollUpdate.options.find((option) => option.name === entry.name)
+          .count;
       });
       if (wasRunning && poll.status === PollStatus.stopped) {
         executePollMacro();
@@ -208,7 +212,7 @@ export class PatreonConnector {
     const pollId = await createPoll(
       poll.duration * 1000,
       poll.options.map((option) => {
-        return { name: option.text, title: option.text };
+        return { name: option.name, title: option.text };
       }),
       "!vote",
       poll.title,
