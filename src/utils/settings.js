@@ -1,11 +1,11 @@
-import { Poll } from './polls.js';
-import { ConfigApplication } from '../applications/configApplication.js';
-import { getGame } from './helpers.js';
-import { Modes } from './const.js';
-import NotificationCenter from '../applications/notificationCenter.js';
-import { TJSGameSettings } from '@typhonjs-fvtt/runtime/svelte/store/fvtt/settings';
-import { ChatCommandApplication } from '../applications/chatCommandApplication.js';
-import { getLinks, getNotifications } from '../notifications/notifications.js';
+import { Poll } from "./polls.js";
+import { ConfigApplication } from "../applications/configApplication.js";
+import { getGame } from "./helpers.js";
+import { Modes } from "./const.js";
+import NotificationCenter from "../applications/notificationCenter.js";
+import { TJSGameSettings } from "@typhonjs-fvtt/runtime/svelte/store/fvtt/settings";
+import { ChatCommandApplication } from "../applications/chatCommandApplication.js";
+import { getLinks, getNotifications } from "../notifications/notifications.js";
 
 const moduleID = "ethereal-plane";
 
@@ -265,7 +265,7 @@ export async function showNotifications() {
   if (notifications.length > 0) {
     const links = await getLinks();
     new NotificationCenter({
-      svelte: { props: { notifications: notifications, links: links } }
+      svelte: { props: { notifications: notifications, links: links } },
     }).render(true);
   }
 }

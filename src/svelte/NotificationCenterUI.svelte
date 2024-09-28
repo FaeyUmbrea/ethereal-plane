@@ -1,10 +1,10 @@
 <svelte:options accessors="{true}" />
 
 <script>
-  import { ApplicationShell } from '@typhonjs-fvtt/runtime/svelte/component/core';
-  import { setSetting } from '../utils/settings.js';
-  import { onDestroy } from 'svelte';
-  import { slide } from 'svelte/transition';
+  import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
+  import { setSetting } from "../utils/settings.js";
+  import { onDestroy } from "svelte";
+  import { slide } from "svelte/transition";
 
   export let notifications;
   export let links;
@@ -20,24 +20,24 @@
     news = notifications.find((notification) => notification.id === id);
   }
   onDestroy(() => {
-    setSetting('lastReadNotification', cutoffDate);
+    setSetting("lastReadNotification", cutoffDate);
   });
 </script>
 
 <ApplicationShell bind:elementRoot="{elementRoot}">
   <main>
-    <div class='newsBox'>
-      <div class='newsSelect'>
+    <div class="newsBox">
+      <div class="newsSelect">
         {#each notifications as notification}
           <div
             class="{notification.id === news.id ? 'selected' : ''} select"
-            role='none'
-            on:click='{() => setNews(notification.id)}'
+            role="none"
+            on:click="{() => setNews(notification.id)}"
           >
             <span>
               {notification.title}
             </span>
-            <span class='date'>
+            <span class="date">
               {#if notification.date_updated != null}
                 {new Date(notification.date_updated).toLocaleDateString()}
               {:else}
@@ -47,28 +47,28 @@
           </div>
         {/each}
       </div>
-      <div class='newsDisplay'>
+      <div class="newsDisplay">
         {#key news}
           <div transition:slide="{{ duration: 200, axis: 'y' }}">
-            <div class='title'>
+            <div class="title">
               {news.title}
             </div>
-            <div class='news'>
+            <div class="news">
               {news.message}
             </div>
           </div>
         {/key}
       </div>
     </div>
-    <div class='links'>
+    <div class="links">
       {#each links as { url, title }}
-        <button on:click='{() => openLink(url)}'>{title}</button>
+        <button on:click="{() => openLink(url)}">{title}</button>
       {/each}
     </div>
   </main>
 </ApplicationShell>
 
-<style lang='sass'>
+<style lang="sass">
   main
     display: grid
     grid-template-rows: auto 36px
