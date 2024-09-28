@@ -261,11 +261,15 @@ const debouncedReload = foundry.utils.debounce(
 
 /** @returns {void} */
 export async function showNotifications() {
-  const notifications = await getNotifications();
-  if (notifications.length > 0) {
-    const links = await getLinks();
-    new NotificationCenter({
-      svelte: { props: { notifications: notifications, links: links } },
-    }).render(true);
+  try {
+    const notifications = await getNotifications();
+    if (notifications.length > 0) {
+      const links = await getLinks();
+      new NotificationCenter({
+        svelte: { props: { notifications: notifications, links: links } },
+      }).render(true);
+    }
+  } catch (e) {
+    console.error(e);
   }
 }
