@@ -42,7 +42,6 @@
   "browserslist": [
     ">5%",
     "not IE 11"
-    j
   ],
   "license": "AGPL3.0",
   "packageManager": "yarn@4.5.0",

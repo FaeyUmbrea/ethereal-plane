@@ -1,5 +1,5 @@
 import PollApplication from './applications/pollApplication.js';
-import { registerHanlders } from './handlers/index.js';
+import { registerHanlders } from './handlers';
 import { getSetting, setSetting, settings, showNotifications } from './utils/settings.js';
 import { registerOverlay } from './utils/overlay.js';
 import { FVTTSidebarControl } from '@typhonjs-fvtt/svelte-standard/application';

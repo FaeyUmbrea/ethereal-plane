@@ -14,42 +14,42 @@ export async function getNotifications() {
         {
           tags: {
             _contains: 'ethereal-plane'
-          }
+          },
         },
         {
           _or: [
             {
               date_updated: {
                 _gte: lastRunDate
-              }
+              },
             },
             {
               date_created: {
                 _gte: lastRunDate
-              }
-            }
-          ]
+              },
+            },
+          ],
         },
         {
           status: {
             _eq: 'published'
-          }
-        }
-      ]
-    }
+          },
+        },
+      ],
+    },
   };
 
   if (lastReadNotification === '') {
     newsQuery.filter._and.push({
       new_users: {
         _eq: true
-      }
+      },
     });
   } else {
     newsQuery.filter._and.push({
       existing_users: {
         _eq: lastReadNotification !== ''
-      }
+      },
     });
   }
 
@@ -65,15 +65,15 @@ export async function getLinks() {
         {
           tags: {
             _contains: 'ethereal-plane'
-          }
+          },
         },
         {
           status: {
             _eq: 'published'
-          }
-        }
-      ]
-    }
+          },
+        },
+      ],
+    },
   };
   return await client.request(readItems('Links', linksQuery));
 }
