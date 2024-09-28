@@ -1,19 +1,14 @@
-import PollApplication from "./applications/pollApplication.js";
-import { registerHanlders } from "./handlers/index.js";
-import {
-  getSetting,
-  setSetting,
-  settings,
-  showNotifications,
-} from "./utils/settings.js";
-import { registerOverlay } from "./utils/overlay.js";
-import { FVTTSidebarControl } from "@typhonjs-fvtt/svelte-standard/application";
-import StreamChat from "./svelte/components/StreamChat.svelte";
-import { getGame } from "./utils/helpers.js";
-import { getConnectionManager } from "./server/connectionManager.js";
-import { nanoid } from "nanoid";
-import "./utils/api.js";
-import "./server/patreon_auth.js";
+import PollApplication from './applications/pollApplication.js';
+import { registerHanlders } from './handlers/index.js';
+import { getSetting, setSetting, settings, showNotifications } from './utils/settings.js';
+import { registerOverlay } from './utils/overlay.js';
+import { FVTTSidebarControl } from '@typhonjs-fvtt/svelte-standard/application';
+import StreamChat from './svelte/components/StreamChat.svelte';
+import { getGame } from './utils/helpers.js';
+import { getConnectionManager } from './server/connectionManager.js';
+import { nanoid } from 'nanoid';
+import './utils/api.js';
+import './server/patreon_auth.js';
 
 let polls;
 
@@ -53,7 +48,7 @@ Hooks.once("ready", async () => {
     registerHanlders();
   }
   if (getGame().user?.isGM) {
-    showNotifications();
+    await showNotifications();
     getConnectionManager();
     const campaignID = getSetting("campaign-id");
     if (!campaignID) await setSetting("campaign-id", nanoid(64));

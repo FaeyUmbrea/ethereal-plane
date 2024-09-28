@@ -1,11 +1,11 @@
-import { Poll } from "./polls.js";
-import { ConfigApplication } from "../applications/configApplication.js";
-import { getGame } from "./helpers.js";
-import { Modes } from "./const.js";
-import NotificationCenter from "../applications/notificationCenter.js";
-import notifications from "./notifications.json";
-import { TJSGameSettings } from "@typhonjs-fvtt/runtime/svelte/store/fvtt/settings";
-import { ChatCommandApplication } from "../applications/chatCommandApplication.js";
+import { Poll } from './polls.js';
+import { ConfigApplication } from '../applications/configApplication.js';
+import { getGame } from './helpers.js';
+import { Modes } from './const.js';
+import NotificationCenter from '../applications/notificationCenter.js';
+import { TJSGameSettings } from '@typhonjs-fvtt/runtime/svelte/store/fvtt/settings';
+import { ChatCommandApplication } from '../applications/chatCommandApplication.js';
+import { getLinks, getNotifications } from '../notifications/notifications.js';
 
 const moduleID = "ethereal-plane";
 
@@ -260,10 +260,12 @@ const debouncedReload = foundry.utils.debounce(
 );
 
 /** @returns {void} */
-export function showNotifications() {
-  const lastRead = getSetting("last-read-notification");
-  if (lastRead < notifications[0].id) {
-    //@ts-ignore
-    new NotificationCenter().render(true);
+export async function showNotifications() {
+  const notifications = await getNotifications();
+  if (notifications.length > 0) {
+    const links = await getLinks();
+    new NotificationCenter({
+      svelte: { props: { notifications: notifications, links: links } }
+    }).render(true);
   }
 }
