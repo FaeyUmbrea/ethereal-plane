@@ -5,6 +5,8 @@
   import { setSetting } from "../utils/settings.js";
   import { onDestroy } from "svelte";
   import { slide } from "svelte/transition";
+  import snarkdown from "snarkdown";
+  import insane from "insane";
 
   export let notifications;
   export let links;
@@ -54,7 +56,8 @@
               {news.title}
             </div>
             <div class="news">
-              {news.message}
+              <!--  eslint-disable-next-line svelte/no-at-html-tags -->
+              {@html insane(snarkdown(news.message))}
             </div>
           </div>
         {/key}

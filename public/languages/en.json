@@ -74,7 +74,9 @@
       "profile": "Show User Profile",
       "disconnect": "Disconnect",
       "accept-text": "By connecting you accept the ",
-      "notification-prefix": "Ethereal Plane | "
+      "notification-prefix": "Ethereal Plane | ",
+      "account-setup": "Account Setup",
+      "account-setup-reminder": "Please make sure to set up your account before trying to connect to the backend!"
     }
   }
 }

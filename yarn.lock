@@ -1205,6 +1205,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/marked@npm:^5.0.1":
+  version: 5.0.2
+  resolution: "@types/marked@npm:5.0.2"
+  checksum: 10c0/357cc530fc94cf876fb6626ab1763c336850d9c884981766a3dc62516abb6f821205a120e5b8209e3333bfa4aba35da6c4acedd2c9a4ddb47951fba70e479fe3
+  languageName: node
+  linkType: hard
+
 "@types/resolve@npm:1.20.2":
   version: 1.20.2
   resolution: "@types/resolve@npm:1.20.2"
@@ -1391,6 +1398,13 @@ __metadata:
   dependencies:
     dequal: "npm:^2.0.3"
   checksum: 10c0/2bff0d4eba5852a9dd578ecf47eaef0e82cc52569b48469b0aac2db5145db0b17b7a58d9e01237706d1e14b7a1b0ac9b78e9c97027ad97679dd8f91b85da1469
+  languageName: node
+  linkType: hard
+
+"assignment@npm:2.0.0":
+  version: 2.0.0
+  resolution: "assignment@npm:2.0.0"
+  checksum: 10c0/59a31b8a257cb9352f261c503f17a089e8062c75aaf56d43c81d3ed9203e83bfb927c1d08325ba995231dc568bcbcc9938db54e8fda0d4e03a33dc196e4582d4
   languageName: node
   linkType: hard
 
@@ -1934,6 +1948,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dompurify@npm:^3.1.7":
+  version: 3.1.7
+  resolution: "dompurify@npm:3.1.7"
+  checksum: 10c0/fcceef2e9f824d712a056fa699b0538f3337f5cf00ccb7227bdc7eba5463823e15d9aecc00a2fd81c726b28a71e7b09f0eb8a2fde1021c40e35f12dc67b66394
+  languageName: node
+  linkType: hard
+
 "domutils@npm:^3.0.1":
   version: 3.1.0
   resolution: "domutils@npm:3.1.0"
@@ -2433,20 +2454,24 @@ __metadata:
     "@sveltejs/vite-plugin-svelte": "npm:^3.1.2"
     "@typhonjs-fvtt/runtime": "npm:^0.1.3"
     "@typhonjs-fvtt/svelte-standard": "npm:^0.1.0"
+    dompurify: "npm:^3.1.7"
     esbuild: "npm:^0.24.0"
     eslint: "npm:^9.11.1"
     eslint-config-prettier: "npm:^9.1.0"
     eslint-plugin-prettier: "npm:^5.2.1"
     eslint-plugin-svelte: "npm:^2.44.1"
     globals: "npm:^15.9.0"
+    insane: "npm:^2.6.2"
     nanoid: "npm:^5.0.7"
     oauth4webapi: "npm:^2.17.0"
     prettier: "npm:^3.3.3"
     prettier-plugin-svelte: "npm:^3.2.7"
     rollup-plugin-visualizer: "npm:^5.12.0"
+    snarkdown: "npm:^2.0.0"
     socket.io-client: "npm:4.8.0"
     stylus: "npm:^0.63.0"
     svelte: "npm:^4.2.19"
+    svelte-markdown: "npm:^0.4.1"
     svelte-preprocess: "npm:^6.0.3"
     vite: "npm:^5.4.8"
   languageName: unknown
@@ -2738,6 +2763,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"he@npm:0.5.0":
+  version: 0.5.0
+  resolution: "he@npm:0.5.0"
+  bin:
+    he: bin/he
+  checksum: 10c0/7cea1fb119d2b66baaa820d9a899491e2b2acf642b254e5730fc0f149fcbcfd9e37fad3445fbc25b6a0742303b9e5910b379ff9e235a5167e7a6bd75f9a20abc
+  languageName: node
+  linkType: hard
+
 "http-cache-semantics@npm:^4.1.0":
   version: 4.1.1
   resolution: "http-cache-semantics@npm:4.1.1"
@@ -2843,6 +2877,16 @@ __metadata:
   version: 2.0.4
   resolution: "inherits@npm:2.0.4"
   checksum: 10c0/4e531f648b29039fb7426fb94075e6545faa1eb9fe83c29f0b6d9e7263aceb4289d2d4557db0d428188eeb449cc7c5e77b0a0b2c4e248ff2a65933a0dee49ef2
+  languageName: node
+  linkType: hard
+
+"insane@npm:^2.6.2":
+  version: 2.6.2
+  resolution: "insane@npm:2.6.2"
+  dependencies:
+    assignment: "npm:2.0.0"
+    he: "npm:0.5.0"
+  checksum: 10c0/503291d7ac735629541c8870581dd7eec875ec1489e45f9161c792f10996b5f6affae2f74aac104f9dd9799005fe91229a137b09738b8afd9a6d2d3fd2dafc73
   languageName: node
   linkType: hard
 
@@ -3138,6 +3182,15 @@ __metadata:
     socks-proxy-agent: "npm:^7.0.0"
     ssri: "npm:^9.0.0"
   checksum: 10c0/28ec392f63ab93511f400839dcee83107eeecfaad737d1e8487ea08b4332cd89a8f3319584222edd9f6f1d0833cf516691469496d46491863f9e88c658013949
+  languageName: node
+  linkType: hard
+
+"marked@npm:^5.1.2":
+  version: 5.1.2
+  resolution: "marked@npm:5.1.2"
+  bin:
+    marked: bin/marked.js
+  checksum: 10c0/46db65d331ee59be7c78c28ae9c3167a49e5bf4c441140aa3e7be3397ad574cd67937d8361c8a2e301015c4f0727be117cde697e45b9f093578328bb8e3254c1
   languageName: node
   linkType: hard
 
@@ -4669,6 +4722,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"snarkdown@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "snarkdown@npm:2.0.0"
+  checksum: 10c0/2e1645924041f0a69804b2d0eac3eef0403d1d769da374c73102f1f8a401401990c79e6dd1ee0ea302585ecea232e358c11134781b389b0afffb987f4db5b36d
+  languageName: node
+  linkType: hard
+
 "socket.io-client@npm:4.8.0":
   version: 4.8.0
   resolution: "socket.io-client@npm:4.8.0"
@@ -4861,6 +4921,18 @@ __metadata:
   peerDependencies:
     svelte: ^3.19.0 || ^4.0.0
   checksum: 10c0/242c0775361b5e8e0c19550ce0f8d27f738c31f45684b8a8beb88e2cce931078ffab0a6793002b4879c2637fa698d559020e78cab40756be11341602284ed01e
+  languageName: node
+  linkType: hard
+
+"svelte-markdown@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "svelte-markdown@npm:0.4.1"
+  dependencies:
+    "@types/marked": "npm:^5.0.1"
+    marked: "npm:^5.1.2"
+  peerDependencies:
+    svelte: ^4.0.0
+  checksum: 10c0/d13259e258c552f6a58c9498d74efef6cfc21ed06abecaf4e1a6cc53a52c9c2b145fc14ffc0c2b15ced2a817e8f63f2eb56a85db0e197f4b61a2c9af3bf3ba54
   languageName: node
   linkType: hard
 

@@ -174,6 +174,10 @@
     </button>
   {/if}
 {:else}
+  <InfoBox variant="info">
+    <span>{localize("ethereal-plane.strings.account-setup-reminder")}</span><br
+    />
+  </InfoBox>
   <InfoBox variant="error">
     <span>{localize("ethereal-plane.strings.patreon-logged-out")}</span><br />
     <span>{localize("ethereal-plane.strings.accept-text")}</span><a
@@ -186,6 +190,9 @@
       >{localize("ethereal-plane.strings.privacy-policy")}</a
     >
   </InfoBox>
+  <button on:click="{profile}"
+    >{localize("ethereal-plane.strings.account-setup")}</button
+  >
   <button on:click="{connect}"
     >{localize("ethereal-plane.strings.connect")}&nbsp;<i
       class="fa-brands fa-patreon orange"
