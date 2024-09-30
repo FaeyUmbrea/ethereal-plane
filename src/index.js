@@ -7,8 +7,6 @@ import {
   showNotifications,
 } from "./utils/settings.js";
 import { registerOverlay } from "./utils/overlay.js";
-import { FVTTSidebarControl } from "@typhonjs-fvtt/svelte-standard/application";
-import StreamChat from "./svelte/components/StreamChat.svelte";
 import { getGame } from "./utils/helpers.js";
 import { getConnectionManager } from "./server/connectionManager.js";
 import { nanoid } from "nanoid";
@@ -70,21 +68,22 @@ Hooks.once("ready", () => registerMenus());
 
 Hooks.on("obsUtilsInit", registerOverlay);
 
-Hooks.once("getSceneControlButtons", () => {
+Hooks.once("renderSidebar", async () => {
   if (
     getGame().user?.isGM &&
     getSetting("enable-chat-tab") &&
     getSetting("enabled")
-  )
-    FVTTSidebarControl.add({
-      beforeId: "combat",
-      classes: ["flexcol"],
-      id: "directory epchat",
-      icon: "fas fa-message-bot",
-      title: "Stream Chat",
-      tooltip: "Stream Chat",
-      svelte: {
-        class: StreamChat,
-      },
-    });
+  ) {
+    const { addSidebar } = await import("./utils/sidebar.js");
+    const StreamChat = (await import("./svelte/components/StreamChat.svelte"))
+      .default;
+
+    await addSidebar(
+      "directory epchat",
+      "Stream Chat",
+      "fas fa-message-bot",
+      "combat",
+      StreamChat,
+    );
+  }
 });

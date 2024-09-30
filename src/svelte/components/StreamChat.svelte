@@ -16,6 +16,8 @@
   const scrollToBottom = async (node) => {
     node.scroll({ top: node.scrollHeight, behavior: "smooth" });
   };
+
+  export let id;
 </script>
 
 <ol bind:this="{element}" class="ep-chat">
