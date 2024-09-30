@@ -29,6 +29,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@castlenine/svelte-qrcode@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "@castlenine/svelte-qrcode@npm:2.2.0"
+  peerDependencies:
+    svelte: ">=3.54.0"
+  checksum: 10c0/eec181a524cf08d79e424ed88b6c785e7f14e7e83aa0799117a9f80f7c00bb0a2ff4804d19887a4bcbf6d1302d5136f4c4e9db5fc7484f7f965c330d755f579d
+  languageName: node
+  linkType: hard
+
 "@csstools/cascade-layer-name-parser@npm:^1.0.3, @csstools/cascade-layer-name-parser@npm:^1.0.4":
   version: 1.0.4
   resolution: "@csstools/cascade-layer-name-parser@npm:1.0.4"
@@ -2448,6 +2457,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ethereal-plane@workspace:."
   dependencies:
+    "@castlenine/svelte-qrcode": "npm:^2.2.0"
     "@directus/sdk": "npm:^17.0.1"
     "@microsoft/signalr": "npm:^8.0.7"
     "@svelte-plugins/tooltips": "npm:^3.0.1"

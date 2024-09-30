@@ -1,13 +1,13 @@
 <script>
   import { PollStatus } from "../../utils/polls.js";
-  import { setSetting, settings } from "../../utils/settings.js";
+  import { setSetting, getStore } from "../../utils/settings.js";
   import { TJSDocument } from "@typhonjs-fvtt/runtime/svelte/store/fvtt/document";
   import { getConnectionManager } from "../../server/connectionManager.js";
 
   /**
    * @type {Poll}
    */
-  const poll = settings.getStore("currentPoll");
+  const poll = getStore("currentPoll");
   let title = "";
   let duration = 30;
 

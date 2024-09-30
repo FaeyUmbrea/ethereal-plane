@@ -39,8 +39,9 @@ export class PatreonConnector {
     });
   }
 
-  connect() {
-    connectClient().then();
+  async connect() {
+    await this.logout();
+    await connectClient();
   }
 
   /** @returns {Promise<void>} */
@@ -163,28 +164,23 @@ export class PatreonConnector {
       verification_uri_complete: uri,
       user_code,
     } = await patreonLogin();
-    let d = new Dialog({
-      title: "Device Code",
-      content: `The login Device Code is ${user_code}. <br> Either manually enter it or press open to open the login dialog. Pressing any button will close this window, please note down the code beforehand.`,
-      buttons: {
-        open: {
-          label: "Open",
-          callback: () =>
-            window.open(
-              uri,
-              "_blank",
-              "location=yes,height=570,width=520,scrollbars=yes,status=yes",
-            ),
+    const LoginApplication = (
+      await import("../applications/loginApplication.js")
+    ).default;
+    let d = new LoginApplication({
+      svelte: {
+        props: {
+          user_code: user_code,
+          uri: uri,
         },
-        close: { label: "Close" },
       },
-      default: "two",
     });
     d.render(true);
     const { access_token, refresh_token } =
       await waitForPatreonVerification(device_code);
     await setSetting("authentication-token", access_token);
     await setSetting("refresh-token", refresh_token);
+    Hooks.callAll("ethereal-plane.patreon-logged-in");
     await this.init();
   }
 

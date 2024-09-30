@@ -1,9 +1,9 @@
 <script>
   import { Poll, PollStatus } from "../../utils/polls.js";
-  import { setSetting, settings } from "../../utils/settings.js";
+  import { setSetting, getStore } from "../../utils/settings.js";
   import { getConnectionManager } from "../../server/connectionManager.js";
 
-  const pollStore = settings.getStore("currentPoll");
+  const pollStore = getStore("currentPoll");
 
   let disableEnd = false;
 

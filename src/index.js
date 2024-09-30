@@ -1,9 +1,9 @@
-import PollApplication from "./applications/pollApplication.js";
 import { registerHanlders } from "./handlers";
 import {
   getSetting,
+  registerMenus,
   setSetting,
-  settings,
+  registerSettings,
   showNotifications,
 } from "./utils/settings.js";
 import { registerOverlay } from "./utils/overlay.js";
@@ -33,7 +33,7 @@ function buildButtons(buttons) {
     name: "openPolls",
     title: "Open Polls",
     toggle: true,
-    onClick: () => openPolls(pollsButton),
+    onClick: async () => await openPolls(pollsButton),
   };
   buttonGroup?.tools.push(pollsButton);
 }
@@ -41,11 +41,14 @@ function buildButtons(buttons) {
 /** @param {SceneControlTool} button
  * @returns {void}
  */
-function openPolls(button) {
-  if (!polls) polls = new PollApplication(button);
-  //@ts-ignore
-  if (!polls.rendered) polls.render(true);
-  else polls.close();
+async function openPolls(button) {
+  if (!polls) {
+    const PollApplication = (await import("./applications/pollApplication.js"))
+      .default;
+    polls = new PollApplication(button);
+  }
+  if (!polls?.rendered) polls?.render(true);
+  else polls?.close();
 }
 
 Hooks.once("ready", async () => {
@@ -62,7 +65,8 @@ Hooks.once("ready", async () => {
 
 Hooks.on("getSceneControlButtons", buildButtons);
 
-Hooks.on("init", () => settings.init());
+Hooks.on("init", () => registerSettings());
+Hooks.once("ready", () => registerMenus());
 
 Hooks.on("obsUtilsInit", registerOverlay);
 

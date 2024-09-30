@@ -1,5 +1,3 @@
-import * as signalR from "@microsoft/signalr";
-
 /** @type {signalR.HubConnection} */
 let connection;
 
@@ -26,6 +24,7 @@ export async function initChatAPI(
   handleChatMessageReceived,
   baseURL,
 ) {
+  const signalR = await import("@microsoft/signalr");
   connection = new signalR.HubConnectionBuilder()
     .withUrl(baseURL + "api/v2/hubs/chat", {
       accessTokenFactory: () => accessToken,

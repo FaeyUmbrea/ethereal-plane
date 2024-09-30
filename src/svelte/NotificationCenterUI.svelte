@@ -21,8 +21,8 @@
   function setNews(id) {
     news = notifications.find((notification) => notification.id === id);
   }
-  onDestroy(() => {
-    setSetting("lastReadNotification", cutoffDate);
+  onDestroy(async () => {
+    await setSetting("last-read-notification", cutoffDate);
   });
 </script>
 
@@ -71,7 +71,7 @@
   </main>
 </ApplicationShell>
 
-<style lang="sass">
+<style lang="stylus">
   main
     display: grid
     grid-template-rows: auto 36px

@@ -2,12 +2,12 @@
 
 <script>
   import { Poll } from "../utils/polls.js";
-  import { settings } from "../utils/settings.js";
+  import { getStore } from "../utils/settings.js";
   import PollDisplay from "./components/PollDisplay.svelte";
   import PollEditor from "./components/PollEditor.svelte";
   import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
 
-  let poll = settings.getStore("currentPoll");
+  let poll = getStore("currentPoll");
   export let elementRoot = void 0;
 
   if (!$poll) {

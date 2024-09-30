@@ -7,4 +7,4 @@ export var Modes;
   Modes["localchat"] = "localchat";
 })(Modes || (Modes = {}));
 
-export const PATREON_URL = "https://epv2.void.monster/";
+export const PATREON_URL = "https://etherealplane.app/";

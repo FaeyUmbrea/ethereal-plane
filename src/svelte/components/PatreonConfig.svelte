@@ -5,11 +5,11 @@
   import { disconnectClient } from "../../server/patreon_auth.js";
   import { onDestroy } from "svelte";
   import { PATREON_URL } from "../../utils/const.js";
+  import { getStore } from "../../utils/settings.js";
 
-  export let settings = void 0;
-  const key = settings.getStore("authentication-token");
-  const pollsEnabled = settings.getStore("polls-enabled");
-  const moduleEnabled = settings.getStore("enabled");
+  const key = getStore("authentication-token");
+  const pollsEnabled = getStore("polls-enabled");
+  const moduleEnabled = getStore("enabled");
 
   let clientIdExists = false;
   foundry.utils
@@ -61,8 +61,8 @@
     ).text());
   }
 
-  async function profile() {
-    window.open(PATREON_URL + "Account/Manage", "_blank");
+  async function open_patreon_site(path = "") {
+    window.open(PATREON_URL + path, "_blank");
   }
 
   const hook1 = Hooks.on("ethereal-plane.patreon-connected", refreshClient);
@@ -93,7 +93,7 @@
 {#if clientIdExists}
   {#if !!$key}
     <div class="buttons">
-      <button on:click="{profile}"
+      <button on:click="{() => open_patreon_site('Account/Manage')}"
         >{localize("ethereal-plane.strings.profile")}</button
       >
       <button on:click="{logout}"
@@ -190,7 +190,7 @@
       >{localize("ethereal-plane.strings.privacy-policy")}</a
     >
   </InfoBox>
-  <button on:click="{profile}"
+  <button on:click="{() => open_patreon_site()}"
     >{localize("ethereal-plane.strings.account-setup")}</button
   >
   <button on:click="{connect}"

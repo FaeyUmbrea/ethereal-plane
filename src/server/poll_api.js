@@ -1,5 +1,3 @@
-import * as signalR from "@microsoft/signalr";
-
 /**
  * @type {import('@microsoft/signalr').HubConnection}
  */
@@ -25,6 +23,7 @@ let connection = null;
  * @return {Promise} - A Promise representing the connection start operation.
  */
 export async function initPollAPI(bearerToken, pollUpdateCallback, baseUrl) {
+  const signalR = await import("@microsoft/signalr");
   connection = new signalR.HubConnectionBuilder()
     .withUrl(`${baseUrl}api/v2/hubs/polls`, {
       accessTokenFactory: () => bearerToken,

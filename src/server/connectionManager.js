@@ -1,4 +1,4 @@
-import { getSetting, settings } from "../utils/settings.js";
+import { getSetting, getStore } from "../utils/settings.js";
 import { Modes } from "../utils/const.js";
 import { PatreonConnector } from "./patreon.js";
 import { LocalServer } from "./localserver.js";
@@ -18,7 +18,7 @@ class ConnectionManager {
   messageListeners = undefined;
 
   constructor() {
-    settings.getStore("mode")?.subscribe((mode) => {
+    getStore("mode")?.subscribe((mode) => {
       this.onChangeMode(mode);
     });
     this.messageListeners = [];

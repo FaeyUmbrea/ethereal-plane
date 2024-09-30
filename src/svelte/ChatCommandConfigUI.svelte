@@ -1,16 +1,13 @@
 <svelte:options accessors="{true}" />
 
 <script>
-  import { setSetting, settings } from "../utils/settings.js";
+  import { setSetting, getStore } from "../utils/settings.js";
   import ChatCommandConfig from "./components/ChatCommandConfig.svelte";
   import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
   import { ChatCommand } from "../utils/chatCommands.js";
   import { getContext } from "svelte";
 
-  /**
-   * @type {SvelteStore<ChatCommand[]>}
-   */
-  const commands = settings.getStore("chat-commands");
+  const commands = getStore("chat-commands");
   export let elementRoot = void 0;
 
   function add() {
