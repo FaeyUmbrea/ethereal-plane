@@ -3,6 +3,7 @@
   import { setSetting, getStore } from "../../utils/settings.js";
   import { TJSDocument } from "@typhonjs-fvtt/runtime/svelte/store/fvtt/document";
   import { getConnectionManager } from "../../server/connectionManager.js";
+  import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
 
   /**
    * @type {Poll}
@@ -72,7 +73,12 @@
 
 <div class="editor">
   <div class="config">
-    <input bind:value="{title}" class="title" placeholder="Title" type="text" />
+    <input
+      bind:value="{title}"
+      class="title"
+      placeholder="{localize('ethereal-plane.ui.title')}"
+      type="text"
+    />
     <input
       bind:value="{duration}"
       class="duration"
@@ -113,7 +119,8 @@
       on:click="{removeOption}"
       ><i class="fas fa-minus"></i>
     </button>
-    <button on:click="{startPoll}">Start</button>
+    <button on:click="{startPoll}">{localize("ethereal-plane.ui.start")}</button
+    >
   </div>
 </div>
 

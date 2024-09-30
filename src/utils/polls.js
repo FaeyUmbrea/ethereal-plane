@@ -1,5 +1,6 @@
 import { getSetting } from "./settings.js";
 import { getGame } from "./helpers.js";
+import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
 
 /** */
 export class Poll {
@@ -7,8 +8,8 @@ export class Poll {
   title = undefined;
   /** @type Array<PollOption> */
   options = [
-    { text: "yes", name: "1" },
-    { text: "no", name: "2" },
+    { text: localize("ethereal-plane.ui.yes"), name: "1" },
+    { text: localize("ethereal-plane.ui.no"), name: "2" },
   ];
   /** @type Array<number> @default [0, 0] */
   tally = [0, 0];

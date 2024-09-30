@@ -12,6 +12,7 @@ import { getConnectionManager } from "./server/connectionManager.js";
 import { nanoid } from "nanoid";
 import "./utils/api.js";
 import "./server/patreon_auth.js";
+import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
 
 let polls;
 
@@ -29,7 +30,7 @@ function buildButtons(buttons) {
   const pollsButton = {
     icon: "fa-solid fa-square-poll-vertical",
     name: "openPolls",
-    title: "Open Polls",
+    title: "ethereal-plane.ui.open-polls-button",
     toggle: true,
     onClick: async () => await openPolls(pollsButton),
   };
@@ -80,7 +81,7 @@ Hooks.once("renderSidebar", async () => {
 
     await addSidebar(
       "directory epchat",
-      "Stream Chat",
+      localize("ethereal-plane.ui.chat-tab-name"),
       "fas fa-message-bot",
       "combat",
       StreamChat,

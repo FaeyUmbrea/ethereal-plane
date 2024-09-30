@@ -4,6 +4,7 @@
   import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
   import { QRCode } from "@castlenine/svelte-qrcode";
   import { getContext, onDestroy } from "svelte";
+  import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
 
   export let user_code;
   export let uri;
@@ -17,6 +18,13 @@
     context.application.close();
   }
 
+  async function copy() {
+    await navigator.clipboard.writeText(uri);
+    ui.notifications?.info(
+      `Ethereal Plane | ${localize("ethereal-plane.notifications.login-copy")}`,
+    );
+  }
+
   onDestroy(() => {
     Hooks.off("ethereal-plane.patreon-logged-in", hook);
   });
@@ -26,14 +34,15 @@
   <main>
     <div class="text">
       <span>
-        The login Device Code is <code class="user-code">{user_code}</code>.
+        {localize("ethereal-plane.ui.login.device-code")}:&nbsp;<code
+          class="user-code">{user_code}</code
+        >.
       </span>
       <span>
-        Either press "Open" to open a log-in dialog directly, copy it and send
-        it to another device, or scan the QR code.
+        {localize("ethereal-plane.ui.login.hint1")}
       </span>
       <span>
-        This window will automatically close when the login is complete.
+        {localize("ethereal-plane.ui.login.hint2")}
       </span>
     </div>
     <div class="QR">
@@ -49,10 +58,10 @@
           );
         }}"
       >
-        Open
+        {localize("ethereal-plane.ui.open")}
       </button>
-      <button> Copy </button>
-      <button> Cancel </button>
+      <button on:click="{copy}">{localize("ethereal-plane.ui.copy")}</button>
+      <button on:click="{close}">{localize("ethereal-plane.ui.cancel")}</button>
     </div>
   </main>
 </ApplicationShell>

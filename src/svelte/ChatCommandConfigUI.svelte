@@ -6,6 +6,7 @@
   import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
   import { ChatCommand } from "../utils/chatCommands.js";
   import { getContext } from "svelte";
+  import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
 
   const commands = getStore("chat-commands");
   export let elementRoot = void 0;
@@ -33,17 +34,19 @@
 <ApplicationShell bind:elementRoot="{elementRoot}">
   <main>
     <div class="command-section">
-      <span class="config">Base Config</span>
-      <span class="cooldown">Cooldown (seconds)</span>
+      <span class="config">{localize("ethereal-plane.ui.commands.base")}</span>
+      <span class="cooldown"
+        >{localize("ethereal-plane.ui.commands.cooldown")}</span
+      >
       <span class="macro"></span>
       <span></span>
-      <span>Active</span>
-      <span>Name</span>
-      <span>Template</span>
-      <span>User</span>
-      <span>Target</span>
-      <span>Target identifier</span>
-      <span class="macro">Macro</span>
+      <span>{localize("ethereal-plane.ui.commands.active")}</span>
+      <span>{localize("ethereal-plane.ui.commands.name")}</span>
+      <span>{localize("ethereal-plane.ui.commands.template")}</span>
+      <span>{localize("ethereal-plane.ui.commands.user")}</span>
+      <span>{localize("ethereal-plane.ui.commands.target")}</span>
+      <span>{localize("ethereal-plane.ui.commands.target-identifier")}</span>
+      <span class="macro">{localize("ethereal-plane.ui.commands.macro")}</span>
       <span></span>
       {#each $commands as command, index}
         <ChatCommandConfig bind:command="{command}" index="{index}"
@@ -56,7 +59,7 @@
     <hr />
     <div class="footer">
       <button class="add" on:click="{add}"><i class="fas fa-plus"></i></button>
-      <button on:click="{close}">Save</button>
+      <button on:click="{close}">{localize("ethereal-plane.ui.save")}</button>
     </div>
   </main>
 </ApplicationShell>

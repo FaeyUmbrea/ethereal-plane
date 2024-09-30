@@ -11,7 +11,7 @@ export class ConfigApplication extends SvelteApplication {
       width: 550,
       height: 460,
       id: "config-application",
-      title: "Ethereal Plane Config",
+      title: "ethereal-plane.ui.config-application-title",
       resizable: true,
       positionOrtho: false,
       transformOrigin: null,

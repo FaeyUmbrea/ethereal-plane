@@ -20,7 +20,7 @@ export default class PollApplication extends SvelteApplication {
       width: 500,
       height: 315,
       id: "polls-application",
-      title: "Polls",
+      title: "ethereal-plane.ui.polls-application-title",
       positionOrtho: false,
       transformOrigin: null,
       svelte: {

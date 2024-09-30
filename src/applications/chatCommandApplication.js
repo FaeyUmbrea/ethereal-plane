@@ -2,18 +2,19 @@ import { SvelteApplication } from "@typhonjs-fvtt/runtime/svelte/application";
 import ChatCommandConfigUI from "../svelte/ChatCommandConfigUI.svelte";
 import { getSetting, setSetting } from "../utils/settings.js";
 import { getGame } from "../utils/helpers.js";
+import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
 
 /** @extends SvelteApplication */
 export class ChatCommandApplication extends SvelteApplication {
   /** @static */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["eppolls"],
+      classes: ["ep-chat-commands"],
       minimizable: true,
       width: 500,
       height: 320,
-      id: "chatcommand-config-application",
-      title: "Chat Command Config",
+      id: "chat-command-config-application",
+      title: "ethereal-plane.ui.chat-command-application-title",
       resizable: true,
       positionOrtho: false,
       transformOrigin: null,
@@ -31,28 +32,28 @@ export class ChatCommandApplication extends SvelteApplication {
     buttons.unshift(
       {
         icon: "fas fa-file-import",
-        title: "Import",
-        label: "Import",
+        title: localize("ethereal-plane.ui.commands.import.button"),
+        label: localize("ethereal-plane.ui.commands.import.button"),
 
         onPress: async function () {
           new Dialog(
             {
-              title: `Import Data: ${this.name}`,
+              title: `${localize("ethereal-plane.ui.commands.import.title")}: ${this.name}`,
               content: await renderTemplate("templates/apps/import-data.html", {
-                hint1:
-                  "You are about to import and exported Chat Command configuration.",
-                hint2:
-                  "Data will be appended to the list. Please choose if you want to import Macros as well.",
+                hint1: localize("ethereal-plane.ui.commands.import.hint1"),
+                hint2: localize("ethereal-plane.ui.commands.import.hint2"),
               }),
               buttons: {
                 import: {
                   icon: '<i class="fas fa-file-import"></i>',
-                  label: "Import",
+                  label: localize("ethereal-plane.ui.commands.import.button"),
                   callback: (html) => {
                     const form = html.find("form")[0];
                     if (!form.data.files.length)
                       return ui.notifications.error(
-                        "You did not upload a data file!",
+                        localize(
+                          "ethereal-plane.ui.commands.import.data-file-error",
+                        ),
                       );
                     readTextFromFile(form.data.files[0]).then((json) =>
                       importChatCommands(json, false),
@@ -61,12 +62,16 @@ export class ChatCommandApplication extends SvelteApplication {
                 },
                 withMacros: {
                   icon: '<i class="fas fa-file-import"></i>',
-                  label: "Import w/ Macros",
+                  label: localize(
+                    "ethereal-plane.ui.commands.import.with-macros",
+                  ),
                   callback: (html) => {
                     const form = html.find("form")[0];
                     if (!form.data.files.length)
                       return ui.notifications.error(
-                        "You did not upload a data file!",
+                        localize(
+                          "ethereal-plane.ui.commands.import.data-file-error",
+                        ),
                       );
                     readTextFromFile(form.data.files[0]).then((json) =>
                       importChatCommands(json, true),
@@ -75,7 +80,7 @@ export class ChatCommandApplication extends SvelteApplication {
                 },
                 no: {
                   icon: '<i class="fas fa-times"></i>',
-                  label: "Cancel",
+                  label: localize("ethereal-plane.ui.cancel"),
                 },
               },
               default: "import",
@@ -88,21 +93,20 @@ export class ChatCommandApplication extends SvelteApplication {
       },
       {
         icon: "fas fa-file-export",
-        title: "Export",
-        label: "Export",
+        title: localize("ethereal-plane.ui.commands.export.button"),
+        label: localize("ethereal-plane.ui.commands.export.button"),
 
         onPress: function () {
           new Dialog({
-            title: "Export with Macros?",
-            content:
-              "Do you want to export the Macros? (Otherwise Macro data will be deleted)",
+            title: localize("ethereal-plane.ui.commands.export.title"),
+            content: localize("ethereal-plane.ui.commands.export.content"),
             buttons: {
               yes: {
-                label: "Yes",
+                label: localize("ethereal-plane.ui.yes"),
                 callback: () => exportChatCommands(true),
               },
               no: {
-                label: "No",
+                label: localize("ethereal-plane.ui.no"),
                 callback: () => exportChatCommands(false),
               },
             },
@@ -167,10 +171,14 @@ async function importChatCommands(data, withMacros) {
    */
   const imported = JSON.parse(data);
   if (imported.type !== "EthPlaExport") {
-    throw new Error("Imported file is not an Ethereal Plane Export");
+    throw new Error(
+      localize("ethereal-plane.ui.commands.import.wrong-file-error"),
+    );
   }
   if (imported.version !== 1) {
-    throw new Error("Version unsupported");
+    throw new Error(
+      localize("ethereal-plane.ui.commands.import.wrong-version-error"),
+    );
   }
   let folder = game.macros?.folders.find(
     (folder) => folder.name === "Ethereal Plane",

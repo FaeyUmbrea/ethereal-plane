@@ -6,7 +6,7 @@ export default class NotificationCenter extends SvelteApplication {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["notification-center"],
       id: "notification-application",
-      title: "Ethereal Plane Notification Center",
+      title: "ethereal-plane.ui.notification-application-title",
       height: 600,
       width: 900,
       resizable: true,

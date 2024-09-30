@@ -1,9 +1,10 @@
-## Version 2.0
+## Version 2.0.1
 
-### Added
+### Changes
 
-- Multi stream Support
-
-### Changed
-
-- Everything! Ethereal Plane now has an all-new and improved backend! 
+- Improved loading times in setups with lots of modules
+- New Backend
+  - Multi Stream Support
+  - YouTube free for everyone!
+- Full localization support
+ 

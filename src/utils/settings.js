@@ -73,7 +73,7 @@ export function registerSettings() {
     ),
     scope: "world",
     config: false,
-    default: Modes.localonly,
+    default: Modes.patreon,
   });
   registerSetting("version", {
     type: Number,

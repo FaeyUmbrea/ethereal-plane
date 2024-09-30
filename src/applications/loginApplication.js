@@ -6,7 +6,7 @@ export default class LoginApplication extends SvelteApplication {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["login-dialog"],
       id: "login-application",
-      title: "Ethereal Plane Login",
+      title: "ethereal-plane.ui.login-application-title",
       width: 400,
       height: 435,
       svelte: {

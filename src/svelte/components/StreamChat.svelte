@@ -2,6 +2,7 @@
   import { chatMessages } from "../stores/chatMessages.js";
   import ChatMessage from "./ChatMessage.svelte";
   import { afterUpdate } from "svelte";
+  import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
 
   let element;
 
@@ -20,8 +21,8 @@
 
 <ol bind:this="{element}" class="ep-chat">
   <ChatMessage
-    message="This is your stream chat! Messages will appear as they are posted"
-    user="System"
+    message="{localize('ethereal-plane.ui.chat-welcome')}"
+    user="{localize('ethereal-plane.ui.system')}"
   />
   {#each $chatMessages as [user, message]}
     <ChatMessage user="{user}" message="{message}" />

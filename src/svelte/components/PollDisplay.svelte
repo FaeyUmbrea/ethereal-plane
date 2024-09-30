@@ -2,6 +2,7 @@
   import { Poll, PollStatus } from "../../utils/polls.js";
   import { setSetting, getStore } from "../../utils/settings.js";
   import { getConnectionManager } from "../../server/connectionManager.js";
+  import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
 
   const pollStore = getStore("currentPoll");
 
@@ -38,9 +39,13 @@
   </div>
   <div class="buttons">
     {#if $pollStore.status <= PollStatus.started}
-      <button id="abort" on:click="{abortPoll}">Abort</button>
+      <button id="abort" on:click="{abortPoll}"
+        >{localize("ethereal-plane.ui.abort")}</button
+      >
     {:else}
-      <button id="end" disabled="{disableEnd}" on:click="{endPoll}">End</button>
+      <button id="end" disabled="{disableEnd}" on:click="{endPoll}"
+        >{localize("ethereal-plane.ui.end")}</button
+      >
     {/if}
   </div>
 </div>

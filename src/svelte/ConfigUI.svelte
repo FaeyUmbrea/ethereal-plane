@@ -30,7 +30,10 @@
         {localize("ethereal-plane.strings.disabled")}
       </InfoBox>
     {/if}
-    <CollapsibleSection collapsed="{false}" title="General">
+    <CollapsibleSection
+      collapsed="{false}"
+      title="{localize('ethereal-plane.ui.general-tab')}"
+    >
       <section class="settings">
         <span>{localize(`ethereal-plane.settings.mode.Name`)}</span>
         <select bind:value="{$mode}" name="mode">
@@ -79,13 +82,19 @@
       </section>
     </CollapsibleSection>
     {#if $mode === Modes.patreon || $mode === Modes.localchat}
-      <CollapsibleSection collapsed="{false}" title="Patreon">
+      <CollapsibleSection
+        collapsed="{false}"
+        title="{localize('ethereal-plane.ui.hosted-tab')}"
+      >
         <PatreonConfig />
       </CollapsibleSection>
     {/if}
 
     {#if $mode === Modes.localonly || $mode === Modes.localchat}
-      <CollapsibleSection collapsed="{false}" title="Local Server">
+      <CollapsibleSection
+        collapsed="{false}"
+        title="{localize('ethereal-plane.ui.local-tab')}"
+      >
         <section class="settings">
           <span>{localize(`ethereal-plane.settings.server-url.Name`)}</span>
           <input type="text" bind:value="{$serverUrl}" />

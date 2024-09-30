@@ -22,6 +22,7 @@ import {
   disconnectPollAPI,
   initPollAPI,
 } from "./poll_api.js";
+import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
 
 export class PatreonConnector {
   /**
@@ -50,7 +51,7 @@ export class PatreonConnector {
     const apiVersion = await (await fetch(`${PATREON_URL}version`)).text();
     if (apiVersion !== "2") {
       ui.notifications?.error(
-        "Ethereal Plane API version does not match the installed Module. Please Update. Patreon Features Disabled.",
+        `Ethereal Plane | ${localize("ethereal-plane.notifications.api-version-mismatch")}`,
       );
       return;
     }
@@ -63,7 +64,7 @@ export class PatreonConnector {
     if (!clientConnected) {
       console.log("Ethereal Plane | No client connected, please connect");
       ui.notifications?.warn(
-        "Ethereal Plane | Please log in to use Ethereal Plane",
+        `Ethereal Plane | ${localize("ethereal-plane.notifications.please-log-in")}`,
       );
       return;
     }
@@ -75,7 +76,7 @@ export class PatreonConnector {
     if (token === "" || refreshToken === "") {
       console.log("Ethereal Plane | No credentials present, please log in");
       ui.notifications?.warn(
-        "Ethereal Plane | Please log in to use Ethereal Plane",
+        `Ethereal Plane | ${localize("ethereal-plane.notifications.please-log-in")}`,
       );
       return;
     }
@@ -107,7 +108,7 @@ export class PatreonConnector {
         await setSetting("authentication-token", "");
         await setSetting("refresh-token", "");
         ui.notifications?.error(
-          "Ethereal Plane | Credentials Invalid, please log in again",
+          `Ethereal Plane | ${localize("ethereal-plane.notifications.invalid-credential")}`,
         );
         throw Error(
           "Ethereal Plane | Credentials Invalid, please log in again",
