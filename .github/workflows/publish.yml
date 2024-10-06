@@ -14,10 +14,9 @@ jobs:
       - uses: actions/checkout@v4.1.4
       - id: set_var
         run: |
-          delimiter="$(openssl rand -hex 8)"
-          echo "moduleJson<<${delimiter}" >> "${GITHUB_OUTPUT}"
+          echo 'moduleJson<<EOF' >> "${GITHUB_OUTPUT}"
           cat ./public/module.json >> ${GITHUB_OUTPUT}
-          echo "${delimiter}" >> "${GITHUB_OUTPUT}"
+          echo EOF >> "${GITHUB_OUTPUT}"
       - name: Publish Module
         run: |
           curl https://api.foundryvtt.com/_api/packages/release_version/ \
