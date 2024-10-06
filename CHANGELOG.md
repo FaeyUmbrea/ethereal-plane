@@ -1,3 +1,9 @@
+## Version 2.0.2
+
+### Fixes
+- Prevent auth-loop from occurring if client has been deleted on the config site
+- Make it clearer that client ids are registered to the foundry instance by using URL as default name
+
 ## Version 2.0.1
 
 ### Changes
