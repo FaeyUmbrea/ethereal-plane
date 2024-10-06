@@ -38,7 +38,7 @@ export async function connectClient() {
 
   window.open(
     encodeURI(
-      `${issuer}connect?url=${window.location.protocol}//${window.location.host}&id=${id}&name=${getGame().world.title}`,
+      `${issuer}connect?url=${window.location.protocol}//${window.location.host}&id=${id}&name=${window.location.host}`,
     ),
     "_blank",
   );
@@ -110,6 +110,9 @@ export async function patreonLogin() {
   );
   if (oauth.isOAuth2Error(result)) {
     console.error("Error Response", result);
+    if (result.error === "invalid_client") {
+      await disconnectClient();
+    }
     throw new Error(); // Handle OAuth 2.0 response body error
   }
 
