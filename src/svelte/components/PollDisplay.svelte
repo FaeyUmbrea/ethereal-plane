@@ -2,7 +2,7 @@
   import { Poll, PollStatus } from "../../utils/polls.js";
   import { setSetting, getStore } from "../../utils/settings.js";
   import { getConnectionManager } from "../../server/connectionManager.js";
-  import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
+  import { localize } from "#runtime/util/i18n";
 
   const pollStore = getStore("currentPoll");
 

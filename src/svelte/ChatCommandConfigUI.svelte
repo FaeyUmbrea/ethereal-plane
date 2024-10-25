@@ -3,10 +3,10 @@
 <script>
   import { setSetting, getStore } from "../utils/settings.js";
   import ChatCommandConfig from "./components/ChatCommandConfig.svelte";
-  import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
+  import { ApplicationShell } from "#runtime/svelte/component/application";
   import { ChatCommand } from "../utils/chatCommands.js";
   import { getContext } from "svelte";
-  import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
+  import { localize } from "#runtime/util/i18n";
 
   const commands = getStore("chat-commands");
   export let elementRoot = void 0;
@@ -40,11 +40,21 @@
       >
       <span class="macro"></span>
       <span></span>
+      <span></span>
+      <span class="user">{localize("ethereal-plane.ui.commands.user")}</span>
+      <span class="target">{localize("ethereal-plane.ui.commands.target")}</span
+      >
+      <span></span>
+      <span></span>
+      <span></span>
+
       <span>{localize("ethereal-plane.ui.commands.active")}</span>
       <span>{localize("ethereal-plane.ui.commands.name")}</span>
       <span>{localize("ethereal-plane.ui.commands.template")}</span>
-      <span>{localize("ethereal-plane.ui.commands.user")}</span>
-      <span>{localize("ethereal-plane.ui.commands.target")}</span>
+      <span>{localize("ethereal-plane.ui.commands.subscriber")}</span>
+      <span>{localize("ethereal-plane.ui.commands.non-subscriber")}</span>
+      <span>{localize("ethereal-plane.ui.commands.subscriber")}</span>
+      <span>{localize("ethereal-plane.ui.commands.non-subscriber")}</span>
       <span>{localize("ethereal-plane.ui.commands.target-identifier")}</span>
       <span class="macro">{localize("ethereal-plane.ui.commands.macro")}</span>
       <span></span>
@@ -76,7 +86,7 @@
   .command-section
     height calc(100% - 50px)
     display grid
-    grid-template-columns 40px 2fr 3fr 40px 40px 3fr 40px 35px
+    grid-template-columns 40px 2fr 3fr 40px 40px 40px 40px 3fr 40px 35px
     grid-template-rows 15px 20px
     grid-auto-rows 35px;
 
@@ -88,5 +98,12 @@
     grid-column 1 / 4
 
   .cooldown
-    grid-column 4 / 7
+    grid-column 4 / 9
+    
+  .user
+    grid-column 4 / 6
+    
+  .target
+    grid-column 6/8
+
 </style>

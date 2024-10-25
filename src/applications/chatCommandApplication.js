@@ -1,8 +1,8 @@
-import { SvelteApplication } from "@typhonjs-fvtt/runtime/svelte/application";
+import { SvelteApplication } from "#runtime/svelte/application";
 import ChatCommandConfigUI from "../svelte/ChatCommandConfigUI.svelte";
 import { getSetting, setSetting } from "../utils/settings.js";
 import { getGame } from "../utils/helpers.js";
-import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
+import { localize } from "#runtime/util/i18n";
 
 /** @extends SvelteApplication */
 export class ChatCommandApplication extends SvelteApplication {

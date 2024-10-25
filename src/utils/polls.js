@@ -1,6 +1,6 @@
 import { getSetting } from "./settings.js";
 import { getGame } from "./helpers.js";
-import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
+import { localize } from "#runtime/util/i18n";
 
 /** */
 export class Poll {

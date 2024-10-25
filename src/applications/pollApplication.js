@@ -1,5 +1,5 @@
 import PollApplicationUi from "../svelte/PollApplicationUI.svelte";
-import { SvelteApplication } from "@typhonjs-fvtt/runtime/svelte/application";
+import { SvelteApplication } from "#runtime/svelte/application";
 
 /** @extends SvelteApplication */
 export default class PollApplication extends SvelteApplication {

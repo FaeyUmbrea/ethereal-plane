@@ -1,10 +1,10 @@
 <svelte:options accessors="{true}" />
 
 <script>
-  import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
+  import { ApplicationShell } from "#runtime/svelte/component/application";
   import { QRCode } from "@castlenine/svelte-qrcode";
   import { getContext, onDestroy } from "svelte";
-  import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
+  import { localize } from "#runtime/util/i18n";
 
   export let user_code;
   export let uri;

@@ -1,4 +1,4 @@
-import { SvelteApplication } from "@typhonjs-fvtt/runtime/svelte/application";
+import { SvelteApplication } from "#runtime/svelte/application";
 import LoginUI from "../svelte/LoginUI.svelte";
 
 export default class LoginApplication extends SvelteApplication {

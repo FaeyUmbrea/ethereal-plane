@@ -77,6 +77,8 @@
         "user": "User",
         "target": "Target",
         "target-identifier": "Target identifier",
+        "subscriber": "Sub",
+        "non-subscriber": "Non-Sub",
         "macro": "Macro",
         "import": {
           "button": "Import",

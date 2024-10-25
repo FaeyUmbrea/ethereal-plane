@@ -1,9 +1,9 @@
 <script>
   import { PollStatus } from "../../utils/polls.js";
   import { setSetting, getStore } from "../../utils/settings.js";
-  import { TJSDocument } from "@typhonjs-fvtt/runtime/svelte/store/fvtt/document";
+  import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
   import { getConnectionManager } from "../../server/connectionManager.js";
-  import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
+  import { localize } from "#runtime/util/i18n";
 
   /**
    * @type {Poll}

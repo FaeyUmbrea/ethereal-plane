@@ -2,6 +2,14 @@ import { getGame } from "./helpers.js";
 import { getSetting } from "./settings.js";
 
 const executionLocks = new Map();
+const subExecutionLocks = new Map();
+
+function getExecutionLock(prefix, target, subscribed) {
+  if (subscribed) {
+    return subExecutionLocks.get(`${prefix}:${target}`);
+  }
+  return executionLocks.get(`${prefix}:${target}`);
+}
 
 /** @param {ChatCommand} command
  * @param {string} message
@@ -48,13 +56,19 @@ async function processCommand(command, message, user, subscribed) {
   macroArguments["messageParts"] = messageParts;
 
   if (command.perTargetCooldown > 0) {
-    const lock = executionLocks.get(`${command.commandPrefix}:${target}`);
+    const lock = getExecutionLock(command.commandPrefix, target, subscribed);
+    console.log(lock);
+    console.log(executionLocks);
+    console.log(subExecutionLocks);
     if (lock && lock > Date.now()) {
       return;
     }
   }
   if (command.perUserCooldown > 0) {
-    const lock = executionLocks.get(`${command.commandPrefix}:${user}`);
+    const lock = getExecutionLock(command.commandPrefix, user, subscribed);
+    console.log(lock);
+    console.log(executionLocks);
+    console.log(subExecutionLocks);
     if (lock && lock > Date.now()) {
       return;
     }
@@ -64,16 +78,30 @@ async function processCommand(command, message, user, subscribed) {
   await getGame().macros?.get(command.macro)?.execute(macroArguments);
 
   if (command.perTargetCooldown > 0) {
-    executionLocks.set(
-      `${command.commandPrefix}:${target}`,
-      Date.now() + command.perTargetCooldown * 1000,
-    );
+    if (subscribed) {
+      subExecutionLocks.set(
+        `${command.commandPrefix}:${target}`,
+        Date.now() + command.perTargetCooldown * 1000,
+      );
+    } else {
+      executionLocks.set(
+        `${command.commandPrefix}:${target}`,
+        Date.now() + command.perTargetCooldown * 1000,
+      );
+    }
   }
   if (command.perUserCooldown > 0) {
-    executionLocks.set(
-      `${command.commandPrefix}:${user}`,
-      Date.now() + command.perUserCooldown * 1000,
-    );
+    if (subscribed) {
+      subExecutionLocks.set(
+        `${command.commandPrefix}:${user}`,
+        Date.now() + command.perUserCooldown * 1000,
+      );
+    } else {
+      executionLocks.set(
+        `${command.commandPrefix}:${user}`,
+        Date.now() + command.perUserCooldown * 1000,
+      );
+    }
   }
 }
 
@@ -101,6 +129,8 @@ export class ChatCommand {
     this.commandTemplate = "";
     this.perUserCooldown = 0;
     this.perTargetCooldown = 0;
+    this.perTargetSubCooldown = 0;
+    this.perUserSubCooldown = 0;
     this.targetIdentifier = "";
     this.macro = "";
     this.active = false;

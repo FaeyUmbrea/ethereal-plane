@@ -1,6 +1,5 @@
 import * as oauth from "oauth4webapi";
 import { nanoid } from "nanoid";
-import { getGame } from "../utils/helpers.js";
 import { MODULE_ID, PATREON_URL as issuer } from "../utils/const.js";
 
 /** @type {number} */
@@ -49,7 +48,7 @@ window.connectClient = connectClient;
 
 /**
  * Creates a client and returns its information from the discovery request and the client ID obtained from a file.
- * @returns {Promise<{as: any, client: {client_id: string, token_endpoint_auth_method: string}}>} A promise that resolves with an object containing the as (discovery response) and client information.
+ * @returns {Promise<{as: any, client: oauth.Client}>} A promise that resolves with an object containing the as (discovery response) and client information.
  * @throws {Error} If the client file is not found or the client is not initialized.
  */
 async function createClient() {
@@ -69,7 +68,6 @@ async function createClient() {
 
   const client = {
     client_id: await file.text(),
-    token_endpoint_auth_method: "none",
   };
   return { as, client };
 }
@@ -97,24 +95,27 @@ export async function patreonLogin() {
   const parameters = new URLSearchParams();
   parameters.set("scope", "api offline_access");
 
+  const clientAuth = oauth.None();
   const response = await oauth.deviceAuthorizationRequest(
     as,
     client,
+    clientAuth,
     parameters,
   );
 
-  const result = await oauth.processDeviceAuthorizationResponse(
-    as,
-    client,
-    response,
-  );
-  if (oauth.isOAuth2Error(result)) {
-    console.error("Error Response", result);
-    if (result.error === "invalid_client") {
-      await disconnectClient();
-    }
-    throw new Error(); // Handle OAuth 2.0 response body error
-  }
+  /**
+   * @type {oauth.DeviceAuthorizationResponse}
+   */
+  const result = await oauth
+    .processDeviceAuthorizationResponse(as, client, response)
+    .catch(async (err) => {
+      if (err instanceof oauth.ResponseBodyError) {
+        console.error("Error Response", err);
+        if (err.error === "invalid_client") {
+          await disconnectClient();
+        }
+      }
+    });
 
   console.log("Device Authorization Response", result);
   ({
@@ -158,29 +159,32 @@ export async function waitForPatreonVerification(device_code) {
 
   while (success === undefined) {
     await wait();
+    const clientAuth = oauth.None();
+
     const response = await oauth.deviceCodeGrantRequest(
       as,
       client,
+      clientAuth,
       device_code,
     );
 
-    const result = await oauth.processDeviceCodeResponse(as, client, response);
-
-    if (oauth.isOAuth2Error(result)) {
-      // response is oauth style error object
-      switch (result.error) {
-        case "slow_down":
-          interval += 5;
-          continue;
-        case "authorization_pending":
-          continue;
-        default:
-          console.error("Error Response", result);
-          throw new Error(); // Handle OAuth 2.0 response body error
-      }
-    } else {
-      success = result;
-    }
+    const result = await oauth
+      .processDeviceCodeResponse(as, client, response)
+      .catch((err) => {
+        if (err instanceof oauth.ResponseBodyError) {
+          switch (err.error) {
+            case "slow_down":
+              interval += 5;
+              return undefined;
+            case "authorization_pending":
+              return undefined;
+            default:
+              console.error("Error Response", result);
+              throw new Error(); // Handle OAuth 2.0 response body error
+          }
+        }
+      });
+    success = result;
   }
 
   ({ access_token, refresh_token } = success);
@@ -197,23 +201,24 @@ export async function waitForPatreonVerification(device_code) {
 export async function refresh(refreshtoken) {
   if (refreshtoken) {
     const { as, client } = await createClient();
+
+    const clientAuth = oauth.None();
     const response = await oauth.refreshTokenGrantRequest(
       as,
       client,
+      clientAuth,
       refreshtoken,
     );
 
-    const result = await oauth.processRefreshTokenResponse(
-      as,
-      client,
-      response,
-    );
-    if (oauth.isOAuth2Error(result)) {
-      console.error("Error Response", result);
-      throw new Error(); // Handle OAuth 2.0 response body error
-    }
-    let { access_token, refresh_token } = result;
+    const result = await oauth
+      .processRefreshTokenResponse(as, client, response)
+      .catch((err) => {
+        if (err instanceof oauth.ResponseBodyError) {
+          console.error("Error Response", err);
+        }
+      });
 
+    let { access_token, refresh_token } = result;
     return { access_token, refresh_token };
   }
 }

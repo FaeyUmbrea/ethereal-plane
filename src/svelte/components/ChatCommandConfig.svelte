@@ -1,5 +1,5 @@
 <script>
-  import { TJSDocument } from "@typhonjs-fvtt/runtime/svelte/store/fvtt/document";
+  import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
 
   /**
    * @type {import("../../utils/chatCommands.js").ChatCommand}
@@ -42,10 +42,13 @@
 <input bind:value="{command.commandPrefix}" type="text" />
 <input bind:value="{command.commandTemplate}" type="text" />
 <input bind:value="{command.perUserCooldown}" type="number" />
+<input bind:value="{command.perUserSubCooldown}" type="number" />
 <input bind:value="{command.perTargetCooldown}" type="number" />
+<input bind:value="{command.perTargetSubCooldown}" type="number" />
 <input
   bind:value="{command.targetIdentifier}"
-  disabled="{command.perTargetCooldown <= 0}"
+  disabled="{command.perTargetCooldown <= 0 &&
+    command.perTargetSubCooldown <= 0}"
   type="text"
 />
 <section

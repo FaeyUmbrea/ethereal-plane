@@ -1,5 +1,5 @@
 import SidebarTabButton from "../svelte/components/SidebarTabButton.svelte";
-import { SvelteApplication } from "@typhonjs-fvtt/runtime/svelte/application";
+import { SvelteApplication } from "#runtime/svelte/application";
 import SidebarPopout from "../svelte/sidebar/SidebarPopout.svelte";
 import SidebarTab from "../svelte/sidebar/SidebarTab.svelte";
 

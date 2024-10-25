@@ -22,7 +22,7 @@ import {
   disconnectPollAPI,
   initPollAPI,
 } from "./poll_api.js";
-import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
+import { localize } from "#runtime/util/i18n";
 
 export class PatreonConnector {
   /**

@@ -1,8 +1,8 @@
 <svelte:options accessors="{true}" />
 
 <script>
-  import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
-  import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
+  import { ApplicationShell } from "#runtime/svelte/component/application";
+  import { localize } from "#runtime/util/i18n";
   import { Modes } from "../utils/const.js";
   import { getStore } from "../utils/settings.js";
   import CollapsibleSection from "./components/CollapsibleSection.svelte";

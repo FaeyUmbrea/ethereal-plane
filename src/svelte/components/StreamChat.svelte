@@ -2,7 +2,7 @@
   import { chatMessages } from "../stores/chatMessages.js";
   import ChatMessage from "./ChatMessage.svelte";
   import { afterUpdate } from "svelte";
-  import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
+  import { localize } from "#runtime/util/i18n";
 
   let element;
 

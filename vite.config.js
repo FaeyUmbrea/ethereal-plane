@@ -28,7 +28,10 @@ export default () => {
     publicDir: "../public", // No public resources to copy.
     cacheDir: "../.vite-cache", // Relative from root directory.
 
-    resolve: { conditions: ["import", "browser"] },
+    resolve: {
+      conditions: ["import", "browser"],
+      alias: { "#runtime/": "@typhonjs-fvtt/runtime/" },
+    },
 
     esbuild: {
       target: ["es2022"],

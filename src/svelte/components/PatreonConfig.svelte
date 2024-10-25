@@ -1,6 +1,6 @@
 <script>
   import InfoBox from "./InfoBox.svelte";
-  import { localize } from "@typhonjs-fvtt/runtime/svelte/helper";
+  import { localize } from "#runtime/util/i18n";
   import { tooltip } from "@svelte-plugins/tooltips";
   import { disconnectClient } from "../../server/patreon_auth.js";
   import { onDestroy } from "svelte";
