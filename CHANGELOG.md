@@ -1,3 +1,9 @@
+## Version 2.1.0
+
+### Added
+
+- Chat Commands now have separate cooldowns for subs and non-subs. Set the sub cooldown to -1 to have both default to the non-sub cooldown
+
 ## Version 2.0.2
 
 ### Fixes

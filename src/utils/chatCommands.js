@@ -4,13 +4,6 @@ import { getSetting } from "./settings.js";
 const executionLocks = new Map();
 const subExecutionLocks = new Map();
 
-function getExecutionLock(prefix, target, subscribed) {
-  if (subscribed) {
-    return subExecutionLocks.get(`${prefix}:${target}`);
-  }
-  return executionLocks.get(`${prefix}:${target}`);
-}
-
 /** @param {ChatCommand} command
  * @param {string} message
  * @param {string} user
@@ -55,48 +48,63 @@ async function processCommand(command, message, user, subscribed) {
       : [];
   macroArguments["messageParts"] = messageParts;
 
-  if (command.perTargetCooldown > 0) {
-    const lock = getExecutionLock(command.commandPrefix, target, subscribed);
-    console.log(lock);
-    console.log(executionLocks);
-    console.log(subExecutionLocks);
-    if (lock && lock > Date.now()) {
-      return;
+  let lock = 0;
+  if (subscribed && command.perTargetSubCooldown > -1) {
+    if (command.perTargetSubCooldown > 0) {
+      lock = subExecutionLocks.get(`${command.commandPrefix}:${target}`);
+    }
+  } else {
+    if (command.perTargetCooldown > 0) {
+      lock = executionLocks.get(`${command.commandPrefix}:${target}`);
     }
   }
-  if (command.perUserCooldown > 0) {
-    const lock = getExecutionLock(command.commandPrefix, user, subscribed);
-    console.log(lock);
-    console.log(executionLocks);
-    console.log(subExecutionLocks);
-    if (lock && lock > Date.now()) {
-      return;
+  if (subscribed && command.perUserSubCooldown > -1) {
+    if (command.perUserSubCooldown > 0) {
+      lock = Math.max(
+        lock,
+        subExecutionLocks.get(`${command.commandPrefix}:${user}`),
+      );
+    }
+  } else {
+    if (command.perUserCooldown > 0) {
+      lock = Math.max(
+        lock,
+        executionLocks.get(`${command.commandPrefix}:${user}`),
+      );
     }
   }
+  if (lock && lock > Date.now()) {
+    return;
+  }
+
   macroArguments["user"] = user;
   macroArguments["isSubscribed"] = subscribed;
   await getGame().macros?.get(command.macro)?.execute(macroArguments);
 
-  if (command.perTargetCooldown > 0) {
-    if (subscribed) {
+  if (subscribed && command.perTargetSubCooldown > -1) {
+    if (command.perTargetSubCooldown > 0) {
       subExecutionLocks.set(
         `${command.commandPrefix}:${target}`,
-        Date.now() + command.perTargetCooldown * 1000,
+        Date.now() + command.perTargetSubCooldown * 1000,
       );
-    } else {
+    }
+  } else {
+    if (command.perTargetCooldown > 0) {
       executionLocks.set(
         `${command.commandPrefix}:${target}`,
         Date.now() + command.perTargetCooldown * 1000,
       );
     }
   }
-  if (command.perUserCooldown > 0) {
-    if (subscribed) {
+  if (subscribed && command.perUserSubCooldown > -1) {
+    if (command.perUserSubCooldown > 0) {
       subExecutionLocks.set(
         `${command.commandPrefix}:${user}`,
-        Date.now() + command.perUserCooldown * 1000,
+        Date.now() + command.perUserSubCooldown * 1000,
       );
-    } else {
+    }
+  } else {
+    if (command.perUserCooldown > 0) {
       executionLocks.set(
         `${command.commandPrefix}:${user}`,
         Date.now() + command.perUserCooldown * 1000,
@@ -129,8 +137,8 @@ export class ChatCommand {
     this.commandTemplate = "";
     this.perUserCooldown = 0;
     this.perTargetCooldown = 0;
-    this.perTargetSubCooldown = 0;
-    this.perUserSubCooldown = 0;
+    this.perTargetSubCooldown = -1;
+    this.perUserSubCooldown = -1;
     this.targetIdentifier = "";
     this.macro = "";
     this.active = false;

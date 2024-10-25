@@ -51,10 +51,10 @@
       <span>{localize("ethereal-plane.ui.commands.active")}</span>
       <span>{localize("ethereal-plane.ui.commands.name")}</span>
       <span>{localize("ethereal-plane.ui.commands.template")}</span>
-      <span>{localize("ethereal-plane.ui.commands.subscriber")}</span>
       <span>{localize("ethereal-plane.ui.commands.non-subscriber")}</span>
       <span>{localize("ethereal-plane.ui.commands.subscriber")}</span>
       <span>{localize("ethereal-plane.ui.commands.non-subscriber")}</span>
+      <span>{localize("ethereal-plane.ui.commands.subscriber")}</span>
       <span>{localize("ethereal-plane.ui.commands.target-identifier")}</span>
       <span class="macro">{localize("ethereal-plane.ui.commands.macro")}</span>
       <span></span>
