@@ -9,7 +9,7 @@
     "compatibility": {
       "maximum": 12,
       "verified": 12,
-      "minimum": 10
+      "minimum": 11
     },
     "authors": [
       {
