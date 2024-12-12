@@ -30,11 +30,20 @@ import {
   PollData,
 } from "./poll_api.js";
 import { localize } from "#runtime/util/i18n";
-import { ChatConnector, ChatMessageCallback } from "./chatConnector.js";
+import {
+  ChatConnector,
+  ChatDeletionCallback,
+  ChatMessageCallback,
+} from "./chatConnector.js";
 import { PollConnector } from "./pollConnector.js";
 
 export class PatreonConnector implements ChatConnector, PollConnector {
   callback?: ChatMessageCallback;
+  chatDeletionCallback?: ChatDeletionCallback;
+
+  setDeletionCallback(callback: ChatDeletionCallback) {
+    this.chatDeletionCallback = callback;
+  }
 
   constructor() {
     Hooks.on("ethereal-plane.patreon-login", () => this.login());
@@ -90,6 +99,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
       await initChatAPI(
         token,
         this.getHandleChatMessageReceived(),
+        this.getHandleChatMessageDeleted(),
         PATREON_URL,
       );
       await initPollAPI(token, this.getPollUpdateCallback(), PATREON_URL);
@@ -103,6 +113,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
         await initChatAPI(
           tokens.access_token,
           this.getHandleChatMessageReceived(),
+          this.getHandleChatMessageDeleted(),
           PATREON_URL,
         );
         await initPollAPI(
@@ -133,6 +144,13 @@ export class PatreonConnector implements ChatConnector, PollConnector {
         message.isMember,
         message.messageId,
       );
+    };
+  }
+
+  getHandleChatMessageDeleted() {
+    return (messageId: string) => {
+      if (this.chatDeletionCallback === undefined) return;
+      this.chatDeletionCallback(messageId);
     };
   }
 

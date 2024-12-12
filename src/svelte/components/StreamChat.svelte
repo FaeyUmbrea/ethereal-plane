@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import { chatMessages } from "../stores/chatMessages.ts";
   import ChatMessage from "./ChatMessage.svelte";
   import { afterUpdate } from "svelte";
@@ -24,7 +24,7 @@
     message="{localize('ethereal-plane.ui.chat-welcome')}"
     user="{localize('ethereal-plane.ui.system')}"
   />
-  {#each $chatMessages as [user, message]}
+  {#each $chatMessages as { user, message, id }}
     <ChatMessage user="{user}" message="{message}" />
   {/each}
 </ol>

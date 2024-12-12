@@ -15,6 +15,7 @@ export interface ChatMessage {
 export async function initChatAPI(
   accessToken: string,
   handleChatMessageReceived: (chatMessage: ChatMessage) => void,
+  handleChatMessageDeleted: (messageId: string) => void,
   baseURL: string,
 ): Promise<void> {
   const signalR = await import("@microsoft/signalr");
@@ -27,6 +28,7 @@ export async function initChatAPI(
     .build();
 
   connection.on("ChatMessageReceived", handleChatMessageReceived);
+  connection.on("ChatMessageDeleted", handleChatMessageDeleted);
   connection.onclose(() => {
     console.log("disconnected");
   });
@@ -34,12 +36,7 @@ export async function initChatAPI(
   await connection.start();
 }
 
-/**
- * Send a chat message.
- * @param {string} message The message to send.
- * @returns {Promise<void>}
- */
-export async function sendChatMessage(message) {
+export async function sendChatMessage(message: string) {
   if (connection === undefined) {
     return;
   }
@@ -66,7 +63,7 @@ export async function disableChatListeners() {
     .catch((err) => console.error(err));
 }
 
-export async function setYoutubeId(id) {
+export async function setYoutubeId(id: string) {
   if (connection === undefined) {
     return;
   }

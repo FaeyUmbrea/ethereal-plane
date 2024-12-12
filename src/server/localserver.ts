@@ -81,4 +81,8 @@ export class LocalServer implements ChatConnector, PollConnector {
   setCallback(callback: ChatMessageCallback): void {
     this.callback = callback;
   }
+
+  setDeletionCallback() {
+    return;
+  }
 }

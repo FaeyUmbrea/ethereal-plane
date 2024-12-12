@@ -5,9 +5,12 @@ export type ChatMessageCallback = (
   id: string,
 ) => void | Promise<void>;
 
+export type ChatDeletionCallback = (messageId: string) => void | Promise<void>;
+
 export interface ChatConnector {
   disconnect(): void;
   setCallback(callback: ChatMessageCallback): void;
+  setDeletionCallback(callback: ChatDeletionCallback): void;
   init(): void | Promise<void>;
   enableChatListener(): void | Promise<void>;
   disableChatListener(): void | Promise<void>;

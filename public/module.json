@@ -19,7 +19,7 @@
       }
     ],
     "styles": [
-      "style.css"
+      "index.css"
     ],
     "esmodules": ["index.js"],
     "languages": [
