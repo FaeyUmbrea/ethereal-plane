@@ -3,7 +3,7 @@ import { Modes } from "./utils/const.js";
 import { ChatCommand } from "./utils/chatCommands.js";
 import { Poll } from "./utils/polls.js";
 import { SvelteApplicationOptions } from "#runtime/svelte/application";
-import PollOverlay from "./svelte/overlays/PollOverlay.svelte";
+import { ComponentConstructorOptions, SvelteComponent } from "svelte";
 
 declare global {
   interface ModuleConfig {
@@ -12,7 +12,11 @@ declare global {
     };
     "obs-utils": {
       api: {
-        registerUniqueOverlay: (component: typeof PollOverlay) => void;
+        registerUniqueOverlay: (
+          component: new (
+            options: ComponentConstructorOptions<Record<string, never>>,
+          ) => SvelteComponent,
+        ) => void;
       };
     };
   }

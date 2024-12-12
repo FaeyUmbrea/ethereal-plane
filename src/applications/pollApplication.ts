@@ -4,15 +4,15 @@ import { SvelteApplication } from "#runtime/svelte/application";
 /** @extends SvelteApplication */
 export default class PollApplication extends SvelteApplication {
   /** */
-  sidebarButton = undefined;
+  sidebarButton: SceneControlTool;
 
-  constructor(sidebarButton) {
+  constructor(sidebarButton: SceneControlTool) {
     super();
     this.sidebarButton = sidebarButton;
   }
 
   /** @static */
-  static get defaultOptions() {
+  static override get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["eppolls"],
       minimizable: true,
@@ -30,8 +30,7 @@ export default class PollApplication extends SvelteApplication {
     });
   }
 
-  /** @returns {Promise<void>} */
-  async close() {
+  override async close() {
     await super.close();
     $("[data-tool=openStreamDirector]").removeClass("active");
     this.sidebarButton.active = false;

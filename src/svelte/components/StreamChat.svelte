@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { chatMessages } from "../stores/chatMessages.ts";
   import ChatMessage from "./ChatMessage.svelte";
   import { afterUpdate } from "svelte";

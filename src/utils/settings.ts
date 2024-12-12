@@ -255,7 +255,7 @@ function SettingsShell(Application: new () => SvelteApplication) {
       return this.#mceSettingsApp;
     }
 
-    render() {
+    override render() {
       this.close();
     }
 

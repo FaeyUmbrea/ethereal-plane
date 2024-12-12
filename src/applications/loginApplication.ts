@@ -2,7 +2,7 @@ import { SvelteApplication } from "#runtime/svelte/application";
 import LoginUI from "../svelte/LoginUI.svelte";
 
 export default class LoginApplication extends SvelteApplication {
-  static get defaultOptions() {
+  static override get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["login-dialog"],
       id: "login-application",

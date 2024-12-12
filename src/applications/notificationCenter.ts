@@ -2,7 +2,7 @@ import { SvelteApplication } from "#runtime/svelte/application";
 import NotificationCenterUI from "../svelte/NotificationCenterUI.svelte";
 
 export default class NotificationCenter extends SvelteApplication {
-  static get defaultOptions() {
+  static override get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["notification-center"],
       id: "notification-application",

@@ -2,14 +2,16 @@ import SidebarTabButton from "../svelte/components/SidebarTabButton.svelte";
 import { SvelteApplication } from "#runtime/svelte/application";
 import SidebarPopout from "../svelte/sidebar/SidebarPopout.svelte";
 import SidebarTab from "../svelte/sidebar/SidebarTab.svelte";
-import { SvelteComponent } from "svelte";
+import { ComponentConstructorOptions, SvelteComponent } from "svelte";
 
 export async function addSidebar(
   id: string,
   tooltip: string,
   icon: string,
   before: string,
-  SvelteClass: SvelteComponent,
+  SvelteClass: new (
+    options: ComponentConstructorOptions<Record<string, never>>,
+  ) => SvelteComponent,
   props = {},
 ) {
   const foundrySidebar = document.querySelector("#sidebar");

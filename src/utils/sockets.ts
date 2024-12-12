@@ -1,11 +1,20 @@
-import { sendRoll } from "../handlers/rollHandler";
-import { getSetting } from "./settings";
+import { sendRoll } from "../handlers/rollHandler.js";
+import { getSetting } from "./settings.js";
+import { getGame } from "./helpers.js";
 
 Hooks.once("init", () => {
-  game.socket.on("event.ethereal-plane", handleEvent);
+  getGame().socket.on("event.ethereal-plane", handleEvent);
 });
 
-async function handleEvent({ eventType, targetUser, payload }) {
+async function handleEvent({
+  eventType,
+  targetUser,
+  payload,
+}: {
+  eventType: string;
+  targetUser: string;
+  payload: { user: string; formula: string; result: string };
+}) {
   if (!!targetUser && game.userId !== targetUser) return;
 
   if (eventType === "roll" && game.user?.isGM) {
@@ -13,27 +22,25 @@ async function handleEvent({ eventType, targetUser, payload }) {
   }
 }
 
-/** @param {string} user
- * @param {string} formula
- * @param {string} result
- * @returns {void}
- */
-export function sendRollToGM(user, formula, result) {
+export function sendRollToGM(
+  user: string,
+  formula: string,
+  result: string,
+): void {
   if (getSetting("allow-socket")) {
     const eventData = {
       eventType: "roll",
       payload: { user: user, formula: formula, result: result },
     };
-    game.socket.emit("event.ethereal-plane", eventData);
+    getGame().socket.emit("event.ethereal-plane", eventData);
   }
 }
 
-/** @param {string} user
- * @param {string} formula
- * @param {string} result
- * @returns {void}
- */
-export function sendRollIfAllowed(user, formula, result) {
+export function sendRollIfAllowed(
+  user: string,
+  formula: string,
+  result: string,
+): void {
   if (getSetting("allow-socket")) {
     sendRoll(user, formula, result);
   }

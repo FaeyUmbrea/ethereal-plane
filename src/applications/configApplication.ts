@@ -3,7 +3,7 @@ import ConfigUI from "../svelte/ConfigUI.svelte";
 
 export class ConfigApplication extends SvelteApplication {
   /** @static */
-  static get defaultOptions() {
+  static override get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["eppolls"],
       minimizable: true,
