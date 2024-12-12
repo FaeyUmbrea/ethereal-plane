@@ -1,25 +1,23 @@
-import { registerHanlders } from "./handlers";
+import { registerHandlers } from "./handlers/index.js";
 import {
   getSetting,
   registerMenus,
   setSetting,
-  registerSettings,
+  settings,
   showNotifications,
 } from "./utils/settings.js";
 import { registerOverlay } from "./utils/overlay.js";
 import { getGame } from "./utils/helpers.js";
 import { getConnectionManager } from "./server/connectionManager.js";
 import { nanoid } from "nanoid";
-import "./utils/api.js";
-import "./server/patreon_auth.js";
+import "./utils/api.ts";
+import "./server/patreon_auth";
 import { localize } from "#runtime/util/i18n";
+import PollApplication from "./applications/pollApplication.js";
 
-let polls;
+let polls: unknown | undefined;
 
-/** @param {SceneControl[]} buttons
- * @returns {void}
- */
-function buildButtons(buttons) {
+function buildButtons(buttons: SceneControl[]) {
   if (
     !getGame().user?.isGM ||
     !getSetting("polls-enabled") ||
@@ -37,22 +35,20 @@ function buildButtons(buttons) {
   buttonGroup?.tools.push(pollsButton);
 }
 
-/** @param {SceneControlTool} button
- * @returns {void}
- */
-async function openPolls(button) {
+async function openPolls(button: SceneControlTool) {
   if (!polls) {
     const PollApplication = (await import("./applications/pollApplication.js"))
       .default;
     polls = new PollApplication(button);
   }
-  if (!polls?.rendered) polls?.render(true);
-  else polls?.close();
+  if (!(polls as PollApplication)?.rendered)
+    (polls as PollApplication)?.render(true);
+  else (polls as PollApplication)?.close();
 }
 
 Hooks.once("ready", async () => {
   if (getSetting("enabled")) {
-    registerHanlders();
+    registerHandlers();
   }
   if (getGame().user?.isGM) {
     await showNotifications();
@@ -64,7 +60,7 @@ Hooks.once("ready", async () => {
 
 Hooks.on("getSceneControlButtons", buildButtons);
 
-Hooks.on("init", () => registerSettings());
+Hooks.on("init", () => settings.init());
 Hooks.once("ready", () => registerMenus());
 
 Hooks.on("obsUtilsInit", registerOverlay);

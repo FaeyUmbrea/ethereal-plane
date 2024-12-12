@@ -1,8 +1,8 @@
 <script>
-  import { PollStatus } from "../../utils/polls.js";
-  import { setSetting, getStore } from "../../utils/settings.js";
+  import { PollStatus } from "../../utils/polls.ts";
+  import { setSetting, getStore } from "../../utils/settings.ts";
   import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
-  import { getConnectionManager } from "../../server/connectionManager.js";
+  import { getConnectionManager } from "../../server/connectionManager.ts";
   import { localize } from "#runtime/util/i18n";
 
   /**

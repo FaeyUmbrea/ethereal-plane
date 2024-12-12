@@ -1,67 +1,64 @@
-import prettier from "eslint-plugin-prettier";
 import globals from "globals";
 import js from "@eslint/js";
+import tslint from "typescript-eslint";
+import tsESLintParser from "@typescript-eslint/parser";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import eslintPluginSvelte from "eslint-plugin-svelte";
+import svelteESLintParser from "svelte-eslint-parser";
 
+const ignores = [
+  ".DS_Store",
+  "node_modules/**/*",
+  "build/**/*",
+  ".svelte-kit/**/*",
+  "package/**/*",
+  ".env",
+  ".env.*",
+  "package-lock.json",
+  "yarn.lock",
+  "dist/**/*",
+  ".vite-cache/**/*",
+];
 export default [
   js.configs.recommended,
+  ...tslint.configs.recommended,
   eslintPluginPrettierRecommended,
-  ...eslintPluginSvelte.configs["flat/recommended"],
+  ...eslintPluginSvelte.configs["flat/prettier"],
   {
-    ignores: [
-      "node_modules",
-      "dist/*",
-      "coverage",
-      "playwright-report",
-      ".vite-cache",
-      ".nyc_output",
-      ".github",
-      ".yarn",
-      "test-results/*",
-    ],
+    ignores: ignores,
   },
   {
-    files: ["**/*"],
+    ignores,
     languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: "module",
       globals: {
         ...globals.browser,
-        $: true,
-        Hooks: true,
         game: true,
+        Hooks: true,
+        PIXI: true,
+        Application: true,
         foundry: true,
-        Actors: true,
         ui: true,
-        CONFIG: true,
-        canvas: true,
-        FormApplication: true,
-        FilePicker: true,
-        Dialog: true,
-        saveDataToFile: true,
-        readTextFromFile: true,
-        renderTemplate: true,
-        Folder: true,
-        Macro: true,
-        Game: true,
       },
-    },
-    plugins: {
-      prettier,
-    },
-    rules: {
-      "prettier/prettier": "error",
     },
   },
   {
+    files: ["*.ts", "*.tsx"],
+    ignores,
     languageOptions: {
-      ecmaVersion: 2022,
       sourceType: "module",
-      globals: {
-        ...globals.node,
+      parser: tsESLintParser,
+    },
+  },
+  {
+    files: ["**/*.svelte", "*.svelte"],
+    ignores,
+    languageOptions: {
+      parser: svelteESLintParser,
+      parserOptions: {
+        // Parse the `<script>` in `.svelte` as TypeScript by adding the following configuration.
+        extraFileExtensions: [".svelte"], // This is a required setting in `@typescript-eslint/parser` v4.24.0.
+        parser: tsESLintParser,
       },
     },
-    files: ["tests/**/*", "playwright*"],
   },
 ];

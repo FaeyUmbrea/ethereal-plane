@@ -1,7 +1,7 @@
 <script>
-  import { Poll, PollStatus } from "../../utils/polls.js";
-  import { setSetting, getStore } from "../../utils/settings.js";
-  import { getConnectionManager } from "../../server/connectionManager.js";
+  import { Poll, PollStatus } from "../../utils/polls.ts";
+  import { setSetting, getStore } from "../../utils/settings.ts";
+  import { getConnectionManager } from "../../server/connectionManager.ts";
   import { localize } from "#runtime/util/i18n";
 
   const pollStore = getStore("currentPoll");

@@ -1,5 +1,5 @@
-import { sendRoll } from "../handlers/rollHandler.js";
-import { getSetting } from "./settings.js";
+import { sendRoll } from "../handlers/rollHandler";
+import { getSetting } from "./settings";
 
 Hooks.once("init", () => {
   game.socket.on("event.ethereal-plane", handleEvent);

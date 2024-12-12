@@ -1,5 +1,5 @@
 <script>
-  import { chatMessages } from "../stores/chatMessages.js";
+  import { chatMessages } from "../stores/chatMessages.ts";
   import ChatMessage from "./ChatMessage.svelte";
   import { afterUpdate } from "svelte";
   import { localize } from "#runtime/util/i18n";

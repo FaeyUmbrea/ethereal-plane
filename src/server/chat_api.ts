@@ -1,29 +1,22 @@
-/** @type {signalR.HubConnection} */
-let connection;
+import { HubConnection } from "@microsoft/signalr";
 
-/**
- * @typedef {Object} chatMessage
- * @property {string} displayName
- * @property {string} messageId
- * @property {string} messageContent
- * @property {boolean} isMember
- * @property {string} channel
- * @property {string} platform
- * @property {Date} timeStamp
- */
+let connection: HubConnection;
 
-/**
- * Initialize the SignalR connection and setup event handlers.
- * @param {string} accessToken The access token to use for authentication on the SignalR hub.
- * @param {(ChatMessage)=>void} handleChatMessageReceived The callback function to handle "ChatMessageReceived" messages.
- * @param {string} baseURL The base URL for the API
- * @returns {Promise<void>}
- */
+export interface ChatMessage {
+  displayName: string;
+  messageId: string;
+  messageContent: string;
+  isMember: boolean;
+  channel: string;
+  platform: string;
+  timeStamp: Date;
+}
+
 export async function initChatAPI(
-  accessToken,
-  handleChatMessageReceived,
-  baseURL,
-) {
+  accessToken: string,
+  handleChatMessageReceived: (chatMessage: ChatMessage) => void,
+  baseURL: string,
+): Promise<void> {
   const signalR = await import("@microsoft/signalr");
   connection = new signalR.HubConnectionBuilder()
     .withUrl(baseURL + "api/v2/hubs/chat", {
@@ -55,11 +48,7 @@ export async function sendChatMessage(message) {
     .catch((err) => console.error(err));
 }
 
-/**
- * Enable chat listeners.
- * @returns {Promise<void>}
- */
-export async function enableChatListeners() {
+export async function enableChatListeners(): Promise<void> {
   if (connection === undefined) {
     return;
   }

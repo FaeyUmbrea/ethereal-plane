@@ -1,8 +1,8 @@
 import { svelte } from "@sveltejs/vite-plugin-svelte";
-import preprocess from "svelte-preprocess";
-import { postcssConfig, terserConfig } from "@typhonjs-fvtt/runtime/rollup";
-import { visualizer } from "rollup-plugin-visualizer";
-import { transform } from "esbuild";
+
+import { postcssConfig, terserConfig } from "#runtime/rollup";
+
+import { sveltePreprocess } from "svelte-preprocess";
 
 // ATTENTION!
 // Please modify the below variables: s_PACKAGE_ID and s_SVELTE_HASH_ID appropriately.
@@ -14,23 +14,32 @@ const s_PACKAGE_ID = "modules/ethereal-plane";
 // A short additional string to add to Svelte CSS hash values to make yours unique. This reduces the amount of
 // duplicated framework CSS overlap between many TRL packages enabled on Foundry VTT at the same time. 'ese' is chosen
 // by shortening 'essential-svelte-esm'.
-const s_SVELTE_HASH_ID = "ethpla";
+const s_SVELTE_HASH_ID = "ese";
 
-const s_TERSER = false; // Set to true to use terser
+const s_COMPRESS = false; // Set to true to compress the module bundle.
 const s_SOURCEMAPS = true; // Generate sourcemaps for the bundle (recommended).
-const s_MINIFY = true; // Set to true to compress the module bundle.
 
-export default () => {
+export default ({ mode }) => {
+  // Provides a custom hash adding the string defined in `s_SVELTE_HASH_ID` to scoped Svelte styles;
+  // This is reasonable to do as the framework styles in TRL compiled across `n` different packages will
+  // be the same. Slightly modifying the hash ensures that your package has uniquely scoped styles for all
+  // TRL components and makes it easier to review styles in the browser debugger.
+  const compilerOptions =
+    mode === "production"
+      ? {
+          cssHash: ({ hash, css }) => `svelte-${s_SVELTE_HASH_ID}-${hash(css)}`,
+        }
+      : {};
+
   /** @type {import('vite').UserConfig} */
   return {
     root: "src/", // Source location / esbuild root.
     base: `/${s_PACKAGE_ID}/`, // Base module path that 30001 / served dev directory.
-    publicDir: "../public", // No public resources to copy.
+    publicDir: false, // No public resources to copy.
     cacheDir: "../.vite-cache", // Relative from root directory.
 
     resolve: {
-      conditions: ["import", "browser"],
-      alias: { "#runtime/": "@typhonjs-fvtt/runtime/" },
+      conditions: ["browser", "import"],
     },
 
     esbuild: {
@@ -39,7 +48,7 @@ export default () => {
 
     css: {
       // Creates a standard configuration for PostCSS with autoprefixer & postcss-preset-env.
-      postcss: postcssConfig({ compress: s_TERSER, sourceMap: s_SOURCEMAPS }),
+      postcss: postcssConfig({ compress: s_COMPRESS, sourceMap: s_SOURCEMAPS }),
     },
 
     // About server options:
@@ -56,7 +65,7 @@ export default () => {
       open: "/game",
       proxy: {
         // Serves static files from main Foundry server.
-        [`^(/${s_PACKAGE_ID}/(assets|lang|packs|storage|style.css))`]:
+        [`^(/${s_PACKAGE_ID}/(assets|lang|packs|style.css))`]:
           "http://localhost:30000",
 
         // All other paths besides package ID path are served from main Foundry server.
@@ -67,52 +76,30 @@ export default () => {
       },
     },
     build: {
-      outDir: "../dist",
-      emptyOutDir: true,
+      outDir: __dirname, // eslint-disable-line no-undef
+      emptyOutDir: false,
       sourcemap: s_SOURCEMAPS,
       brotliSize: true,
-      minify: s_TERSER ? "terser" : "esbuild",
+      minify: s_COMPRESS ? "terser" : false,
       target: ["es2022"],
-      terserOptions: s_TERSER ? { ...terserConfig(), ecma: 2022 } : void 0,
+      terserOptions: s_COMPRESS ? { ...terserConfig(), ecma: 2022 } : void 0,
       lib: {
         entry: "./index.js",
         formats: ["es"],
-        fileName: `index`,
+        fileName: "index",
       },
     },
-
+    // Necessary when using the dev server for top-level await usage inside of TRL.
+    optimizeDeps: {
+      esbuildOptions: {
+        target: "es2022",
+      },
+    },
     plugins: [
       svelte({
-        compilerOptions: {
-          // Provides a custom hash adding the string defined in `s_SVELTE_HASH_ID` to scoped Svelte styles;
-          // This is reasonable to do as the framework styles in TRL compiled across `n` different packages will
-          // be the same. Slightly modifying the hash ensures that your package has uniquely scoped styles for all
-          // TRL components and makes it easier to review styles in the browser debugger.
-          cssHash: ({ hash, css }) => `svelte-${s_SVELTE_HASH_ID}-${hash(css)}`,
-        },
-        preprocess: preprocess(),
+        compilerOptions,
+        preprocess: sveltePreprocess(),
       }),
-
-      minifyEs(),
-      visualizer(),
     ],
   };
 };
-
-function minifyEs() {
-  return {
-    name: "minifyEs",
-    renderChunk: {
-      order: "post",
-      async handler(code) {
-        if (s_MINIFY) {
-          return await transform(code, {
-            minify: true,
-            sourcemap: s_SOURCEMAPS,
-          });
-        }
-        return code;
-      },
-    },
-  };
-}

@@ -1,77 +1,62 @@
-import { getSetting, getStore } from "../utils/settings.js";
-import { Modes } from "../utils/const.js";
-import { PatreonConnector } from "./patreon.js";
-import { LocalServer } from "./localserver.js";
-import { chatMessages } from "../svelte/stores/chatMessages.js";
-import { get } from "svelte/store";
+import { getSetting, settings } from "../utils/settings";
+import { Modes } from "../utils/const";
+import { PatreonConnector } from "./patreon";
+import { LocalServer } from "./localserver";
+import { chatMessages } from "../svelte/stores/chatMessages";
 import { processChat } from "../utils/chatCommands.js";
+import { ChatConnector, ChatMessageCallback } from "./chatConnector";
+import { PollConnector } from "./pollConnector";
+import { Poll } from "../utils/polls";
 
-/** */
 class ConnectionManager {
   /** @private */
   currentMode = undefined;
+  private chatConnector?: ChatConnector;
+  private pollConnector?: PollConnector;
+
+  messageListeners: ChatMessageCallback[] = [];
   /** @private */
-  chatConnector = undefined;
-  /** @private */
-  pollConnector = undefined;
-  /** @private */
-  messageListeners = undefined;
+
+  messageDeletionListeners: ((id: string) => void)[] = [];
 
   constructor() {
-    getStore("mode")?.subscribe((mode) => {
+    settings.getStore("mode")?.subscribe((mode) => {
       this.onChangeMode(mode);
     });
-    this.messageListeners = [];
-    this.messageListeners.push((message, user) => {
-      chatMessages.set([...get(chatMessages), [user, message]]);
+    this.messageListeners.push((message, user, subscribed, id) => {
+      chatMessages.update((messages) => {
+        messages.push({ user, message, id });
+        return messages;
+      });
     });
     this.messageListeners.push(processChat);
+    this.messageDeletionListeners.push((id) => {
+      chatMessages.update((messages) => {
+        return messages.filter((message) => message.id !== id);
+      });
+    });
   }
 
-  /** @param {(message: string, user: string) => void} listener
-   * @returns {void}
-   */
-  addMessageListener(listener) {
-    this.messageListeners.push(listener);
-  }
-
-  /** @param {(message: string, user: string) => void} listener
-   * @returns {void}
-   */
-  removeMessageListener(listener) {
-    const index = this.messageListeners.indexOf(listener);
-    this.messageListeners = this.messageListeners.splice(index, 1);
-  }
-
-  /**
-   * @default (message: string, user: string) => {
-   *     this.messageListeners.forEach((listener) => {
-   *       listener(message, user);
-   *     });
-   *   }
-   */
-  handleMessages = async (message, user, subscribed) => {
+  handleMessages: ChatMessageCallback = async (
+    message,
+    user,
+    subscribed,
+    id,
+  ) => {
     this.messageListeners.forEach((listener) => {
-      listener(message, user, subscribed);
+      listener(message, user, subscribed, id);
     });
   };
 
-  /** @param {string} message
-   * @returns {void}
-   */
-  sendMessage(message) {
+  sendMessage(message: string): void {
     this.chatConnector.sendMessage(message);
   }
 
-  /** @param {Poll} poll
-   * @returns {void}
-   */
-  createPoll(poll) {
+  createPoll(poll: Poll): void {
     this.pollConnector.startPoll(poll);
   }
 
-  /** @returns {void} */
-  abortPoll() {
+  abortPoll(): void {
     this.pollConnector.abortPoll();
   }
 
@@ -88,25 +73,25 @@ class ConnectionManager {
         if (this.currentMode === Modes.localchat) {
           if (mode === Modes.patreon) {
             this.chatConnector.disconnect();
-            this.chatConnector = this.pollConnector;
+            this.chatConnector = this.pollConnector as PatreonConnector;
             this.chatConnector.setCallback(this.handleMessages);
           } else {
             this.pollConnector.disconnect();
-            this.pollConnector = this.chatConnector;
+            this.pollConnector = this.chatConnector as LocalServer;
           }
         } else if (this.currentMode === Modes.patreon) {
           this.chatConnector = new LocalServer();
           await this.chatConnector.init();
           if (mode === Modes.localonly) {
             this.pollConnector.disconnect();
-            this.pollConnector = this.chatConnector;
+            this.pollConnector = this.chatConnector as LocalServer;
           }
         } else {
           this.pollConnector = new PatreonConnector();
           await this.pollConnector.init();
           if (mode === Modes.patreon) {
             this.chatConnector.disconnect();
-            this.chatConnector = this.pollConnector;
+            this.chatConnector = this.pollConnector as LocalServer;
           }
         }
       }
@@ -138,10 +123,7 @@ class ConnectionManager {
     this.chatConnector.setCallback(this.handleMessages);
     this.currentMode = mode;
     try {
-      if (
-        (getSetting("enable-chat-tab") || getSetting("")) &&
-        getSetting("enabled")
-      ) {
+      if (getSetting("enable-chat-tab") && getSetting("enabled")) {
         console.log("Enable Chat Listener");
         this.chatConnector.enableChatListener();
       } else {
@@ -153,10 +135,9 @@ class ConnectionManager {
   }
 }
 
-let connectionManager;
+let connectionManager: ConnectionManager | undefined;
 
-/** @returns {ConnectionManager} */
-export function getConnectionManager() {
+export function getConnectionManager(): ConnectionManager {
   if (connectionManager) return connectionManager;
   connectionManager = new ConnectionManager();
   return connectionManager;

@@ -13,7 +13,6 @@ export default class PollApplication extends SvelteApplication {
 
   /** @static */
   static get defaultOptions() {
-    //@ts-ignore
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["eppolls"],
       minimizable: true,
@@ -33,7 +32,6 @@ export default class PollApplication extends SvelteApplication {
 
   /** @returns {Promise<void>} */
   async close() {
-    //@ts-ignore
     await super.close();
     $("[data-tool=openStreamDirector]").removeClass("active");
     this.sidebarButton.active = false;

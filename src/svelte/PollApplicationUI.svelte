@@ -1,8 +1,8 @@
 <svelte:options accessors="{true}" />
 
 <script>
-  import { Poll } from "../utils/polls.js";
-  import { getStore } from "../utils/settings.js";
+  import { Poll } from "../utils/polls.ts";
+  import { getStore } from "../utils/settings.ts";
   import PollDisplay from "./components/PollDisplay.svelte";
   import PollEditor from "./components/PollEditor.svelte";
   import { ApplicationShell } from "#runtime/svelte/component/application";

@@ -15,7 +15,7 @@
   const context = getContext("#external");
 
   async function close() {
-    context.application.close();
+    await context.application.close();
   }
 
   async function copy() {

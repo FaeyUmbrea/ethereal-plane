@@ -1,8 +1,8 @@
 import { getGame } from "./helpers.js";
 import { getSetting } from "./settings.js";
 
-const executionLocks = new Map();
-const subExecutionLocks = new Map();
+const executionLocks = new Map<string, number>();
+const subExecutionLocks = new Map<string, number>();
 
 /** @param {ChatCommand} command
  * @param {string} message
@@ -10,20 +10,25 @@ const subExecutionLocks = new Map();
  * @param {boolean} subscribed
  * @returns {void}
  */
-async function processCommand(command, message, user, subscribed) {
+async function processCommand(
+  command: ChatCommand,
+  message: string,
+  user: string,
+  subscribed: boolean,
+): Promise<void> {
   const regex = /(["'«»‘’‚‛“”„‟‹›](?<a>.*?)["'«»‘’‚‛“”„‟‹›])|(?<b>[^\s]+)/gm;
   const templateParts = command.commandTemplate.split(/\s/);
   const matches = message.matchAll(regex);
-  const messageParts = [];
+  const messageParts: string[] = [];
   for (const match of matches) {
-    if (match.groups.a) {
+    if (match.groups?.a) {
       messageParts.push(match.groups.a);
     }
-    if (match.groups.b) {
+    if (match.groups?.b) {
       messageParts.push(match.groups.b);
     }
   }
-  const macroArguments = {};
+  const macroArguments: Record<string, string | string[] | boolean> = {};
   let target = "";
 
   templateParts.forEach((part, index) => {
@@ -51,25 +56,25 @@ async function processCommand(command, message, user, subscribed) {
   let lock = 0;
   if (subscribed && command.perTargetSubCooldown > -1) {
     if (command.perTargetSubCooldown > 0) {
-      lock = subExecutionLocks.get(`${command.commandPrefix}:${target}`);
+      lock = subExecutionLocks.get(`${command.commandPrefix}:${target}`) || 0;
     }
   } else {
     if (command.perTargetCooldown > 0) {
-      lock = executionLocks.get(`${command.commandPrefix}:${target}`);
+      lock = executionLocks.get(`${command.commandPrefix}:${target}`) || 0;
     }
   }
   if (subscribed && command.perUserSubCooldown > -1) {
     if (command.perUserSubCooldown > 0) {
       lock = Math.max(
         lock,
-        subExecutionLocks.get(`${command.commandPrefix}:${user}`),
+        subExecutionLocks.get(`${command.commandPrefix}:${user}`) || 0,
       );
     }
   } else {
     if (command.perUserCooldown > 0) {
       lock = Math.max(
         lock,
-        executionLocks.get(`${command.commandPrefix}:${user}`),
+        executionLocks.get(`${command.commandPrefix}:${user}`) || 0,
       );
     }
   }
@@ -118,11 +123,15 @@ async function processCommand(command, message, user, subscribed) {
  * @param {boolean} subscribed
  * @returns {void}
  */
-export async function processChat(message, user, subscribed) {
+export async function processChat(
+  message: string,
+  user: string,
+  subscribed: boolean,
+): Promise<void> {
   if (getSetting("chat-commands-active")) {
     const commandPrefix = message.split(/\s/)[0];
     const commandArguments = message.substring(commandPrefix.length + 1);
-    const commands = getSetting("chat-commands");
+    const commands = getSetting("chat-commands") as ChatCommand[];
     for (const command of commands) {
       if (command.commandPrefix === commandPrefix && command.active) {
         await processCommand(command, commandArguments, user, subscribed);
@@ -131,16 +140,26 @@ export async function processChat(message, user, subscribed) {
   }
 }
 
+export function getMacro(macroID: string) {
+  return getGame().macros?.get(macroID)?.toCompendium();
+}
+
+export type ImportChatCommand = typeof ChatCommand & {
+  macro: string | { folder: string | undefined | null };
+};
+
+export type ExportChatCommand = typeof ChatCommand & {
+  macro: string | ReturnType<typeof getMacro>;
+};
+
 export class ChatCommand {
-  constructor() {
-    this.commandPrefix = "";
-    this.commandTemplate = "";
-    this.perUserCooldown = 0;
-    this.perTargetCooldown = 0;
-    this.perTargetSubCooldown = -1;
-    this.perUserSubCooldown = -1;
-    this.targetIdentifier = "";
-    this.macro = "";
-    this.active = false;
-  }
+  commandPrefix = "";
+  commandTemplate = "";
+  perUserCooldown = 0;
+  perTargetCooldown = 0;
+  perTargetSubCooldown = -1;
+  perUserSubCooldown = -1;
+  targetIdentifier = "";
+  macro: string = "";
+  active = false;
 }

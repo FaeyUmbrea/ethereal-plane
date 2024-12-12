@@ -1,9 +1,6 @@
 <script>
   import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
 
-  /**
-   * @type {import("../../utils/chatCommands.js").ChatCommand}
-   */
   export let command;
   export let index;
 

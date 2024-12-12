@@ -1,40 +1,37 @@
-import { executePollMacro, PollStatus } from "../utils/polls.js";
+import { executePollMacro, Poll, PollStatus } from "../utils/polls.js";
 import { getSetting, setSetting } from "../utils/settings.js";
+import { ChatConnector, ChatMessageCallback } from "./chatConnector.js";
+import { PollConnector } from "./pollConnector.js";
 
 /** */
-export class LocalServer {
+export class LocalServer implements ChatConnector, PollConnector {
   /** @default '' */
   url = "";
-  /** */
-  socket = undefined;
-  /** @private */
-  callback = undefined;
 
-  /** @returns {Promise<void>} */
-  async sendMessage(message) {
-    this.socket.emit("message", message);
+  private socket?: ReturnType<typeof io.connect>;
+
+  private callback?: ChatMessageCallback;
+
+  async sendMessage(message: string): Promise<void> {
+    this.socket?.emit("message", message);
   }
 
-  /** @returns {Promise<void>} */
   async abortPoll() {
-    this.socket.emit("endPoll", 0);
+    this.socket?.emit("endPoll", 0);
   }
 
-  /** @returns {void | Promise<void>} */
-  disableChatListener() {
-    this.socket.emit("stopChat");
+  disableChatListener(): void | Promise<void> {
+    this.socket?.emit("stopChat");
   }
 
-  /** @returns {void | Promise<void>} */
-  enableChatListener() {
-    this.socket.emit("startChat");
+  enableChatListener(): void | Promise<void> {
+    this.socket?.emit("startChat");
   }
 
-  /** @returns {void} */
-  init() {
+  init(): void {
     if (!getSetting("enabled")) return;
     this.url = getSetting("server-url");
-    this.socket = window.io.connect(this.url);
+    this.socket = io.connect(this.url);
     this.socket.on("chatMessageRecieved", (user, message) =>
       console.log(user, message),
     );
@@ -45,7 +42,7 @@ export class LocalServer {
       const until = new Date(poll.createdAt).getTime() + poll.duration * 1000;
       console.warn(until);
       if (until && poll.status === PollStatus.started) {
-        poll.tally = tally.map((e) => e[1]);
+        poll.tally = tally.map((e: [number, number]) => e[1]);
         if (Date.now() > until) {
           poll.status = PollStatus.stopped;
           executePollMacro();
@@ -64,15 +61,12 @@ export class LocalServer {
     });
     this.socket.emit("getPoll", 0);
     this.socket.on("chatMessageRecieved", (user, message) => {
-      if (this.callback) this.callback(message, user);
+      if (this.callback) this.callback(message, user, false, "local");
     });
   }
 
-  /** @param {Poll} poll
-   * @returns {void | Promise<void>}
-   */
-  startPoll(poll) {
-    this.socket.emit(
+  startPoll(poll: Poll) {
+    this.socket?.emit(
       "createPoll",
       poll.options.map((_option, index) => (index + 1).toString()),
       poll.duration ? poll.duration * 1000 : 30 * 1000,
@@ -80,15 +74,11 @@ export class LocalServer {
     );
   }
 
-  /** @returns {void} */
-  disconnect() {
-    this.socket.disconnect();
+  disconnect(): void {
+    this.socket?.disconnect();
   }
 
-  /** @param {ChatMessageCallback} callback
-   * @returns {void}
-   */
-  setCallback(callback) {
+  setCallback(callback: ChatMessageCallback): void {
     this.callback = callback;
   }
 }

@@ -1,5 +1,10 @@
 import { getSetting, setSetting } from "../utils/settings.js";
-import { executePollMacro, PollStatus } from "../utils/polls.js";
+import {
+  executePollMacro,
+  Poll,
+  PollOption,
+  PollStatus,
+} from "../utils/polls.js";
 import {
   disableChatListeners,
   disconnectChatAPI,
@@ -7,6 +12,7 @@ import {
   initChatAPI,
   sendChatMessage,
   setYoutubeId,
+  ChatMessage,
 } from "./chat_api.js";
 import { PATREON_URL } from "../utils/const.js";
 import {
@@ -21,22 +27,22 @@ import {
   createPoll,
   disconnectPollAPI,
   initPollAPI,
+  PollData,
 } from "./poll_api.js";
 import { localize } from "#runtime/util/i18n";
+import { ChatConnector, ChatMessageCallback } from "./chatConnector.js";
+import { PollConnector } from "./pollConnector.js";
 
-export class PatreonConnector {
-  /**
-   * @type {ChatMessageCallback}
-   */
-  callback;
+export class PatreonConnector implements ChatConnector, PollConnector {
+  callback?: ChatMessageCallback;
 
   constructor() {
     Hooks.on("ethereal-plane.patreon-login", () => this.login());
     Hooks.on("ethereal-plane.patreon-logout", () => this.logout());
     Hooks.on("ethereal-plane.patreon-connect", () => this.connect());
     Hooks.on("ethereal-plane.patreon-disconnect", () => this.deleteClient());
-    Hooks.on("ethereal-plane.set-youtube-id", (id) => {
-      this.setYoutubeID(id);
+    Hooks.on("ethereal-plane.set-youtube-id", async (id) => {
+      await this.setYoutubeID(id);
     });
   }
 
@@ -45,7 +51,6 @@ export class PatreonConnector {
     await connectClient();
   }
 
-  /** @returns {Promise<void>} */
   async init() {
     console.log("Ethereal Plane | Connecting to Patreon Server");
     const apiVersion = await (await fetch(`${PATREON_URL}version`)).text();
@@ -90,7 +95,8 @@ export class PatreonConnector {
       await initPollAPI(token, this.getPollUpdateCallback(), PATREON_URL);
     } catch {
       try {
-        let tokens = await refresh(refreshToken);
+        const tokens = await refresh(refreshToken);
+        if (!tokens || !tokens.refresh_token) return;
         await setSetting("authentication-token", tokens.access_token);
         await setSetting("refresh-token", tokens.refresh_token);
 
@@ -119,24 +125,20 @@ export class PatreonConnector {
   }
 
   getHandleChatMessageReceived() {
-    return (message) => {
+    return (message: ChatMessage) => {
+      if (this.callback === undefined) return;
       this.callback(
         message.messageContent,
         message.displayName,
         message.isMember,
+        message.messageId,
       );
     };
   }
 
-  /**
-   * @returns {(function(*): Promise<void>)|*}
-   */
   getPollUpdateCallback() {
-    return async (pollUpdate) => {
-      /**
-       * @type {Poll}
-       */
-      const poll = getSetting("currentPoll");
+    return async (pollUpdate: PollData) => {
+      const poll = getSetting("currentPoll") as Poll;
       let wasRunning = false;
       if (poll.status === PollStatus.started) {
         wasRunning = true;
@@ -146,9 +148,13 @@ export class PatreonConnector {
         : pollUpdate.finalized
           ? PollStatus.stopped
           : PollStatus.started;
-      poll.tally = poll.options.map((entry) => {
-        return pollUpdate.options.find((option) => option.name === entry.name)
-          .count;
+      poll.tally = poll.options.map((entry: PollOption) => {
+        return (
+          pollUpdate.options.find(
+            (option: { count: number; name: string }) =>
+              option.name === entry.name,
+          )?.count ?? 0
+        );
       });
       if (wasRunning && poll.status === PollStatus.stopped) {
         executePollMacro();
@@ -157,18 +163,15 @@ export class PatreonConnector {
     };
   }
 
-  /** @returns {void} */
   async login() {
     console.warn("Login");
-    const {
-      device_code,
-      verification_uri_complete: uri,
-      user_code,
-    } = await patreonLogin();
+    const tokens = await patreonLogin();
+    if (tokens === undefined) return;
+    const { device_code, verification_uri_complete: uri, user_code } = tokens;
     const LoginApplication = (
       await import("../applications/loginApplication.js")
     ).default;
-    let d = new LoginApplication({
+    const d = new LoginApplication({
       svelte: {
         props: {
           user_code: user_code,
@@ -179,36 +182,28 @@ export class PatreonConnector {
     d.render(true);
     const { access_token, refresh_token } =
       await waitForPatreonVerification(device_code);
+    if (!refresh_token) throw new Error("Refresh token is undefined");
     await setSetting("authentication-token", access_token);
     await setSetting("refresh-token", refresh_token);
     Hooks.callAll("ethereal-plane.patreon-logged-in");
     await this.init();
   }
-
-  /** @returns {void} */
   async disableChatListener() {
     await disableChatListeners();
   }
 
-  /** @returns {Promise<void>} */
-  async enableChatListener() {
+  async enableChatListener(): Promise<void> {
     await enableChatListeners();
   }
 
-  /** @param {string} message
-   * @returns {void | Promise<void>}
-   */
-  async sendMessage(message) {
+  async sendMessage(message: string) {
     await sendChatMessage(message);
   }
 
-  /** @param {Poll} poll
-   * @returns {void | Promise<void>}
-   */
-  async startPoll(poll) {
+  async startPoll(poll: Poll) {
     const pollId = await createPoll(
       poll.duration * 1000,
-      poll.options.map((option) => {
+      poll.options.map((option: PollOption) => {
         return { name: option.name, title: option.text };
       }),
       "!vote",
@@ -219,39 +214,27 @@ export class PatreonConnector {
     await setSetting("currentPoll", poll);
   }
 
-  /** @returns {void | Promise<void>} */
-  async disconnect() {
+  async disconnect(): Promise<void> {
     await disconnectPollAPI();
     await disconnectChatAPI();
   }
 
-  /** @param {ChatMessageCallback} callback
-   * @returns {void | Promise<void>}
-   */
-  setCallback(callback) {
+  setCallback(callback: ChatMessageCallback): void | Promise<void> {
     this.callback = callback;
   }
 
-  /** @returns {void} */
   async abortPoll() {
     const poll = getSetting("currentPoll");
     await abortPoll(poll.id);
   }
 
-  /** @private
-   * @returns {Promise<void>}
-   */
   async logout() {
-    this.disconnect();
+    await this.disconnect();
     await setSetting("refresh-token", "");
     await setSetting("authentication-token", "");
   }
 
-  /** @private
-   * @param {string} id
-   * @returns {void}
-   */
-  async setYoutubeID(id) {
+  async setYoutubeID(id: string) {
     await setYoutubeId(id);
   }
 

@@ -1,4 +1,3 @@
-/** @returns {Game} */
 export function getGame() {
   if (!(game instanceof Game))
     throw new Error(

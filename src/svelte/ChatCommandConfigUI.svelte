@@ -1,7 +1,7 @@
 <svelte:options accessors="{true}" />
 
 <script>
-  import { setSetting, getStore } from "../utils/settings.js";
+  import { setSetting, getStore } from "../utils/settings.ts";
   import ChatCommandConfig from "./components/ChatCommandConfig.svelte";
   import { ApplicationShell } from "#runtime/svelte/component/application";
   import { ChatCommand } from "../utils/chatCommands.js";

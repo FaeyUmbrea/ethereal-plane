@@ -3,8 +3,8 @@
 <script>
   import { ApplicationShell } from "#runtime/svelte/component/application";
   import { localize } from "#runtime/util/i18n";
-  import { Modes } from "../utils/const.js";
-  import { getStore } from "../utils/settings.js";
+  import { Modes } from "../utils/const.ts";
+  import { getStore } from "../utils/settings.ts";
   import CollapsibleSection from "./components/CollapsibleSection.svelte";
   import PatreonConfig from "./components/PatreonConfig.svelte";
   import InfoBox from "./components/InfoBox.svelte";

@@ -2,27 +2,28 @@ import SidebarTabButton from "../svelte/components/SidebarTabButton.svelte";
 import { SvelteApplication } from "#runtime/svelte/application";
 import SidebarPopout from "../svelte/sidebar/SidebarPopout.svelte";
 import SidebarTab from "../svelte/sidebar/SidebarTab.svelte";
+import { SvelteComponent } from "svelte";
 
 export async function addSidebar(
-  id,
-  tooltip,
-  icon,
-  before,
-  SvelteClass,
+  id: string,
+  tooltip: string,
+  icon: string,
+  before: string,
+  SvelteClass: SvelteComponent,
   props = {},
 ) {
   const foundrySidebar = document.querySelector("#sidebar");
   const foundrySidebarTabs = document.querySelector("#sidebar-tabs");
 
-  if (window.ui[id] !== void 0) {
+  if ((ui as Record<string, object>)[id] !== void 0) {
     throw new Error("Sidebar element with this id already exists");
   }
 
-  const button = foundrySidebarTabs.querySelector(`[data-tab=${before}]`);
+  const button = foundrySidebarTabs!.querySelector(`[data-tab=${before}]`);
 
   new SidebarTabButton({
-    target: foundrySidebarTabs,
-    anchor: button,
+    target: foundrySidebarTabs!,
+    anchor: button ?? undefined,
     props: {
       id,
       icon,
@@ -31,12 +32,12 @@ export async function addSidebar(
   });
 
   const beforeTab =
-    foundrySidebar.querySelector(`template[data-tab=${before}]`) &&
-    foundrySidebar.querySelector(`section[data-tab=${before}]`);
+    foundrySidebar!.querySelector(`template[data-tab=${before}]`) &&
+    foundrySidebar!.querySelector(`section[data-tab=${before}]`);
 
   new SidebarTab({
-    target: foundrySidebar,
-    anchor: beforeTab,
+    target: foundrySidebar!,
+    anchor: beforeTab ?? undefined,
     props: {
       id,
       sidebarClass: SvelteClass,
@@ -58,7 +59,7 @@ export async function addSidebar(
     },
   });
 
-  window.ui[`${id}`] = Object.assign({
+  (ui as Record<string, object>)[`${id}`] = Object.assign({
     _popout: popout,
     renderPopout: () => popout.render(true, { focus: true }),
     render() {},

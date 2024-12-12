@@ -1,3 +1,0 @@
-export {};
-
-/** @typedef {Object} PollConnector */

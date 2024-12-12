@@ -2,7 +2,7 @@
 
 <script>
   import { ApplicationShell } from "#runtime/svelte/component/application";
-  import { setSetting } from "../utils/settings.js";
+  import { setSetting } from "../utils/settings.ts";
   import { onDestroy } from "svelte";
   import { slide } from "svelte/transition";
   import Markdown from "svelte-exmarkdown";

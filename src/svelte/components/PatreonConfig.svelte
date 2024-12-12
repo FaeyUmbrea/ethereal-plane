@@ -2,10 +2,10 @@
   import InfoBox from "./InfoBox.svelte";
   import { localize } from "#runtime/util/i18n";
   import { tooltip } from "@svelte-plugins/tooltips";
-  import { disconnectClient } from "../../server/patreon_auth.js";
+  import { disconnectClient } from "../../server/patreon_auth.ts";
   import { onDestroy } from "svelte";
-  import { PATREON_URL } from "../../utils/const.js";
-  import { getStore } from "../../utils/settings.js";
+  import { PATREON_URL } from "../../utils/const.ts";
+  import { getStore } from "../../utils/settings.ts";
 
   const key = getStore("authentication-token");
   const pollsEnabled = getStore("polls-enabled");

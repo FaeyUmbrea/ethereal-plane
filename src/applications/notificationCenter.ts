@@ -11,8 +11,8 @@ export default class NotificationCenter extends SvelteApplication {
       width: 900,
       resizable: true,
       svelte: {
-        class: NotificationCenterUI,
         target: document.body,
+        class: NotificationCenterUI,
       },
     });
   }

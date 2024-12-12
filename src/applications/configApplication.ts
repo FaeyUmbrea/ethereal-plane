@@ -1,7 +1,6 @@
 import { SvelteApplication } from "#runtime/svelte/application";
 import ConfigUI from "../svelte/ConfigUI.svelte";
 
-/** @extends SvelteApplication */
 export class ConfigApplication extends SvelteApplication {
   /** @static */
   static get defaultOptions() {
