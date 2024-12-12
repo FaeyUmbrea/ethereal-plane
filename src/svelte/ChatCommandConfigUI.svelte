@@ -1,14 +1,14 @@
 <svelte:options accessors="{true}" />
 
 <script>
-  import { setSetting, getStore } from "../utils/settings.ts";
+  import { setSetting, settings } from "../utils/settings.ts";
   import ChatCommandConfig from "./components/ChatCommandConfig.svelte";
   import { ApplicationShell } from "#runtime/svelte/component/application";
-  import { ChatCommand } from "../utils/chatCommands.js";
+  import { ChatCommand } from "../utils/chatCommands.ts";
   import { getContext } from "svelte";
   import { localize } from "#runtime/util/i18n";
 
-  const commands = getStore("chat-commands");
+  const commands = settings.getStore("chat-commands");
   export let elementRoot = void 0;
 
   function add() {

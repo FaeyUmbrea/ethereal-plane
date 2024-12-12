@@ -20,6 +20,7 @@
   function setNews(id) {
     news = notifications.find((notification) => notification.id === id);
   }
+
   onDestroy(async () => {
     await setSetting("last-read-notification", cutoffDate);
   });

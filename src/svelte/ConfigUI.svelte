@@ -4,21 +4,21 @@
   import { ApplicationShell } from "#runtime/svelte/component/application";
   import { localize } from "#runtime/util/i18n";
   import { Modes } from "../utils/const.ts";
-  import { getStore } from "../utils/settings.ts";
+  import { settings } from "../utils/settings.ts";
   import CollapsibleSection from "./components/CollapsibleSection.svelte";
   import PatreonConfig from "./components/PatreonConfig.svelte";
   import InfoBox from "./components/InfoBox.svelte";
   import { tooltip } from "@svelte-plugins/tooltips";
 
-  const mode = getStore("mode");
+  const mode = settings.getStore("mode");
   const modes = Object.values(Modes);
-  const serverUrl = getStore("server-url");
-  const sendRollsToChat = getStore("send-rolls-to-chat");
-  const chatMessageTemplate = getStore("chat-message-template");
-  const pollsEnabled = getStore("polls-enabled");
-  const moduleEnabled = getStore("enabled");
-  const allowSocket = getStore("allow-socket");
-  const allowAPI = getStore("allow-api");
+  const serverUrl = settings.getStore("server-url");
+  const sendRollsToChat = settings.getStore("send-rolls-to-chat");
+  const chatMessageTemplate = settings.getStore("chat-message-template");
+  const pollsEnabled = settings.getStore("polls-enabled");
+  const moduleEnabled = settings.getStore("enabled");
+  const allowSocket = settings.getStore("allow-socket");
+  const allowAPI = settings.getStore("allow-api");
 
   export let elementRoot = void 0;
 </script>

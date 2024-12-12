@@ -1,10 +1,10 @@
 <script>
   import { Poll, PollStatus } from "../../utils/polls.ts";
-  import { setSetting, getStore } from "../../utils/settings.ts";
+  import { setSetting, settings } from "../../utils/settings.ts";
   import { getConnectionManager } from "../../server/connectionManager.ts";
   import { localize } from "#runtime/util/i18n";
 
-  const pollStore = getStore("currentPoll");
+  const pollStore = settings.getStore("currentPoll");
 
   let disableEnd = false;
 

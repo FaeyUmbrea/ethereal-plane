@@ -5,11 +5,11 @@
   import { disconnectClient } from "../../server/patreon_auth.ts";
   import { onDestroy } from "svelte";
   import { PATREON_URL } from "../../utils/const.ts";
-  import { getStore } from "../../utils/settings.ts";
+  import { settings } from "../../utils/settings.ts";
 
-  const key = getStore("authentication-token");
-  const pollsEnabled = getStore("polls-enabled");
-  const moduleEnabled = getStore("enabled");
+  const key = settings.getStore("authentication-token");
+  const pollsEnabled = settings.getStore("polls-enabled");
+  const moduleEnabled = settings.getStore("enabled");
 
   let clientIdExists = false;
   foundry.utils

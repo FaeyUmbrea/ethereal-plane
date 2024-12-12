@@ -2,12 +2,12 @@
 
 <script>
   import { Poll } from "../utils/polls.ts";
-  import { getStore } from "../utils/settings.ts";
+  import { settings } from "../utils/settings.ts";
   import PollDisplay from "./components/PollDisplay.svelte";
   import PollEditor from "./components/PollEditor.svelte";
   import { ApplicationShell } from "#runtime/svelte/component/application";
 
-  let poll = getStore("currentPoll");
+  let poll = settings.getStore("currentPoll");
   export let elementRoot = void 0;
 
   if (!$poll) {

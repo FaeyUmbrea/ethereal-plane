@@ -1,6 +1,6 @@
 <script>
   import { PollStatus } from "../../utils/polls.ts";
-  import { setSetting, getStore } from "../../utils/settings.ts";
+  import { setSetting, settings } from "../../utils/settings.ts";
   import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
   import { getConnectionManager } from "../../server/connectionManager.ts";
   import { localize } from "#runtime/util/i18n";
@@ -8,7 +8,7 @@
   /**
    * @type {Poll}
    */
-  const poll = getStore("currentPoll");
+  const poll = settings.getStore("currentPoll");
   let title = "";
   let duration = 30;
 
