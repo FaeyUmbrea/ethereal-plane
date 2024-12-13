@@ -65,7 +65,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
     const apiVersion = await (await fetch(`${PATREON_URL}version`)).text();
     if (apiVersion !== "2") {
       ui.notifications?.error(
-        `Ethereal Plane | ${localize("ethereal-plane.notifications.api-version-mismatch")}`,
+        `${localize("ethereal-plane.strings.notification-prefix")}${localize("ethereal-plane.notifications.api-version-mismatch")}`,
       );
       return;
     }
@@ -78,7 +78,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
     if (!clientConnected) {
       console.log("Ethereal Plane | No client connected, please connect");
       ui.notifications?.warn(
-        `Ethereal Plane | ${localize("ethereal-plane.notifications.please-log-in")}`,
+        `${localize("ethereal-plane.strings.notification-prefix")}${localize("ethereal-plane.notifications.please-log-in")}`,
       );
       return;
     }
@@ -90,7 +90,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
     if (token === "" || refreshToken === "") {
       console.log("Ethereal Plane | No credentials present, please log in");
       ui.notifications?.warn(
-        `Ethereal Plane | ${localize("ethereal-plane.notifications.please-log-in")}`,
+        `${localize("ethereal-plane.strings.notification-prefix")}${localize("ethereal-plane.notifications.please-log-in")}`,
       );
       return;
     }
@@ -125,7 +125,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
         await setSetting("authentication-token", "");
         await setSetting("refresh-token", "");
         ui.notifications?.error(
-          `Ethereal Plane | ${localize("ethereal-plane.notifications.invalid-credential")}`,
+          `${localize("ethereal-plane.strings.notification-prefix")}${localize("ethereal-plane.notifications.invalid-credential")}`,
         );
         throw Error(
           "Ethereal Plane | Credentials Invalid, please log in again",

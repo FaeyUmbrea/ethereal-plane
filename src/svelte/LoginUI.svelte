@@ -21,7 +21,7 @@
   async function copy() {
     await navigator.clipboard.writeText(uri);
     ui.notifications?.info(
-      `Ethereal Plane | ${localize("ethereal-plane.notifications.login-copy")}`,
+      `${localize("ethereal-plane.strings.notification-prefix")}${localize("ethereal-plane.notifications.login-copy")}`,
     );
   }
 

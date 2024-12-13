@@ -57,6 +57,7 @@
       "twitch-polls": "Twitch Polls"
     },
     "ui": {
+      "reconnect": "Reconnect",
       "general-tab": "General",
       "hosted-tab": "Hosted",
       "local-tab": "Local Server",
@@ -116,7 +117,8 @@
       "login-copy": "Login link copied to clipboard",
       "api-version-mismatch": "API version does not match the installed Module. Please Update. Patreon Features Disabled.",
       "please-log-in": "Please log in to use Ethereal Plane",
-      "invalid-credential": "Credentials Invalid, please log in again"
+      "invalid-credential": "Credentials Invalid, please log in again",
+      "reconnecting": "Reconnecting to EP Backend, please wait"
     },
     "strings": {
       "youtube-id": "Set Youtube ID (Optional)",

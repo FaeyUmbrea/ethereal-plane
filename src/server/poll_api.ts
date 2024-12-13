@@ -68,6 +68,7 @@ export function endPoll(pollId: string) {
   if (connection) {
     return connection.invoke("AbortPoll", pollId);
   }
+  return undefined;
 }
 export async function disconnectPollAPI() {
   if (connection) {

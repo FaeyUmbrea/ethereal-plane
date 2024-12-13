@@ -11,6 +11,7 @@ import {
 } from "./chatConnector.js";
 import { PollConnector } from "./pollConnector.js";
 import { Poll } from "../utils/polls.js";
+import { localize } from "@typhonjs-fvtt/runtime/util/i18n";
 
 class ConnectionManager {
   private currentMode: Modes | undefined;
@@ -23,6 +24,7 @@ class ConnectionManager {
   messageDeletionListeners: ((id: string) => void)[] = [];
 
   constructor() {
+    Hooks.on("ethereal-plane.reconnect", () => this.reconnect());
     settings.getStore("mode")?.subscribe((mode: Modes) => {
       this.onChangeMode(mode).then();
     });
@@ -42,6 +44,16 @@ class ConnectionManager {
         return messages.filter((message) => message.id !== id);
       });
     });
+  }
+
+  async reconnect() {
+    ui.notifications?.warn(
+      `${localize("ethereal-plane.strings.notification-prefix")}${localize("ethereal-plane.notifications.reconnecting")}`,
+    );
+    await this.chatConnector?.disconnect();
+    await this.pollConnector?.disconnect();
+    this.currentMode = undefined;
+    await this.onChangeMode(getSetting("mode"));
   }
 
   handleMessages: ChatMessageCallback = async (

@@ -1,4 +1,4 @@
-import { Poll } from "../utils/polls";
+import { Poll } from "../utils/polls.js";
 
 export interface PollConnector {
   startPoll(poll: Poll): void | Promise<void>;

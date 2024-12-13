@@ -79,6 +79,14 @@
         >
           <input bind:checked="{$allowAPI}" type="checkbox" />
         </div>
+        <span>{localize("ethereal-plane.ui.reconnect")}</span>
+        <div>
+          <button
+            on:click="{() => {
+              Hooks.call('ethereal-plane.reconnect');
+            }}"><i class="fa-solid fa-arrows-rotate"></i></button
+          >
+        </div>
       </section>
     </CollapsibleSection>
     {#if $mode === Modes.patreon || $mode === Modes.localchat}

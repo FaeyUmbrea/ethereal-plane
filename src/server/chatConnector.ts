@@ -8,8 +8,8 @@ export type ChatMessageCallback = (
 export type ChatDeletionCallback = (messageId: string) => void | Promise<void>;
 
 export interface ChatConnector {
-  disconnect(): void;
-  setCallback(callback: ChatMessageCallback): void;
+  disconnect(): void | Promise<void>;
+  setCallback(callback: ChatMessageCallback): void | Promise<void>;
   setDeletionCallback(callback: ChatDeletionCallback): void;
   init(): void | Promise<void>;
   enableChatListener(): void | Promise<void>;
