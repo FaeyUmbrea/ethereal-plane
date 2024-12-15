@@ -22,7 +22,7 @@ interface News {
 export async function getNotifications() {
 	const lastReadNotification = getSetting('last-read-notification') as string;
 	const lastRunDate = Date.parse(lastReadNotification)
-		? new Date(lastReadNotification).toString()
+		? new Date(lastReadNotification)
 		: '1990-01-01';
 	const client = createDirectus('https://cms.void.monster').with(rest());
 
@@ -38,12 +38,12 @@ export async function getNotifications() {
 					_or: [
 						{
 							date_updated: {
-								_gte: lastRunDate,
+								_gte: lastRunDate as string,
 							},
 						},
 						{
 							date_created: {
-								_gte: lastRunDate,
+								_gte: lastRunDate as string,
 							},
 						},
 					],

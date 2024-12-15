@@ -1,10 +1,11 @@
-<script>
+<script lang='ts'>
+	import type { Writable } from 'svelte/store';
 	import { localize } from '#runtime/util/i18n';
 	import { getConnectionManager } from '../../server/connectionManager.ts';
 	import { Poll, PollStatus } from '../../utils/polls.ts';
 	import { setSetting, settings } from '../../utils/settings.ts';
 
-	const pollStore = settings.getStore('currentPoll');
+	const pollStore: Writable<Poll> = settings.getStore('currentPoll')!;
 
 	const disableEnd = false;
 
@@ -30,7 +31,7 @@
 		{#if $pollStore.tally}
 			{#each $pollStore.tally as tally, index}
 				<span class='tally-entry'>{$pollStore.options[index].text}</span>
-				<progress value={tally} max={total(tally)}></progress>
+				<progress value={tally} max={total()}></progress>
 				<span class='tally-entry'
 				>{tally} / {Math.round((tally / total()) * 100)}%</span
 				>

@@ -17,7 +17,7 @@ export class Poll {
 	];
 
 	tally: number[] = [0, 0];
-	duration: number = 30;
+	duration: number | undefined;
 	createdAt: Date = new Date();
 	status: PollStatus = PollStatus.notStarted;
 	id: string = 'awawawawawa';
