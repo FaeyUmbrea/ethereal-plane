@@ -1,3 +1,14 @@
+## Version 2.2.0
+
+### Added
+
+- Introduced a new feature in the backend that forwards message deletions to the foundry client, currently this only removes messages from the chat tab
+- Added a button to manually reconnect to the server
+
+### Changed
+
+- Codebase has been refactored to TypeScript to allow for better stability, all EP features have been tested, but some bugs might still occur as this involved updating the entire module to TypeScript
+
 ## Version 2.1.1
 
 ### Changed
