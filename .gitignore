@@ -138,4 +138,4 @@ stats.html
 .vite-cache/
 types/
 
-public/storage/**/*
+storage/**/*

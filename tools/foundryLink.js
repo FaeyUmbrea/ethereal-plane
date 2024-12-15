@@ -6,9 +6,9 @@ import * as readline from 'node:readline';
 
 async function foundryLink() {
 	const winPath = `${process.env.LOCALAPPDATA}/FoundryVTT/Config/options.json`;
-	const distDir = '/dist';
+	const distDir = '/';
 	const moduleDir = '/Data/modules/';
-	const moduleJsonPath = '/public/module.json';
+	const moduleJsonPath = '/module.json';
 
 	let moduleJsonPathFull = '';
 	let cwd = process.cwd();

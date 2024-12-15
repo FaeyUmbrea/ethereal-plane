@@ -4,7 +4,7 @@
 	import { getConnectionManager } from '../../server/connectionManager.ts';
 	import { PollStatus } from '../../utils/polls.ts';
 	import { setSetting, settings } from '../../utils/settings.ts';
-	import { log } from '../../utils/utils.js';
+	import { log } from '../../utils/utils.ts';
 
 	/**
 	 * @type {Poll}

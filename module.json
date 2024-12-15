@@ -19,9 +19,9 @@
 		}
 	],
 	"styles": [
-		"index.css"
+		"dist/ethereal-plane.css"
 	],
-	"esmodules": ["index.js"],
+	"esmodules": ["dist/ethereal-plane.js"],
 	"languages": [
 		{
 			"lang": "en",
