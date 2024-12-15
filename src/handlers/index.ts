@@ -1,5 +1,5 @@
-import { registerHandler } from "./rollHandler";
+import { registerHandler } from './rollHandler';
 
 export function registerHandlers() {
-  registerHandler();
+	registerHandler();
 }

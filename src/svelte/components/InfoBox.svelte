@@ -1,12 +1,12 @@
 <script>
-  export let variant;
+	export let variant;
 </script>
 
-<div class="{'infobox ' + variant}">
-  <slot />
+<div class={`infobox ${variant}`}>
+	<slot></slot>
 </div>
 
-<style lang="stylus">
+<style lang='stylus'>
   .infobox
     border: #ffffff90 1px solid
     border-radius: 5px

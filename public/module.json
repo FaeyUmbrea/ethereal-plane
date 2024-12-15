@@ -1,44 +1,44 @@
 {
-    "id": "ethereal-plane",
-    "title": "Ethereal Plane",
-    "description": "",
-    "version": "This is auto replaced",
-    "library": "false",
-    "manifestPlusVersion": "1.2.0",
-  "persistentStorage": true,
-    "compatibility": {
-      "maximum": 12,
-      "verified": 12,
-      "minimum": 11
-    },
-    "authors": [
-      {
-        "name": "Faey Umbrea",
-        "url": "https://github.com/FaeyUmbrea",
-        "discord": "Faey#0001"
-      }
-    ],
-    "styles": [
-      "index.css"
-    ],
-    "esmodules": ["index.js"],
-    "languages": [
-      {
-        "lang": "en",
-        "name": "English",
-        "path": "languages/en.json"
-      }
-    ],
-    "url": "This is auto replaced",
-    "socket": true,
-    "manifest": "This is auto replaced",
-    "download": "This is auto replaced",
-    "license": "AGPL-3.0-only",
-    "readme": "https://github.com/FaeyUmbrea/obs-utils/blob/master/README.md",
-    "media": [
-      {
-        "type": "icon",
-        "url": "https://avatars2.githubusercontent.com/u/71292812?s=400&u=ccdb4eeb7abf551ca8f314e5a9bfd0479a4d3d41&v=4"
-      }
-    ]
+	"id": "ethereal-plane",
+	"title": "Ethereal Plane",
+	"description": "",
+	"version": "This is auto replaced",
+	"library": "false",
+	"manifestPlusVersion": "1.2.0",
+	"persistentStorage": true,
+	"compatibility": {
+		"maximum": 12,
+		"verified": 12,
+		"minimum": 11
+	},
+	"authors": [
+		{
+			"name": "Faey Umbrea",
+			"url": "https://github.com/FaeyUmbrea",
+			"discord": "Faey#0001"
+		}
+	],
+	"styles": [
+		"index.css"
+	],
+	"esmodules": ["index.js"],
+	"languages": [
+		{
+			"lang": "en",
+			"name": "English",
+			"path": "languages/en.json"
+		}
+	],
+	"url": "This is auto replaced",
+	"socket": true,
+	"manifest": "This is auto replaced",
+	"download": "This is auto replaced",
+	"license": "AGPL-3.0-only",
+	"readme": "https://github.com/FaeyUmbrea/obs-utils/blob/master/README.md",
+	"media": [
+		{
+			"type": "icon",
+			"url": "https://avatars2.githubusercontent.com/u/71292812?s=400&u=ccdb4eeb7abf551ca8f314e5a9bfd0479a4d3d41&v=4"
+		}
+	]
 }

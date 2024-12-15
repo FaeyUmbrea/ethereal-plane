@@ -1,130 +1,131 @@
 <script>
-  import { PollStatus } from "../../utils/polls.ts";
-  import { setSetting, settings } from "../../utils/settings.ts";
-  import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
-  import { getConnectionManager } from "../../server/connectionManager.ts";
-  import { localize } from "#runtime/util/i18n";
+	import { TJSDocument } from '#runtime/svelte/store/fvtt/document';
+	import { localize } from '#runtime/util/i18n';
+	import { getConnectionManager } from '../../server/connectionManager.ts';
+	import { PollStatus } from '../../utils/polls.ts';
+	import { setSetting, settings } from '../../utils/settings.ts';
+	import { log } from '../../utils/utils.js';
 
-  /**
-   * @type {Poll}
-   */
-  const poll = settings.getStore("currentPoll");
-  let title = "";
-  let duration = 30;
+	/**
+	 * @type {Poll}
+	 */
+	const poll = settings.getStore('currentPoll');
+	let title = '';
+	let duration = 30;
 
-  function addOption() {
-    if ($poll.options.length >= 5) return;
-    const newPoll = $poll;
-    newPoll.options.push({
-      text: "",
-      name: ($poll.options.length + 1).toString(),
-    });
-    setSetting("currentPoll", newPoll);
-  }
+	function addOption() {
+		if ($poll.options.length >= 5) return;
+		const newPoll = $poll;
+		newPoll.options.push({
+			text: '',
+			name: ($poll.options.length + 1).toString(),
+		});
+		setSetting('currentPoll', newPoll);
+	}
 
-  function removeOption() {
-    if ($poll.options.length <= 2) return;
-    const newPoll = $poll;
-    newPoll.options.pop();
-    setSetting("currentPoll", newPoll);
-  }
+	function removeOption() {
+		if ($poll.options.length <= 2) return;
+		const newPoll = $poll;
+		newPoll.options.pop();
+		setSetting('currentPoll', newPoll);
+	}
 
-  async function startPoll() {
-    const newPoll = $poll;
-    newPoll.tally = Array(newPoll.options.length).fill(0);
-    newPoll.status = PollStatus.started;
-    newPoll.duration = duration;
-    newPoll.createdAt = new Date();
-    newPoll.title = title ? title : "Poll";
-    await setSetting("currentPoll", newPoll);
-    getConnectionManager().createPoll(newPoll);
-  }
+	async function startPoll() {
+		const newPoll = $poll;
+		newPoll.tally = Array.from({ length: newPoll.options.length }).fill(0);
+		newPoll.status = PollStatus.started;
+		newPoll.duration = duration;
+		newPoll.createdAt = new Date();
+		newPoll.title = title || 'Poll';
+		await setSetting('currentPoll', newPoll);
+		getConnectionManager().createPoll(newPoll);
+	}
 
-  const doc = new TJSDocument();
+	const doc = new TJSDocument();
 
-  async function onDrop(event, index) {
-    console.log("Ethereal Plane | Adding Macro to Poll Option " + index);
-    try {
-      await doc.setFromDataTransfer(
-        JSON.parse(event.dataTransfer.getData("text/plain")),
-      );
-      const newPoll = $poll;
-      newPoll.options[index].macro = doc.get().id;
-      await setSetting("currentPoll", newPoll);
-    } catch (err) {
-      console.error(err);
-    }
-  }
+	async function onDrop(event, index) {
+		log(`Ethereal Plane | Adding Macro to Poll Option ${index}`);
+		try {
+			await doc.setFromDataTransfer(
+				JSON.parse(event.dataTransfer.getData('text/plain')),
+			);
+			const newPoll = $poll;
+			newPoll.options[index].macro = doc.get().id;
+			await setSetting('currentPoll', newPoll);
+		} catch (err) {
+			console.error(err);
+		}
+	}
 
-  function onClick(index) {
-    const id = $poll.options[index].macro;
-    if (!id) return;
-    const currentMacro = game.macros.get(id);
-    currentMacro.sheet.render(true);
-  }
+	function onClick(index) {
+		const id = $poll.options[index].macro;
+		if (!id) return;
+		const currentMacro = game.macros.get(id);
+		currentMacro.sheet.render(true);
+	}
 
-  async function onRClick(index) {
-    console.log("Ethereal Plane | Removing Macro from Poll Option " + index);
-    const newPoll = $poll;
-    newPoll.options[index].macro = undefined;
-    await setSetting("currentPoll", newPoll);
-  }
+	async function onRClick(index) {
+		log(`Ethereal Plane | Removing Macro from Poll Option ${index}`);
+		const newPoll = $poll;
+		newPoll.options[index].macro = undefined;
+		await setSetting('currentPoll', newPoll);
+	}
 </script>
 
-<div class="editor">
-  <div class="config">
-    <input
-      bind:value="{title}"
-      class="title"
-      placeholder="{localize('ethereal-plane.ui.title')}"
-      type="text"
-    />
-    <input
-      bind:value="{duration}"
-      class="duration"
-      max="{300}"
-      min="{0}"
-      type="number"
-    />
-  </div>
-  <div class="options">
-    {#each $poll.options as option, index}
-      <label for="{index}">{index + 1}</label>
-      <input id="{index}" type="text" bind:value="{option.text}" />
-      <section
-        role="none"
-        class="macro"
-        on:click="{() => onClick(index)}"
-        on:auxclick="{() => onRClick(index)}"
-        on:drop|preventDefault|stopPropagation="{(e) => onDrop(e, index)}"
-      >
-        {#if option.macro}
-          <section class="macro">
-            <img alt="Macro Icon" src="{game.macros.get(option.macro).img}" />
-          </section>
-        {/if}
-      </section>
-    {/each}
-  </div>
-  <div class="buttons">
-    <button
-      class="addrem"
-      disabled="{$poll.options.length >= 5}"
-      on:click="{addOption}"
-      ><i class="fas fa-plus"></i>
-    </button>
-    <button
-      class="addrem"
-      disabled="{$poll.options.length <= 2}"
-      on:click="{removeOption}"
-      ><i class="fas fa-minus"></i>
-    </button>
-    <button on:click="{startPoll}">{localize("ethereal-plane.ui.start")}</button
-    >
-  </div>
+<div class='editor'>
+	<div class='config'>
+		<input
+			bind:value={title}
+			class='title'
+			placeholder={localize('ethereal-plane.ui.title')}
+			type='text'
+		/>
+		<input
+			bind:value={duration}
+			class='duration'
+			max={300}
+			min={0}
+			type='number'
+		/>
+	</div>
+	<div class='options'>
+		{#each $poll.options as option, index}
+			<label for={index}>{index + 1}</label>
+			<input id={index} type='text' bind:value={option.text} />
+			<section
+				role='none'
+				class='macro'
+				on:click={() => onClick(index)}
+				on:auxclick={() => onRClick(index)}
+				on:drop|preventDefault|stopPropagation={e => onDrop(e, index)}
+			>
+				{#if option.macro}
+					<section class='macro'>
+						<img alt='Macro Icon' src={game.macros.get(option.macro).img} />
+					</section>
+				{/if}
+			</section>
+		{/each}
+	</div>
+	<div class='buttons'>
+		<button
+			class='addrem'
+			disabled={$poll.options.length >= 5}
+			on:click={addOption}
+		><i class='fas fa-plus'></i>
+		</button>
+		<button
+			class='addrem'
+			disabled={$poll.options.length <= 2}
+			on:click={removeOption}
+		><i class='fas fa-minus'></i>
+		</button>
+		<button on:click={startPoll}>{localize('ethereal-plane.ui.start')}</button
+		>
+	</div>
 </div>
 
-<style lang="stylus">
+<style lang='stylus'>
   .config {
     display: grid;
     grid-template-columns: auto 60px;

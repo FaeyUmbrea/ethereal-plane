@@ -1,18 +1,19 @@
-import { SvelteApplication } from "#runtime/svelte/application";
-import LoginUI from "../svelte/LoginUI.svelte";
+import { SvelteApplication } from '#runtime/svelte/application';
+import LoginUI from '../svelte/LoginUI.svelte';
 
 export default class LoginApplication extends SvelteApplication {
-  static override get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["login-dialog"],
-      id: "login-application",
-      title: "ethereal-plane.ui.login-application-title",
-      width: 400,
-      height: 435,
-      svelte: {
-        class: LoginUI,
-        target: document.body,
-      },
-    });
-  }
+	constructor(user_code: string, uri: string | undefined) {
+		super({
+			classes: ['login-dialog'],
+			id: 'login-application',
+			title: 'ethereal-plane.ui.login-application-title',
+			width: 400,
+			height: 435,
+			svelte: {
+				class: LoginUI,
+				target: document.body,
+				props: { user_code, uri },
+			},
+		});
+	}
 }

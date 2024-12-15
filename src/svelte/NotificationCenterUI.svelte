@@ -1,76 +1,76 @@
-<svelte:options accessors="{true}" />
+<svelte:options accessors={true} />
 
 <script>
-  import { ApplicationShell } from "#runtime/svelte/component/application";
-  import { setSetting } from "../utils/settings.ts";
-  import { onDestroy } from "svelte";
-  import { slide } from "svelte/transition";
-  import Markdown from "svelte-exmarkdown";
+	import { ApplicationShell } from '#runtime/svelte/component/application';
+	import { onDestroy } from 'svelte';
+	import Markdown from 'svelte-exmarkdown';
+	import { slide } from 'svelte/transition';
+	import { setSetting } from '../utils/settings.ts';
 
-  export let notifications;
-  export let links;
-  export let elementRoot = void 0;
-  let news = notifications[0];
-  let cutoffDate = new Date().toISOString();
+	export let notifications;
+	export let links;
+	export let elementRoot = void 0;
+	let news = notifications[0];
+	const cutoffDate = new Date().toISOString();
 
-  function openLink(uri) {
-    window.open(uri, "_blank").focus();
-  }
+	function openLink(uri) {
+		window.open(uri, '_blank').focus();
+	}
 
-  function setNews(id) {
-    news = notifications.find((notification) => notification.id === id);
-  }
+	function setNews(id) {
+		news = notifications.find(notification => notification.id === id);
+	}
 
-  onDestroy(async () => {
-    await setSetting("last-read-notification", cutoffDate);
-  });
+	onDestroy(async () => {
+		await setSetting('last-read-notification', cutoffDate);
+	});
 </script>
 
-<ApplicationShell bind:elementRoot="{elementRoot}">
-  <main>
-    <div class="newsBox">
-      <div class="newsSelect">
-        {#each notifications as notification}
-          <div
-            class="{notification.id === news.id ? 'selected' : ''} select"
-            role="none"
-            on:click="{() => setNews(notification.id)}"
-          >
-            <span>
-              {notification.title}
-            </span>
-            <span class="date">
-              {#if notification.date_updated != null}
-                {new Date(notification.date_updated).toLocaleDateString()}
-              {:else}
-                {new Date(notification.date_created).toLocaleDateString()}
-              {/if}
-            </span>
-          </div>
-        {/each}
-      </div>
-      <div class="newsDisplay">
-        {#key news}
-          <div transition:slide="{{ duration: 200, axis: 'y' }}">
-            <div class="title">
-              {news.title}
-            </div>
-            <div class="news">
-              <Markdown content="{news.message}" />
-            </div>
-          </div>
-        {/key}
-      </div>
-    </div>
-    <div class="links">
-      {#each links as { url, title }}
-        <button on:click="{() => openLink(url)}">{title}</button>
-      {/each}
-    </div>
-  </main>
+<ApplicationShell bind:elementRoot={elementRoot}>
+	<main>
+		<div class='newsBox'>
+			<div class='newsSelect'>
+				{#each notifications as notification}
+					<div
+						class="{notification.id === news.id ? 'selected' : ''} select"
+						role='none'
+						on:click={() => setNews(notification.id)}
+					>
+						<span>
+							{notification.title}
+						</span>
+						<span class='date'>
+							{#if notification.date_updated != null}
+								{new Date(notification.date_updated).toLocaleDateString()}
+							{:else}
+								{new Date(notification.date_created).toLocaleDateString()}
+							{/if}
+						</span>
+					</div>
+				{/each}
+			</div>
+			<div class='newsDisplay'>
+				{#key news}
+					<div transition:slide={{ duration: 200, axis: 'y' }}>
+						<div class='title'>
+							{news.title}
+						</div>
+						<div class='news'>
+							<Markdown content={news.message} />
+						</div>
+					</div>
+				{/key}
+			</div>
+		</div>
+		<div class='links'>
+			{#each links as { url, title }}
+				<button on:click={() => openLink(url)}>{title}</button>
+			{/each}
+		</div>
+	</main>
 </ApplicationShell>
 
-<style lang="stylus">
+<style lang='stylus'>
   main
     display: grid
     grid-template-rows: auto 36px

@@ -1,36 +1,36 @@
 <script>
-  import { chatMessages } from "../stores/chatMessages.ts";
-  import ChatMessage from "./ChatMessage.svelte";
-  import { afterUpdate } from "svelte";
-  import { localize } from "#runtime/util/i18n";
+	import { localize } from '#runtime/util/i18n';
+	import { afterUpdate } from 'svelte';
+	import { chatMessages } from '../stores/chatMessages.ts';
+	import ChatMessage from './ChatMessage.svelte';
 
-  let element;
+	let element;
 
-  afterUpdate(() => {
-    if ($chatMessages) scrollToBottom(element);
-  });
+	const scrollToBottom = async (node) => {
+		node.scroll({ top: node.scrollHeight, behavior: 'smooth' });
+	};
 
-  $: if ($chatMessages && element) {
-    scrollToBottom(element);
-  }
+	afterUpdate(() => {
+		if ($chatMessages) scrollToBottom(element);
+	});
 
-  const scrollToBottom = async (node) => {
-    node.scroll({ top: node.scrollHeight, behavior: "smooth" });
-  };
+	$: if ($chatMessages && element) {
+		scrollToBottom(element);
+	}
 </script>
 
-<ol bind:this="{element}" class="ep-chat">
-  <ChatMessage
-    message="{localize('ethereal-plane.ui.chat-welcome')}"
-    user="{localize('ethereal-plane.ui.system')}"
-  />
-  {#each $chatMessages as { user, message, id }}
-    <ChatMessage user="{user}" message="{message}" />
-  {/each}
+<ol bind:this={element} class='ep-chat'>
+	<ChatMessage
+		message={localize('ethereal-plane.ui.chat-welcome')}
+		user={localize('ethereal-plane.ui.system')}
+	/>
+	{#each $chatMessages as { user, message }}
+		<ChatMessage user={user} message={message} />
+	{/each}
 </ol>
-<div id="anchor"></div>
+<div id='anchor'></div>
 
-<style lang="stylus">
+<style lang='stylus'>
   .ep-chat
     overflow-anchor none
     height 100%

@@ -1,8 +1,7 @@
-import PollOverlay from "../svelte/overlays/PollOverlay.svelte";
-
-import "../css/overlay.styl";
-import { getGame } from "./helpers.js";
+import PollOverlay from '../svelte/overlays/PollOverlay.svelte';
+import { getGame } from './helpers.js';
+import '../css/overlay.styl';
 
 export async function registerOverlay() {
-  getGame()?.modules?.get("obs-utils")?.api?.registerUniqueOverlay(PollOverlay);
+	(getGame()?.modules?.get('obs-utils')?.api as obsAPI)?.registerUniqueOverlay(PollOverlay);
 }

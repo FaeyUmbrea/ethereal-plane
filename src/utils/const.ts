@@ -1,9 +1,9 @@
-export const MODULE_ID = "ethereal-plane";
+export const MODULE_ID = 'ethereal-plane';
 
 export enum Modes {
-  patreon = "patreon",
-  localonly = "localonly",
-  localchat = "localchat",
+	patreon = 'patreon',
+	localonly = 'localonly',
+	localchat = 'localchat',
 }
 
-export const PATREON_URL = "https://etherealplane.app/";
+export const PATREON_URL = 'https://etherealplane.app/';

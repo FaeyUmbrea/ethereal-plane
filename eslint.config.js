@@ -1,64 +1,45 @@
-import globals from "globals";
-import js from "@eslint/js";
-import tslint from "typescript-eslint";
-import tsESLintParser from "@typescript-eslint/parser";
-import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
-import eslintPluginSvelte from "eslint-plugin-svelte";
-import svelteESLintParser from "svelte-eslint-parser";
+import antfu from '@antfu/eslint-config';
 
-const ignores = [
-  ".DS_Store",
-  "node_modules/**/*",
-  "build/**/*",
-  ".svelte-kit/**/*",
-  "package/**/*",
-  ".env",
-  ".env.*",
-  "package-lock.json",
-  "yarn.lock",
-  "dist/**/*",
-  ".vite-cache/**/*",
-];
-export default [
-  js.configs.recommended,
-  ...tslint.configs.recommended,
-  eslintPluginPrettierRecommended,
-  ...eslintPluginSvelte.configs["flat/prettier"],
-  {
-    ignores: ignores,
-  },
-  {
-    ignores,
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        game: true,
-        Hooks: true,
-        PIXI: true,
-        Application: true,
-        foundry: true,
-        ui: true,
-      },
-    },
-  },
-  {
-    files: ["*.ts", "*.tsx"],
-    ignores,
-    languageOptions: {
-      sourceType: "module",
-      parser: tsESLintParser,
-    },
-  },
-  {
-    files: ["**/*.svelte", "*.svelte"],
-    ignores,
-    languageOptions: {
-      parser: svelteESLintParser,
-      parserOptions: {
-        // Parse the `<script>` in `.svelte` as TypeScript by adding the following configuration.
-        extraFileExtensions: [".svelte"], // This is a required setting in `@typescript-eslint/parser` v4.24.0.
-        parser: tsESLintParser,
-      },
-    },
-  },
-];
+export default antfu(
+	{
+		formatters: true,
+		svelte: true,
+
+		stylistic: {
+			indent: 'tab',
+			quotes: 'single',
+			semi: true,
+		},
+
+		rules: {
+			'import/order': 'off',
+			'sort-imports': 'off',
+			'unicorn/consistent-function-scoping': 'off',
+			'svelte/html-self-closing': [
+				'error',
+				{
+					void: 'always', // or "never" or "ignore"
+					normal: 'never',
+					component: 'always',
+					svelte: 'always',
+				},
+			],
+			'svelte/prefer-style-directive': 'warn',
+			'antfu/consistent-list-newline': 'warn',
+			'antfu/if-newline': 'off',
+			'import/no-mutable-exports': 'off',
+			'style/brace-style': ['error', '1tbs', { allowSingleLine: true }],
+			'unused-imports/no-unused-vars': 'warn',
+			'node/prefer-global/process': 'off',
+			'svelte/valid-compile': 'warn',
+		},
+
+		ignores: [],
+	},
+	{
+		files: ['**/*.svelte'],
+		rules: {
+			'no-self-assign': 'off',
+		},
+	},
+);

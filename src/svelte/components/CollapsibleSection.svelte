@@ -1,26 +1,26 @@
 <script>
-  import { slide } from "svelte/transition";
+	import { slide } from 'svelte/transition';
 
-  export let collapsed = true;
-  export let title = "Section";
+	export let collapsed = true;
+	export let title = 'Section';
 
-  function click() {
-    collapsed = !collapsed;
-  }
+	function click() {
+		collapsed = !collapsed;
+	}
 </script>
 
-<div class="collapsable-section">
-  <section class="header" on:click="{click}" role="none">
-    ▼<span>{title}</span>▼
-  </section>
-  {#if !collapsed}
-    <section class="{`content`}" in:slide out:slide>
-      <slot />
-    </section>
-  {/if}
+<div class='collapsable-section'>
+	<section class='header' on:click={click} role='none'>
+		▼<span>{title}</span>▼
+	</section>
+	{#if !collapsed}
+		<section class='content' in:slide out:slide>
+			<slot></slot>
+		</section>
+	{/if}
 </div>
 
-<style lang="stylus">
+<style lang='stylus'>
   .header
     display: flex
     border: #2b2d42 1px solid
@@ -42,6 +42,5 @@
   .content
     display: block
     margin: 9px 1%
-
 
 </style>

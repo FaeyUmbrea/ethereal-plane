@@ -1,219 +1,224 @@
+import type {
+	ChatCommand,
+	ExportChatCommand,
+	ImportChatCommand,
+} from '../utils/chatCommands.js';
 import {
-  SvelteApplication,
-  SvelteApplicationOptions,
-} from "#runtime/svelte/application";
-import ChatCommandConfigUI from "../svelte/ChatCommandConfigUI.svelte";
-import { getSetting, setSetting } from "../utils/settings.js";
-import { getGame } from "../utils/helpers.js";
-import { localize } from "#runtime/util/i18n";
-import {
-  ChatCommand,
-  ExportChatCommand,
-  ImportChatCommand,
-} from "../utils/chatCommands.js";
+	SvelteApplication,
+} from '#runtime/svelte/application';
+import { localize } from '#runtime/util/i18n';
+import ChatCommandConfigUI from '../svelte/ChatCommandConfigUI.svelte';
+import { getGame } from '../utils/helpers.js';
+import { getSetting, setSetting } from '../utils/settings.js';
+import { readTextFromFile } from '../utils/utils';
 
 export class ChatCommandApplication extends SvelteApplication {
-  /** @static */
-  static get defaultOptions() {
-    // @ts-expect-error Type Instantiation Bug
-    return foundry.utils.mergeObject(
-      super.defaultOptions as SvelteApplicationOptions,
-      {
-        classes: ["ep-chat-commands"],
-        minimizable: true,
-        width: 500,
-        height: 320,
-        id: "chat-command-config-application",
-        title: "ethereal-plane.ui.chat-command-application-title",
-        resizable: true,
-        positionOrtho: false,
-        transformOrigin: null,
-        svelte: {
-          class: ChatCommandConfigUI,
-          target: document.body,
-          intro: true,
-        },
-      },
-    );
-  }
+	/** @static */
+	static override get defaultOptions() {
+		return foundry.utils.mergeObject(
+			super.defaultOptions,
+			{
+				classes: ['ep-chat-commands'],
+				minimizable: true,
+				width: 500,
+				height: 320,
+				id: 'chat-command-config-application',
+				title: 'ethereal-plane.ui.chat-command-application-title',
+				resizable: true,
+				positionOrtho: false,
+				transformOrigin: null,
+				svelte: {
+					class: ChatCommandConfigUI,
+					target: document.body,
+					intro: true,
+				},
+			},
+		);
+	}
 
-  _getHeaderButtons() {
-    const buttons = super._getHeaderButtons();
+	override _getHeaderButtons() {
+		const buttons = super._getHeaderButtons();
 
-    buttons.unshift(
-      {
-        icon: "fas fa-file-import",
-        class: "import-data",
-        label: localize("ethereal-plane.ui.commands.import.button"),
+		buttons.unshift(
+			{
+				icon: 'fas fa-file-import',
+				class: 'import-data',
+				label: localize('ethereal-plane.ui.commands.import.button'),
 
-        onclick: async function () {
-          new Dialog(
-            {
-              title: `${localize("ethereal-plane.ui.commands.import.title")}`,
-              content: await renderTemplate("templates/apps/import-data.html", {
-                hint1: localize("ethereal-plane.ui.commands.import.hint1"),
-                hint2: localize("ethereal-plane.ui.commands.import.hint2"),
-              }),
-              buttons: {
-                import: {
-                  icon: '<i class="fas fa-file-import"></i>',
-                  label: localize("ethereal-plane.ui.commands.import.button"),
-                  callback: (html) => {
-                    const form = (html as JQuery<HTMLElement>).find(
-                      "form",
-                    )[0] as HTMLFormElement;
-                    if (!form.data.files.length)
-                      return ui?.notifications?.error(
-                        localize(
-                          "ethereal-plane.ui.commands.import.data-file-error",
-                        ),
-                      );
-                    readTextFromFile(form.data.files[0]).then((json) =>
-                      importChatCommands(json, false),
-                    );
-                  },
-                },
-                withMacros: {
-                  icon: '<i class="fas fa-file-import"></i>',
-                  label: localize(
-                    "ethereal-plane.ui.commands.import.with-macros",
-                  ),
-                  callback: (html) => {
-                    const form = (html as JQuery<HTMLElement>).find(
-                      "form",
-                    )[0] as HTMLFormElement;
-                    if (!form.data.files.length)
-                      return ui?.notifications?.error(
-                        localize(
-                          "ethereal-plane.ui.commands.import.data-file-error",
-                        ),
-                      );
-                    readTextFromFile(form.data.files[0]).then((json) =>
-                      importChatCommands(json, true),
-                    );
-                  },
-                },
-                no: {
-                  icon: '<i class="fas fa-times"></i>',
-                  label: localize("ethereal-plane.ui.cancel"),
-                },
-              },
-              default: "import",
-            },
-            {
-              width: 400,
-            },
-          ).render(true);
-        },
-      },
-      {
-        icon: "fas fa-file-export",
-        label: localize("ethereal-plane.ui.commands.export.button"),
-        class: "export-data",
+				async onclick() {
+					new Dialog(
+						{
+							title: `${localize('ethereal-plane.ui.commands.import.title')}`,
+							content: await renderTemplate('templates/apps/import-data.html', {
+								hint1: localize('ethereal-plane.ui.commands.import.hint1'),
+								hint2: localize('ethereal-plane.ui.commands.import.hint2'),
+							}),
+							buttons: {
+								import: {
+									icon: '<i class="fas fa-file-import"></i>',
+									label: localize('ethereal-plane.ui.commands.import.button'),
+									callback: (html) => {
+										const form = html.find(
+											'form',
+										)[0] as HTMLFormElement;
+										if (!form.data.files.length) {
+											ui?.notifications?.error(
+												localize(
+													'ethereal-plane.ui.commands.import.data-file-error',
+												),
+											);
+										}
+										const file = form.data.files[0];
+										readTextFromFile(file).then(json =>
+											importChatCommands(json, false),
+										);
+									},
+								},
+								withMacros: {
+									icon: '<i class="fas fa-file-import"></i>',
+									label: localize(
+										'ethereal-plane.ui.commands.import.with-macros',
+									),
+									callback: (html) => {
+										const form = html.find(
+											'form',
+										)[0] as HTMLFormElement;
+										if (!form.data.files.length) {
+											ui?.notifications?.error(
+												localize(
+													'ethereal-plane.ui.commands.import.data-file-error',
+												),
+											);
+										}
+										readTextFromFile(form.data.files[0]).then(json =>
+											importChatCommands(json, true),
+										);
+									},
+								},
+								no: {
+									icon: '<i class="fas fa-times"></i>',
+									label: localize('ethereal-plane.ui.cancel'),
+								},
+							},
+							default: 'import',
+						},
+						{
+							width: 400,
+						},
+						// @ts-expect-error WHAT THE FUCK?
+					).render(true);
+				},
+			},
+			{
+				icon: 'fas fa-file-export',
+				label: localize('ethereal-plane.ui.commands.export.button'),
+				class: 'export-data',
 
-        onclick: function () {
-          new Dialog({
-            title: localize("ethereal-plane.ui.commands.export.title"),
-            content: localize("ethereal-plane.ui.commands.export.content"),
-            buttons: {
-              yes: {
-                label: localize("ethereal-plane.ui.yes"),
-                callback: () => exportChatCommands(true),
-              },
-              no: {
-                label: localize("ethereal-plane.ui.no"),
-                callback: () => exportChatCommands(false),
-              },
-            },
-          }).render(true);
-        },
-      },
-    );
+				onclick() {
+					new Dialog({
+						title: localize('ethereal-plane.ui.commands.export.title'),
+						content: localize('ethereal-plane.ui.commands.export.content'),
+						buttons: {
+							yes: {
+								label: localize('ethereal-plane.ui.yes'),
+								callback: () => exportChatCommands(true),
+							},
+							no: {
+								label: localize('ethereal-plane.ui.no'),
+								callback: () => exportChatCommands(false),
+							},
+						},
+						// @ts-expect-error WHAT THE FUCK?
+					}).render(true);
+				},
+			},
+		);
 
-    return buttons;
-  }
+		return buttons;
+	}
 }
 
 function exportChatCommands(withMacro: boolean) {
-  const commands = foundry.utils.deepClone(
-    getSetting("chat-commands"),
-  ) as ExportChatCommand[];
+	const commands = foundry.utils.deepClone(
+		getSetting('chat-commands'),
+	) as ExportChatCommand[];
 
-  if (withMacro) {
-    commands.forEach((command) => {
-      const macro = command.macro as string;
-      const macroExport = getGame().macros?.get(macro)?.toCompendium();
-      if (macroExport !== undefined) {
-        command.macro = macroExport;
-      } else {
-        command.macro = "";
-      }
-    });
-  } else {
-    commands.forEach((command) => {
-      command.macro = "";
-    });
-  }
+	if (withMacro) {
+		commands.forEach((command) => {
+			const macro = command.macro as string;
+			const macroExport = getGame().macros?.get(macro)?.toCompendium();
+			if (macroExport !== undefined) {
+				command.macro = macroExport;
+			} else {
+				command.macro = '';
+			}
+		});
+	} else {
+		commands.forEach((command) => {
+			command.macro = '';
+		});
+	}
 
-  const data = {
-    type: "EthPlaExport",
-    version: 1,
-    commands,
-  };
+	const data = {
+		type: 'EthPlaExport',
+		version: 1,
+		commands,
+	};
 
-  const filename = [
-    "ethpla",
-    getGame()?.world?.id,
-    "chat_commands",
-    withMacro ? "with_macros" : "",
-    new Date().toString(),
-  ].filterJoin("-");
-  saveDataToFile(
-    JSON.stringify(data, null, 2),
-    "text/json",
-    `${filename}.json`,
-  );
+	const filename = [
+		'ethpla',
+		getGame()?.world?.id,
+		'chat_commands',
+		withMacro ? 'with_macros' : '',
+		new Date().toString(),
+	].filterJoin('-');
+	// @ts-expect-error WHAT THE FUCK?
+	saveDataToFile(
+		JSON.stringify(data, null, 2),
+		'text/json',
+		`${filename}.json`,
+	);
 }
 
 /**
- * @param {String} data
+ * @param {string} data
  * @param {boolean} withMacros
  */
 async function importChatCommands(data: string, withMacros: boolean) {
-  const imported = JSON.parse(data) as {
-    version: number;
-    type: string;
-    commands: ImportChatCommand[];
-  };
-  if (imported.type !== "EthPlaExport") {
-    throw new Error(
-      localize("ethereal-plane.ui.commands.import.wrong-file-error"),
-    );
-  }
-  if (imported.version !== 1) {
-    throw new Error(
-      localize("ethereal-plane.ui.commands.import.wrong-version-error"),
-    );
-  }
-  let folder = game.macros?.folders.find(
-    (folder) => folder.name === "Ethereal Plane",
-  );
-  if (folder === undefined && withMacros) {
-    folder = await Folder.create(
-      // @ts-expect-error Weird Types
-      new Folder({ type: "Macro", name: "Ethereal Plane" }),
-    );
-  }
-  for (const command of imported.commands) {
-    if (typeof command.macro !== "string" && withMacros) {
-      command.macro.folder = folder?.id;
-      // @ts-expect-error Weird Types
-      command.macro = (await Macro.create(command.macro)).id;
-    } else {
-      command.macro = "";
-    }
-  }
-  const commandData = getSetting("chat-commands") as ChatCommand[];
-  commandData.push(...(imported.commands as unknown as ChatCommand[]));
-  await setSetting("chat-commands", commandData);
+	const imported = JSON.parse(data) as {
+		version: number;
+		type: string;
+		commands: ImportChatCommand[];
+	};
+	if (imported.type !== 'EthPlaExport') {
+		throw new Error(
+			localize('ethereal-plane.ui.commands.import.wrong-file-error'),
+		);
+	}
+	if (imported.version !== 1) {
+		throw new Error(
+			localize('ethereal-plane.ui.commands.import.wrong-version-error'),
+		);
+	}
+	let folder = game.macros?.folders.find(
+		folder => folder.name === 'Ethereal Plane',
+	);
+	if (folder === undefined && withMacros) {
+		folder = await Folder.create(
+			// @ts-expect-error Weird Types
+			new Folder({ type: 'Macro', name: 'Ethereal Plane' }),
+		);
+	}
+	for (const command of imported.commands) {
+		if (typeof command.macro !== 'string' && withMacros) {
+			command.macro.folder = folder?.id;
+			// @ts-expect-error Weird Types
+			command.macro = (await Macro.create(command.macro)).id;
+		} else {
+			command.macro = '';
+		}
+	}
+	const commandData = getSetting('chat-commands') as ChatCommand[];
+	commandData.push(...(imported.commands as unknown as ChatCommand[]));
+	await setSetting('chat-commands', commandData);
 }
