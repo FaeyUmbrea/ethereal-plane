@@ -17,7 +17,7 @@ jobs:
           delimiter=$(openssl rand -hex 8)
           {
             echo "moduleJson<<$delimiter"
-            sed -e '$a\' ./public/module.json
+            sed -e '$a\' ./module.json
             echo "$delimiter"
           } >> "${GITHUB_OUTPUT}"
       - name: Publish Module
