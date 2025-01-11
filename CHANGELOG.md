@@ -1,3 +1,9 @@
+## Version 2.2.1
+
+### Fixed
+
+- Fixed a formatting issue in the Typescript conversion that prevented new EP connections from being created.
+
 ## Version 2.2.0
 
 ### Added

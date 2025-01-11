@@ -15,9 +15,9 @@ export async function connectClient(): Promise<void> {
 	const data = new Blob([id], { type: 'text/plain' });
 
 	if (
-		(!(await FilePicker.browse('data', 'modules/ethereal-plane')) as any).dirs.includes(
+		(!((await FilePicker.browse('data', 'modules/ethereal-plane')) as any).dirs.includes(
 			'modules/ethereal-plane/storage',
-		)
+		))
 	) {
 		await FilePicker.createDirectory(
 			'data',
