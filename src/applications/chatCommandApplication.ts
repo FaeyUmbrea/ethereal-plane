@@ -160,7 +160,7 @@ function exportChatCommands(withMacro: boolean) {
 
 	const data = {
 		type: 'EthPlaExport',
-		version: 1,
+		version: 2,
 		commands,
 	};
 
@@ -193,7 +193,7 @@ async function importChatCommands(data: string, withMacros: boolean) {
 			localize('ethereal-plane.ui.commands.import.wrong-file-error'),
 		);
 	}
-	if (imported.version !== 1) {
+	if (imported.version > 2 || imported.version < 1) {
 		throw new Error(
 			localize('ethereal-plane.ui.commands.import.wrong-version-error'),
 		);
@@ -214,6 +214,9 @@ async function importChatCommands(data: string, withMacros: boolean) {
 			command.macro = (await Macro.create(command.macro)).id;
 		} else {
 			command.macro = '';
+		}
+		if (imported.version === 1) {
+			command.commandAliases = [];
 		}
 	}
 	const commandData = getSetting('chat-commands') as ChatCommand[];
