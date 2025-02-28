@@ -1,3 +1,13 @@
+## Version 2.3.0
+
+### Fixed
+
+- Chat Commands now properly work even if the chat tab is disabled
+
+### Added
+
+- Chat Command aliases, allowing multiple commands to share macros and cooldowns are now available. Existing command entries will automatically be migrated to work with the new system, but commands sharing a macro will need to be manually merged
+  - Importing old commands still works as expected, but the new format is not backwards compatible and command lists exported in 2.3.0 or newer can't be imported in 2.2.1 or older
 ## Version 2.2.1
 
 ### Fixed
