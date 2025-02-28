@@ -4,13 +4,6 @@ import { getSetting } from './settings.js';
 const executionLocks = new Map<string, number>();
 const subExecutionLocks = new Map<string, number>();
 
-/**
- * @param {ChatCommand} command
- * @param {string} message
- * @param {string} user
- * @param {boolean} subscribed
- * @returns {void}
- */
 async function processCommand(
 	command: ChatCommand,
 	message: string,

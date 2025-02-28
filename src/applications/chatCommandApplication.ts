@@ -15,6 +15,7 @@ import { readTextFromFile } from '../utils/utils';
 export class ChatCommandApplication extends SvelteApplication {
 	/** @static */
 	static override get defaultOptions() {
+		// @ts-expect-error get off my case
 		return foundry.utils.mergeObject(
 			super.defaultOptions,
 			{
@@ -58,7 +59,7 @@ export class ChatCommandApplication extends SvelteApplication {
 									icon: '<i class="fas fa-file-import"></i>',
 									label: localize('ethereal-plane.ui.commands.import.button'),
 									callback: (html) => {
-										const form = html.find(
+										const form = (html as JQuery<HTMLElement>).find(
 											'form',
 										)[0] as HTMLFormElement;
 										if (!form.data.files.length) {
@@ -80,7 +81,7 @@ export class ChatCommandApplication extends SvelteApplication {
 										'ethereal-plane.ui.commands.import.with-macros',
 									),
 									callback: (html) => {
-										const form = html.find(
+										const form = (html as JQuery<HTMLElement>).find(
 											'form',
 										)[0] as HTMLFormElement;
 										if (!form.data.files.length) {
@@ -105,7 +106,6 @@ export class ChatCommandApplication extends SvelteApplication {
 						{
 							width: 400,
 						},
-						// @ts-expect-error WHAT THE FUCK?
 					).render(true);
 				},
 			},
@@ -128,7 +128,6 @@ export class ChatCommandApplication extends SvelteApplication {
 								callback: () => exportChatCommands(false),
 							},
 						},
-						// @ts-expect-error WHAT THE FUCK?
 					}).render(true);
 				},
 			},
@@ -146,7 +145,7 @@ function exportChatCommands(withMacro: boolean) {
 	if (withMacro) {
 		commands.forEach((command) => {
 			const macro = command.macro as string;
-			const macroExport = getGame().macros?.get(macro)?.toCompendium();
+			const macroExport = (getGame().macros?.get(macro) as any)?.toCompendium();
 			if (macroExport !== undefined) {
 				command.macro = macroExport;
 			} else {
@@ -172,7 +171,6 @@ function exportChatCommands(withMacro: boolean) {
 		withMacro ? 'with_macros' : '',
 		new Date().toString(),
 	].filterJoin('-');
-	// @ts-expect-error WHAT THE FUCK?
 	saveDataToFile(
 		JSON.stringify(data, null, 2),
 		'text/json',
@@ -200,7 +198,7 @@ async function importChatCommands(data: string, withMacros: boolean) {
 			localize('ethereal-plane.ui.commands.import.wrong-version-error'),
 		);
 	}
-	let folder = game.macros?.folders.find(
+	let folder: Folder | undefined = game.macros?.folders.find(
 		folder => folder.name === 'Ethereal Plane',
 	);
 	if (folder === undefined && withMacros) {

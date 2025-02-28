@@ -145,7 +145,7 @@ class ConnectionManager {
 		this.chatConnector?.setDeletionCallback(this.handleMessageDeletion);
 		this.currentMode = mode;
 		try {
-			if (getSetting('enable-chat-tab') && getSetting('enabled')) {
+			if ((getSetting('enable-chat-tab') || getSetting('chat-commands-active')) && getSetting('enabled')) {
 				log('Enable Chat Listener');
 				this.chatConnector?.enableChatListener();
 			} else {

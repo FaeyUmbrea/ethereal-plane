@@ -35,8 +35,7 @@ export async function addSidebar(
 	});
 
 	const beforeTab
-    = foundrySidebar!.querySelector(`template[data-tab=${before}]`)
-    && foundrySidebar!.querySelector(`section[data-tab=${before}]`);
+    = foundrySidebar!.querySelector(`template[data-tab=${before}]`) && foundrySidebar!.querySelector(`section[data-tab=${before}]`);
 
 	// eslint-disable-next-line no-new
 	new SidebarTab({

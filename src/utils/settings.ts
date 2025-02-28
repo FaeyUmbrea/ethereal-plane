@@ -43,7 +43,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
 				scope: 'world',
 				config: false,
 				onChange: () => {
-					if (canvas.activeLayer?.name === 'TokenLayer') {
+					if (canvas?.activeLayer?.name === 'TokenLayer') {
 						ui?.controls?.initialize({ layer: 'tokens', tool: 'select' });
 					}
 				},
