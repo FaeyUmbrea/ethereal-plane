@@ -8,6 +8,7 @@ import { registerOverlay } from './utils/overlay.js';
 import {
 	getSetting,
 	registerMenus,
+	runMigrations,
 	setSetting,
 	settings,
 	showNotifications,
@@ -62,7 +63,10 @@ Hooks.once('ready', async () => {
 
 Hooks.on('getSceneControlButtons', buildButtons);
 
-Hooks.on('init', () => settings.init());
+Hooks.on('init', () => {
+	settings.init();
+	runMigrations();
+});
 Hooks.once('ready', () => registerMenus());
 
 Hooks.on('obsUtilsInit', registerOverlay);

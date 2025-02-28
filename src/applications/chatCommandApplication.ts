@@ -21,8 +21,8 @@ export class ChatCommandApplication extends SvelteApplication {
 			{
 				classes: ['ep-chat-commands'],
 				minimizable: true,
-				width: 500,
-				height: 320,
+				width: 800,
+				height: 520,
 				id: 'chat-command-config-application',
 				title: 'ethereal-plane.ui.chat-command-application-title',
 				resizable: true,

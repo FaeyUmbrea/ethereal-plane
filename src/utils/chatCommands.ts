@@ -126,7 +126,7 @@ export async function processChat(
 		const commandArguments = message.substring(commandPrefix.length + 1);
 		const commands = getSetting('chat-commands') as ChatCommand[];
 		for (const command of commands) {
-			if (command.commandPrefix === commandPrefix && command.active) {
+			if ((command.commandPrefix === commandPrefix || command.commandAliases.includes(commandPrefix)) && command.active) {
 				await processCommand(command, commandArguments, user, subscribed);
 			}
 		}
@@ -147,6 +147,7 @@ export type ExportChatCommand = typeof ChatCommand & {
 
 export class ChatCommand {
 	commandPrefix = '';
+	commandAliases: string[] = [];
 	commandTemplate = '';
 	perUserCooldown = 0;
 	perTargetCooldown = 0;

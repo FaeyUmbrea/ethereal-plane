@@ -19,8 +19,9 @@ export default class ChatCommandAliasApplication extends SvelteApplication<Optio
 			id: 'command-alias-editor-application',
 			title: 'ethereal-plane.ui.chat-command-alias-application-title',
 			// tabs: [{ navSelector: '.tabs', contentSelector: '.content', initial: 'onLoad' }],
-			height: 125,
+			height: 400,
 			width: 400,
+			resizable: true,
 			// resizable: true,
 			svelte: {
 				class: ChatCommandAliasUi,

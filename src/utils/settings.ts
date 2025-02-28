@@ -1,4 +1,5 @@
 import type { SvelteApplication } from '#runtime/svelte/application';
+import type { ChatCommand } from './chatCommands.ts';
 import { TJSGameSettings } from '#runtime/svelte/store/fvtt/settings';
 import { Modes, MODULE_ID } from './const.js';
 import { getGame } from './helpers.js';
@@ -9,6 +10,8 @@ const debouncedReload = foundry.utils.debounce(
 	() => window.location.reload(),
 	100,
 );
+
+const SETTINGS_VERSION = 1;
 
 class EtherealPlaneSettings extends TJSGameSettings {
 	constructor() {
@@ -285,3 +288,22 @@ export async function showNotifications(): Promise<void> {
 }
 
 export const settings = new EtherealPlaneSettings();
+
+export function runMigrations() {
+	const version = getSetting('version') as number ?? 0;
+	if (version < SETTINGS_VERSION) {
+		console.warn('Running Ethereal Plane Migrations');
+		if (version < 1) {
+			console.warn('Migrations for Data-Model Version 1');
+			const chatCommands = getSetting('chat-commands') as ChatCommand[];
+			chatCommands.forEach((command) => {
+				if (!command.commandAliases) {
+					command.commandAliases = [];
+				}
+			});
+			setSetting('chat-commands', chatCommands);
+		}
+		console.warn('OBS Utils Migrations Finished');
+		setSetting('settingsVersion', SETTINGS_VERSION);
+	}
+}

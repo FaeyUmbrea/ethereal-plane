@@ -1,5 +1,6 @@
 <script>
 	import { TJSDocument } from '#runtime/svelte/store/fvtt/document';
+	import ChatCommandAliasApplication from '../../applications/chatCommandAliasApplication.js';
 
 	export let command;
 	export let index;
@@ -26,6 +27,13 @@
 			console.error(err);
 		}
 	}
+
+	function openAliasEditor() {
+		const editor = new ChatCommandAliasApplication(command.commandAliases, (commandAliases) => {
+			command.commandAliases = commandAliases;
+		});
+		editor.render(true);
+	}
 </script>
 
 <label for='active-checkbox-{index}'>
@@ -36,7 +44,11 @@
 	id='active-checkbox-{index}'
 	type='checkbox'
 />
-<input bind:value={command.commandPrefix} type='text' />
+<div class='command-prefix'>
+	<input bind:value={command.commandPrefix} type='text' />
+	<button on:click={() => { openAliasEditor(); }}
+	><i class='fas fa-list'></i></button
+	></div>
 <input bind:value={command.commandTemplate} type='text' />
 <input bind:value={command.perUserCooldown} type='number' />
 <input bind:value={command.perUserSubCooldown} type='number' />
@@ -86,4 +98,10 @@
     align-items: center;
     justify-self center;
 
+	.command-prefix
+		display grid;
+		grid-template-columns auto 35px;
+
+		button
+			width 35px;
 </style>

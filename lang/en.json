@@ -112,7 +112,8 @@
 			"start": "Start",
 			"title": "Title",
 			"open": "Open",
-			"copy": "Copy"
+			"copy": "Copy",
+			"chat-command-alias-application-title": "Chat Command Alias Editor"
 		},
 		"notifications": {
 			"login-copy": "Login link copied to clipboard",
