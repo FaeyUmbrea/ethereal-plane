@@ -4,7 +4,7 @@ import type {
 } from 'oauth4webapi';
 import { nanoid } from 'nanoid';
 import * as oauth from 'oauth4webapi';
-import { PATREON_URL as issuer, MODULE_ID } from '../utils/const.js';
+import { ISSUER_URL as issuer, MODULE_ID } from '../utils/const.js';
 import { error, log } from '../utils/utils';
 
 let interval: number;

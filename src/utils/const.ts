@@ -7,3 +7,5 @@ export enum Modes {
 }
 
 export const PATREON_URL = 'https://etherealplane.app/';
+
+export const ISSUER_URL = 'https://etherealplane.app/';

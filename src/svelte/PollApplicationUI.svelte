@@ -2,7 +2,7 @@
 
 <script>
 	import { ApplicationShell } from '#runtime/svelte/component/application';
-	import { Poll } from '../utils/polls.ts';
+	import { Poll, PollStatus } from '../utils/polls.ts';
 	import { settings } from '../utils/settings.ts';
 	import PollDisplay from './components/PollDisplay.svelte';
 	import PollEditor from './components/PollEditor.svelte';
@@ -18,7 +18,7 @@
 
 <ApplicationShell bind:elementRoot={elementRoot}>
 	<main>
-		{#if $poll.duration}
+		{#if $poll.status > PollStatus.notStarted}
 			<PollDisplay />
 		{:else}
 			<PollEditor />
