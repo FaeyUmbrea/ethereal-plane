@@ -1,3 +1,9 @@
+## Version 2.3.1
+
+### Fixed
+
+- Fixed a bug that prevented the poll editor from rendering, even if the poll was not started yet
+
 ## Version 2.3.0
 
 ### Fixed
