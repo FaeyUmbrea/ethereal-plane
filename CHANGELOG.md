@@ -1,3 +1,10 @@
+## Version 2.4.0
+
+### Changed
+
+- Added preliminary compatibility for Foundry V13
+- Changed UI to be in line with the new Foundry V13 UI (May cause display issues on V12)
+
 ## Version 2.3.1
 
 ### Fixed
