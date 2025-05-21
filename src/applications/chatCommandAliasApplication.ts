@@ -2,6 +2,7 @@ import type { SvelteApp } from '#runtime/svelte/application';
 import { SvelteApplication } from '#runtime/svelte/application';
 import ChatCommandAliasUi from '../svelte/ChatCommandAliasUi.svelte';
 
+// @ts-expect-error get off my case
 export default class ChatCommandAliasApplication extends SvelteApplication<Options> {
 	aliases: string[];
 	callback: (aliases: string[]) => void | Promise<void>;
@@ -12,7 +13,6 @@ export default class ChatCommandAliasApplication extends SvelteApplication<Optio
 		this.callback = callback;
 	}
 
-	// @ts-expect-error Excessive stack depth
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ['command-alias-editor'],

@@ -201,6 +201,9 @@
 {/if}
 
 <style lang='stylus'>
+  button
+    width: 100%
+    height: 35px
   a
     color: darkred
   .buttons

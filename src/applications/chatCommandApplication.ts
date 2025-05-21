@@ -12,10 +12,10 @@ import { getGame } from '../utils/helpers.js';
 import { getSetting, setSetting } from '../utils/settings.js';
 import { readTextFromFile } from '../utils/utils';
 
+// @ts-expect-error get off my case
 export class ChatCommandApplication extends SvelteApplication {
 	/** @static */
 	static override get defaultOptions() {
-		// @ts-expect-error get off my case
 		return foundry.utils.mergeObject(
 			super.defaultOptions,
 			{
@@ -50,7 +50,7 @@ export class ChatCommandApplication extends SvelteApplication {
 					new Dialog(
 						{
 							title: `${localize('ethereal-plane.ui.commands.import.title')}`,
-							content: await renderTemplate('templates/apps/import-data.html', {
+							content: await renderTemplate(`templates/apps/import-data.${getGame().version.startsWith('12.') ? 'html' : 'hbs'}`, {
 								hint1: localize('ethereal-plane.ui.commands.import.hint1'),
 								hint2: localize('ethereal-plane.ui.commands.import.hint2'),
 							}),
@@ -198,24 +198,26 @@ async function importChatCommands(data: string, withMacros: boolean) {
 			localize('ethereal-plane.ui.commands.import.wrong-version-error'),
 		);
 	}
-	let folder: Folder | undefined = game.macros?.folders.find(
+	let folder: Folder | undefined = getGame().macros?.folders.find(
 		folder => folder.name === 'Ethereal Plane',
 	);
 	if (folder === undefined && withMacros) {
+		// @ts-expect-error get off my case
 		folder = await Folder.create(
-			// @ts-expect-error Weird Types
 			new Folder({ type: 'Macro', name: 'Ethereal Plane' }),
 		);
 	}
 	for (const command of imported.commands) {
 		if (typeof command.macro !== 'string' && withMacros) {
+			// @ts-expect-error get off my case
 			command.macro.folder = folder?.id;
-			// @ts-expect-error Weird Types
+			// @ts-expect-error get off my case
 			command.macro = (await Macro.create(command.macro)).id;
 		} else {
 			command.macro = '';
 		}
 		if (imported.version === 1) {
+			// @ts-expect-error get off my case
 			command.commandAliases = [];
 		}
 	}

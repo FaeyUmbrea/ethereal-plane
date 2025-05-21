@@ -1,11 +1,11 @@
 <script lang='ts'>
-	import type { Writable } from 'svelte/store';
+	import type { MinimalWritable } from '#runtime/svelte/store/util';
 	import { localize } from '#runtime/util/i18n';
 	import { getConnectionManager } from '../../server/connectionManager.ts';
 	import { Poll, PollStatus } from '../../utils/polls.ts';
 	import { setSetting, settings } from '../../utils/settings.ts';
 
-	const pollStore: Writable<Poll> = settings.getStore('currentPoll')!;
+	const pollStore: MinimalWritable<Poll> = settings.getStore('currentPoll')!;
 
 	const disableEnd = false;
 
@@ -78,6 +78,10 @@
     padding-right: 10px;
     white-space: nowrap;
   }
+	button{
+		height 35px
+		width 100%
+	}
   #abort {
     background: lightcoral;
   }

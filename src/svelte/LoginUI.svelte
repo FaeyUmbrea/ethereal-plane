@@ -67,6 +67,9 @@
 </ApplicationShell>
 
 <style lang='stylus'>
+  button
+    width 100%
+    height 35px
   .user-code
     background-color black
     padding-left 2px

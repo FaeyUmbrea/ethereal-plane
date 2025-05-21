@@ -53,6 +53,9 @@
 </ApplicationShell>
 
 <style lang='stylus'>
+    button {
+        height 35px
+    }
     footer {
         width 100%
 				display grid

@@ -74,6 +74,8 @@
 </section>
 
 <style lang='stylus'>
+  button
+    height 35px
   .macro
     border grey 1px solid;
     border-radius 5px;

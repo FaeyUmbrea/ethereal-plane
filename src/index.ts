@@ -18,24 +18,34 @@ import './server/patreon_auth';
 
 let polls: unknown | undefined;
 
-function buildButtons(buttons: SceneControl[]) {
+function buildButtons(buttons) {
 	if (
+		// @ts-expect-error broken mixin
 		!getGame().user?.isGM
 		|| !getSetting('polls-enabled')
 		|| !getSetting('enabled')
 	) {
 		return;
 	}
-	const buttonGroup = buttons.find(element => element.name === 'token');
+	let buttonGroup;
+	if (getGame().version.startsWith('12.')) {
+		buttonGroup = buttons.find(element => element.name === 'token');
+	} else {
+		buttonGroup = buttons.tokens;
+	}
+
 	const pollsButton = {
 		icon: 'fa-solid fa-square-poll-vertical',
 		name: 'openPolls',
 		title: 'ethereal-plane.ui.open-polls-button',
 		toggle: true,
-		visible: true,
 		onClick: async () => await openPolls(pollsButton),
 	};
-	buttonGroup?.tools.push(pollsButton);
+	if ((game as ReadyGame).version.startsWith('12.')) {
+		buttonGroup?.tools.push(pollsButton);
+	} else {
+		buttonGroup.tools.openPolls = pollsButton;
+	}
 }
 
 async function openPolls(button: SceneControlTool) {
@@ -53,6 +63,7 @@ Hooks.once('ready', async () => {
 	if (getSetting('enabled')) {
 		registerHandlers();
 	}
+	// @ts-expect-error get off my case
 	if (getGame().user?.isGM) {
 		await showNotifications();
 		getConnectionManager();
@@ -73,6 +84,7 @@ Hooks.on('obsUtilsInit', registerOverlay);
 
 Hooks.once('renderSidebar', async () => {
 	if (
+		// @ts-expect-error get off my case
 		getGame().user?.isGM
 		&& getSetting('enable-chat-tab')
 		&& getSetting('enabled')

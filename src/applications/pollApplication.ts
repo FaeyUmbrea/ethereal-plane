@@ -1,7 +1,7 @@
 import { SvelteApplication } from '#runtime/svelte/application';
 import PollApplicationUi from '../svelte/PollApplicationUI.svelte';
 
-/** @extends SvelteApplication */
+// @ts-expect-error get off my case
 export default class PollApplication extends SvelteApplication {
 	/** */
 	sidebarButton: SceneControlTool;
@@ -17,7 +17,7 @@ export default class PollApplication extends SvelteApplication {
 			classes: ['eppolls'],
 			minimizable: true,
 			width: 500,
-			height: 315,
+			height: 330,
 			id: 'polls-application',
 			title: 'ethereal-plane.ui.polls-application-title',
 			positionOrtho: false,

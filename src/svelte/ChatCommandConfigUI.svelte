@@ -33,7 +33,7 @@
 
 <ApplicationShell bind:elementRoot={elementRoot}>
 	<main>
-		<div class='command-section'>
+		<div class='header-section'>
 			<span class='config'>{localize('ethereal-plane.ui.commands.base')}</span>
 			<span class='cooldown'
 			>{localize('ethereal-plane.ui.commands.cooldown')}</span
@@ -58,6 +58,8 @@
 			<span>{localize('ethereal-plane.ui.commands.target-identifier')}</span>
 			<span class='macro'>{localize('ethereal-plane.ui.commands.macro')}</span>
 			<span></span>
+		</div>
+		<div class='command-section'>
 			{#each $commands as command, index}
 				<ChatCommandConfig bind:command={command} index={index}
 				/>
@@ -75,6 +77,14 @@
 </ApplicationShell>
 
 <style lang='stylus'>
+  main
+    height 100%
+    display grid
+    grid-template-rows 75px auto 35px 40px
+    gap 2px
+  button
+    width 100%
+    height 35px
   .footer
     display grid
     grid-template-columns 35px auto
@@ -83,11 +93,18 @@
   .add
     width 35px
 
-  .command-section
-    height calc(100% - 50px)
+	.header-section
+		display grid
+		grid-template-columns 40px 2fr 3fr 40px 40px 40px 40px 3fr 40px 35px
+		grid-template-rows 15px 20px;
+
+	.command-section
     display grid
+    max-height 100%
+    overflow-y scroll
+    overflow-x hidden
+    gap 2px
     grid-template-columns 40px 2fr 3fr 40px 40px 40px 40px 3fr 40px 35px
-    grid-template-rows 15px 20px
     grid-auto-rows 35px;
 
   span

@@ -128,6 +128,7 @@
 <style lang='stylus'>
   .config {
     display: grid;
+		gap: 2px;
     grid-template-columns: auto 60px;
     align-content: flex-start;
 
@@ -166,12 +167,18 @@
     width: 35px;
   }
 
+	button {
+		height 35px
+		width 100%
+	}
+
   button.addrem {
     width: 35px;
   }
 
   .buttons {
     display: flex;
+		gap: 3px;
   }
 
   .editor {

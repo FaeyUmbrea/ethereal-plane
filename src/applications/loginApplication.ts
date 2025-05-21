@@ -8,7 +8,7 @@ export default class LoginApplication extends SvelteApplication {
 			id: 'login-application',
 			title: 'ethereal-plane.ui.login-application-title',
 			width: 400,
-			height: 435,
+			height: 455,
 			svelte: {
 				class: LoginUI,
 				target: document.body,
