@@ -1,3 +1,13 @@
+## Version 2.4.1
+
+### Changed
+
+-  A lot of changes in the patreon integration due to the new backend!
+
+### Added
+
+- Script macros can now optionally return a value at the end. If the value evaluates to "false" and is not "undefined", the macro execution will be considered failed and lockouts will not be triggered. 
+
 ## Version 2.4.0
 
 ### Changed

@@ -39,7 +39,11 @@
 		{/if}
 	</div>
 	<div class='buttons'>
-		{#if $pollStore.status <= PollStatus.started}
+		{#if $pollStore.status === PollStatus.starting}
+			<button id='end' disabled
+			>{localize('ethereal-plane.ui.starting')}</button
+			>
+		{:else if $pollStore.status <= PollStatus.started}
 			<button id='abort' on:click={abortPoll}
 			>{localize('ethereal-plane.ui.abort')}</button
 			>

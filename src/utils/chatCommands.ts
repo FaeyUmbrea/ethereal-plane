@@ -76,36 +76,37 @@ async function processCommand(
 
 	macroArguments.user = user;
 	macroArguments.isSubscribed = subscribed;
-	await getGame().macros?.get(command.macro)?.execute(macroArguments);
-
-	if (subscribed && command.perTargetSubCooldown > -1) {
-		if (command.perTargetSubCooldown > 0) {
-			subExecutionLocks.set(
-				`${command.commandPrefix}:${target}`,
-				Date.now() + command.perTargetSubCooldown * 1000,
-			);
+	const result = await getGame().macros?.get(command.macro)?.execute(macroArguments);
+	if (result === undefined || !result) {
+		if (subscribed && command.perTargetSubCooldown > -1) {
+			if (command.perTargetSubCooldown > 0) {
+				subExecutionLocks.set(
+					`${command.commandPrefix}:${target}`,
+					Date.now() + command.perTargetSubCooldown * 1000,
+				);
+			}
+		} else {
+			if (command.perTargetCooldown > 0) {
+				executionLocks.set(
+					`${command.commandPrefix}:${target}`,
+					Date.now() + command.perTargetCooldown * 1000,
+				);
+			}
 		}
-	} else {
-		if (command.perTargetCooldown > 0) {
-			executionLocks.set(
-				`${command.commandPrefix}:${target}`,
-				Date.now() + command.perTargetCooldown * 1000,
-			);
-		}
-	}
-	if (subscribed && command.perUserSubCooldown > -1) {
-		if (command.perUserSubCooldown > 0) {
-			subExecutionLocks.set(
-				`${command.commandPrefix}:${user}`,
-				Date.now() + command.perUserSubCooldown * 1000,
-			);
-		}
-	} else {
-		if (command.perUserCooldown > 0) {
-			executionLocks.set(
-				`${command.commandPrefix}:${user}`,
-				Date.now() + command.perUserCooldown * 1000,
-			);
+		if (subscribed && command.perUserSubCooldown > -1) {
+			if (command.perUserSubCooldown > 0) {
+				subExecutionLocks.set(
+					`${command.commandPrefix}:${user}`,
+					Date.now() + command.perUserSubCooldown * 1000,
+				);
+			}
+		} else {
+			if (command.perUserCooldown > 0) {
+				executionLocks.set(
+					`${command.commandPrefix}:${user}`,
+					Date.now() + command.perUserCooldown * 1000,
+				);
+			}
 		}
 	}
 }

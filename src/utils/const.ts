@@ -6,6 +6,8 @@ export enum Modes {
 	localchat = 'localchat',
 }
 
-export const PATREON_URL = 'https://etherealplane.app/';
+export const PATREON_URL = 'https://api.etherealplane.app/';
 
-export const ISSUER_URL = 'https://etherealplane.app/';
+export const ISSUER_URL = 'https://auth.etherealplane.app/.ory/hydra/public';
+
+export const FRONTEND_URL = 'https://etherealplane.app/';

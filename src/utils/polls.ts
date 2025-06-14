@@ -7,6 +7,7 @@ export enum PollStatus {
 	started = 1,
 	stopped = 2,
 	failed = 3,
+	starting = 4,
 }
 
 export class Poll {

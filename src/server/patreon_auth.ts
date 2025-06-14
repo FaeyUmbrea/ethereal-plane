@@ -4,7 +4,7 @@ import type {
 } from 'oauth4webapi';
 import { nanoid } from 'nanoid';
 import * as oauth from 'oauth4webapi';
-import { ISSUER_URL as issuer, MODULE_ID } from '../utils/const.js';
+import { FRONTEND_URL, ISSUER_URL as issuer, MODULE_ID } from '../utils/const.js';
 import { error, log } from '../utils/utils';
 
 let interval: number;
@@ -33,7 +33,7 @@ export async function connectClient(): Promise<void> {
 
 	window.open(
 		encodeURI(
-			`${issuer}connect?url=${window.location.protocol}//${window.location.host}&id=${id}&name=${window.location.host}`,
+			`${FRONTEND_URL}connect?url=${window.location.protocol}//${window.location.host}&id=${id}&name=${window.location.host}`,
 		),
 		'_blank',
 	);

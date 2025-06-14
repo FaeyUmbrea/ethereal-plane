@@ -220,17 +220,24 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 	}
 
 	async startPoll(poll: Poll) {
-		const pollId = await createPoll(
-			poll.duration * 1000,
-			poll.options.map((option: PollOption) => {
-				return { name: option.name, title: option.text };
-			}),
-			'!vote',
-			poll.title,
-		);
-		const currentPoll = getSetting('currentPoll') as Poll;
-		currentPoll.id = pollId;
-		await setSetting('currentPoll', poll);
+		try {
+			const pollId = await createPoll(
+				poll.duration * 1000,
+				poll.options.map((option: PollOption) => {
+					return { name: option.name, title: option.text };
+				}),
+				'!vote',
+				poll.title,
+			);
+			const currentPoll = getSetting('currentPoll') as Poll;
+			currentPoll.id = pollId;
+			currentPoll.status = PollStatus.started;
+			await setSetting('currentPoll', currentPoll);
+		} catch {
+			const currentPoll = getSetting('currentPoll') as Poll;
+			currentPoll.status = PollStatus.failed;
+			await setSetting('currentPoll', currentPoll);
+		}
 	}
 
 	async disconnect(): Promise<void> {

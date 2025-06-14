@@ -33,7 +33,7 @@
 	async function startPoll() {
 		const newPoll = $poll;
 		newPoll.tally = Array.from({ length: newPoll.options.length }).fill(0);
-		newPoll.status = PollStatus.started;
+		newPoll.status = PollStatus.starting;
 		newPoll.duration = duration;
 		newPoll.createdAt = new Date();
 		newPoll.title = title || 'Poll';
