@@ -10,38 +10,36 @@ import type {
 	ChatDeletionCallback,
 	ChatMessageCallback,
 } from './chatConnector.js';
-import type {
-	PollData,
-} from './poll_api.js';
 import type { PollConnector } from './pollConnector.js';
 import { localize } from '#runtime/util/i18n';
-import { PATREON_URL } from '../utils/const.js';
+import { API_URL } from '../utils/const.js';
 import {
 	executePollMacro,
 	PollStatus,
 } from '../utils/polls.js';
 import { getSetting, setSetting } from '../utils/settings.js';
-import { log, warn } from '../utils/utils';
+import { error, log, warn } from '../utils/utils';
 import {
 	disableChatListeners,
-	disconnectChatAPI,
 	enableChatListeners,
-	initChatAPI,
 	sendChatMessage,
 	setYoutubeId,
 } from './chat_api.js';
 import {
 	connectClient,
 	disconnectClient,
+	get_token,
 	patreonLogin,
-	refresh,
 	waitForPatreonVerification,
 } from './patreon_auth.js';
 import {
+	disablePollListeners,
+	enablePollListeners,
+	type PollData,
+} from './poll_api.js';
+import {
 	abortPoll,
 	createPoll,
-	disconnectPollAPI,
-	initPollAPI,
 } from './poll_api.js';
 
 export class PatreonConnector implements ChatConnector, PollConnector {
@@ -69,7 +67,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 
 	async init() {
 		log('Ethereal Plane | Connecting to Patreon Server');
-		const apiVersion = await (await fetch(`${PATREON_URL}version`)).text();
+		const apiVersion = await (await fetch(`${API_URL}version`)).text();
 		if (apiVersion !== '2') {
 			ui.notifications?.error(
 				`${localize('ethereal-plane.strings.notification-prefix')}${localize('ethereal-plane.notifications.api-version-mismatch')}`,
@@ -90,55 +88,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 			return;
 		}
 		log('Ethereal Plane | Client OK');
-
-		const token = getSetting('authentication-token') as string;
-		const refreshToken = getSetting('refresh-token') as string;
-
-		if (token === '' || refreshToken === '') {
-			log('Ethereal Plane | No credentials present, please log in');
-			ui.notifications?.warn(
-				`${localize('ethereal-plane.strings.notification-prefix')}${localize('ethereal-plane.notifications.please-log-in')}`,
-			);
-			return;
-		}
-
-		try {
-			await initChatAPI(
-				token,
-				this.getHandleChatMessageReceived(),
-				this.getHandleChatMessageDeleted(),
-				PATREON_URL,
-			);
-			await initPollAPI(token, this.getPollUpdateCallback(), PATREON_URL);
-		} catch {
-			try {
-				const tokens = await refresh(refreshToken);
-				if (!tokens || !tokens.refresh_token) return;
-				await setSetting('authentication-token', tokens.access_token);
-				await setSetting('refresh-token', tokens.refresh_token);
-
-				await initChatAPI(
-					tokens.access_token,
-					this.getHandleChatMessageReceived(),
-					this.getHandleChatMessageDeleted(),
-					PATREON_URL,
-				);
-				await initPollAPI(
-					tokens.access_token,
-					this.getPollUpdateCallback(),
-					PATREON_URL,
-				);
-			} catch {
-				await setSetting('authentication-token', '');
-				await setSetting('refresh-token', '');
-				ui.notifications?.error(
-					`${localize('ethereal-plane.strings.notification-prefix')}${localize('ethereal-plane.notifications.invalid-credential')}`,
-				);
-				throw new Error(
-					'Ethereal Plane | Credentials Invalid, please log in again',
-				);
-			}
-		}
+		await fetchFeatures();
 		log('Ethereal Plane | Connected');
 	}
 
@@ -146,10 +96,10 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 		return (message: ChatMessage) => {
 			if (this.callback === undefined) return;
 			this.callback(
-				message.messageContent,
-				message.displayName,
-				message.isMember,
-				message.messageId,
+				message.message_content,
+				message.display_name,
+				message.is_member,
+				message.message_id,
 			);
 		};
 	}
@@ -161,9 +111,18 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 		};
 	}
 
+	getHandleErrorMessage() {
+		return (error: string) => {
+			ui.notifications?.error(`Ethereal Plane | ${error}`);
+		};
+	}
+
 	getPollUpdateCallback() {
 		return async (pollUpdate: PollData) => {
 			const poll = getSetting('currentPoll') as Poll;
+			if (poll.id !== pollUpdate.id) {
+				return;
+			}
 			let wasRunning = false;
 			if (poll.status === PollStatus.started) {
 				wasRunning = true;
@@ -183,6 +142,9 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 			});
 			if (wasRunning && poll.status === PollStatus.stopped) {
 				executePollMacro();
+			}
+			if (wasRunning && poll.status) {
+				disablePollListeners();
 			}
 			await setSetting('currentPoll', poll);
 		};
@@ -208,11 +170,11 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 	}
 
 	async disableChatListener() {
-		await disableChatListeners();
+		disableChatListeners();
 	}
 
 	async enableChatListener(): Promise<void> {
-		await enableChatListeners();
+		await enableChatListeners(this.getHandleChatMessageReceived(), this.getHandleChatMessageDeleted(), this.getHandleErrorMessage());
 	}
 
 	async sendMessage(message: string) {
@@ -221,6 +183,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 
 	async startPoll(poll: Poll) {
 		try {
+			await enablePollListeners(this.getPollUpdateCallback(), this.getHandleErrorMessage());
 			const pollId = await createPoll(
 				poll.duration * 1000,
 				poll.options.map((option: PollOption) => {
@@ -229,6 +192,10 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 				'!vote',
 				poll.title,
 			);
+			if (!pollId) {
+				error('Failed to create poll');
+				return;
+			}
 			const currentPoll = getSetting('currentPoll') as Poll;
 			currentPoll.id = pollId;
 			currentPoll.status = PollStatus.started;
@@ -241,8 +208,8 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 	}
 
 	async disconnect(): Promise<void> {
-		await disconnectPollAPI();
-		await disconnectChatAPI();
+		disablePollListeners();
+		disableChatListeners();
 	}
 
 	setCallback(callback: ChatMessageCallback): void | Promise<void> {
@@ -267,4 +234,14 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 	async deleteClient() {
 		await disconnectClient();
 	}
+}
+
+export async function fetchFeatures() {
+	const access_token = get_token()?.access_token;
+	if (!access_token) {
+		return;
+	}
+	return (await fetch(`${API_URL}api/v2/Features`, {
+		headers: { Authorization: `Bearer ${access_token}` },
+	})).json();
 }

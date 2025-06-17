@@ -2,9 +2,11 @@ import type {
 	DeviceAuthorizationResponse,
 	TokenEndpointResponse,
 } from 'oauth4webapi';
+import { localize } from '#runtime/util/i18n';
 import { nanoid } from 'nanoid';
 import * as oauth from 'oauth4webapi';
 import { FRONTEND_URL, ISSUER_URL as issuer, MODULE_ID } from '../utils/const.js';
+import { getSetting, setSetting } from '../utils/settings.ts';
 import { error, log } from '../utils/utils';
 
 let interval: number;
@@ -171,23 +173,18 @@ export async function refresh(refreshToken: string) {
 			refreshToken,
 		);
 
-		try {
-			const result = await oauth.processRefreshTokenResponse(
-				as,
-				client,
-				response,
-			);
+		const result = await oauth.processRefreshTokenResponse(
+			as,
+			client,
+			response,
+		);
 
-			const { access_token, refresh_token } = result;
-			return { access_token, refresh_token };
-		} catch (err) {
-			if (err instanceof oauth.ResponseBodyError) {
-				console.error('Error Response', err);
-			}
-			return Promise.reject(err);
-		}
+		const { access_token, refresh_token } = result;
+		await setSetting('authentication-token', access_token);
+		await setSetting('refresh-token', refresh_token);
+		return { access_token, refresh_token };
 	}
-	return Promise.reject(new Error('Refresh Token is not set'));
+	throw new Error('Refresh Token is not set');
 }
 
 export async function disconnectClient() {
@@ -198,4 +195,78 @@ export async function disconnectClient() {
 		new File([data], 'client_id.txt'),
 	);
 	Hooks.call('ethereal-plane.patreon-disconnected');
+}
+
+export function get_token() {
+	const access_token = getSetting('authentication-token') as string;
+	const refresh_token = getSetting('refresh-token') as string;
+
+	if (access_token === '' || refresh_token === '') {
+		log('Ethereal Plane | No credentials present, please log in');
+		ui.notifications?.warn(
+			`${localize('ethereal-plane.strings.notification-prefix')}${localize('ethereal-plane.notifications.please-log-in')}`,
+		);
+		return;
+	}
+	return {
+		access_token,
+		refresh_token,
+	};
+}
+
+export async function handle_refresh_error() {
+	await setSetting('authentication-token', '');
+	await setSetting('refresh-token', '');
+	ui.notifications?.error(
+		`${localize('ethereal-plane.strings.notification-prefix')}${localize('ethereal-plane.notifications.invalid-credential')}`,
+	);
+	throw new Error(
+		'Ethereal Plane | Credentials Invalid, please log in again',
+	);
+}
+
+export async function wrapClient(providedFetch: typeof fetch) {
+	try {
+		const currentToken = get_token();
+		if (!currentToken) {
+			return;
+		}
+
+		// Return client fetch utility
+		return {
+			async fetch(url: RequestInfo, options: RequestInit = {}) {
+				const token = currentToken.access_token;
+
+				try {
+					const response = await providedFetch(url, {
+						...options,
+						headers: {
+							...options.headers,
+							Authorization: `Bearer ${token}`,
+						},
+					});
+
+					if (response.status === 401) {
+						// Retry once after a silent token refresh
+						const newToken = (await refresh(currentToken.refresh_token)).access_token;
+
+						return await providedFetch(url, {
+							...options,
+							headers: {
+								...options.headers,
+								Authorization: `Bearer ${newToken}`,
+							},
+						});
+					}
+
+					return response;
+				} catch {
+					await handle_refresh_error();
+				}
+			},
+		};
+	} catch (error) {
+		console.error('Failed to create client:', error);
+		return null;
+	}
 }

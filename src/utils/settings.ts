@@ -196,7 +196,8 @@ function createSetting(
 }
 
 export async function registerMenus() {
-	if (getGame().user?.isGM) {
+	// @ts-expect-error ayo
+	if ((getGame().user)?.isGM) {
 		const { ConfigApplication } = await import(
 			'../applications/configApplication.js'
 		);
@@ -226,13 +227,13 @@ export async function registerMenus() {
 }
 
 export function getSetting(
-	settingName: string,
+	settingName: ClientSettings.KeyFor<'ethereal-plane'>,
 ) {
 	return getGame().settings.get(MODULE_ID, settingName);
 }
 
 export async function setSetting(
-	settingName: string,
+	settingName: ClientSettings.KeyFor<'ethereal-plane'>,
 	value: unknown,
 ) {
 	await getGame().settings.set(MODULE_ID, settingName, value);
@@ -304,6 +305,6 @@ export function runMigrations() {
 			setSetting('chat-commands', chatCommands);
 		}
 		console.warn('OBS Utils Migrations Finished');
-		setSetting('settingsVersion', SETTINGS_VERSION);
+		setSetting('version', SETTINGS_VERSION);
 	}
 }

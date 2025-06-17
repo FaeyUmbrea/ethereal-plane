@@ -2,8 +2,9 @@
 	import { localize } from '#runtime/util/i18n';
 	import { tooltip } from '@svelte-plugins/tooltips';
 	import { onDestroy } from 'svelte';
+	import { fetchFeatures } from '../../server/patreon.js';
 	import { disconnectClient } from '../../server/patreon_auth.ts';
-	import { PATREON_URL } from '../../utils/const.ts';
+	import { FRONTEND_URL } from '../../utils/const.js';
 	import { settings } from '../../utils/settings.ts';
 	import InfoBox from './InfoBox.svelte';
 
@@ -25,17 +26,7 @@
 		polls: pollsEnabled,
 	};
 
-	fetchFeatures();
-
-	function fetchFeatures() {
-		if ($key === undefined || $key === '') return;
-
-		fetch(`${PATREON_URL}api/v2/Features`, {
-			headers: { Authorization: `Bearer ${$key}` },
-		}).then(async (v) => {
-			features = JSON.parse(await v.text());
-		});
-	}
+	features = fetchFeatures();
 
 	function login() {
 		Hooks.call('ethereal-plane.patreon-login');
@@ -62,7 +53,7 @@
 	}
 
 	async function open_patreon_site(path = '') {
-		window.open(PATREON_URL + path, '_blank');
+		window.open(FRONTEND_URL + path, '_blank');
 	}
 
 	const hook1 = Hooks.on('ethereal-plane.patreon-connected', refreshClient);

@@ -15,9 +15,6 @@ declare global {
 	interface Module {
 		api: EtherealPlaneAPI | obsAPI;
 	}
-	const io: {
-		connect: (url: string) => NonNullable<typeof socket>;
-	};
 	interface ModuleConfig {
 		'ethereal-plane': {
 			api: EtherealPlaneAPI;

@@ -1,13 +1,12 @@
-import type { HubConnection } from '@microsoft/signalr';
-
-let connection: HubConnection;
+import { API_URL, POLL_ENDPOINT, SOCKET_ENDPOINT } from '../utils/const.ts';
+import { get_token, handle_refresh_error, refresh, wrapClient } from './patreon_auth.ts';
 
 export interface PollData {
 	id: string;
 	title: string;
-	chatPollPrefix: string;
-	endTimeStamp: Date;
-	startTimeStamp: Date;
+	chat_poll_prefix: string;
+	end_time_stamp: Date;
+	start_time_stamp: Date;
 	aborted: boolean;
 	finalized: boolean;
 	options: Array<{ count: number; name: string }>;
@@ -18,60 +17,128 @@ export interface PollCreateOption {
 	title: string;
 }
 
-export async function initPollAPI(
-	bearerToken: string,
-	pollUpdateCallback: (data: PollData) => void,
-	baseUrl: string,
-): Promise<void> {
-	const signalR = await import('@microsoft/signalr');
-	connection = new signalR.HubConnectionBuilder()
-		.withUrl(`${baseUrl}api/v2/hubs/polls`, {
-			accessTokenFactory: () => bearerToken,
-			withCredentials: false,
-		})
-		.withAutomaticReconnect()
-		.build();
-
-	connection.on('PollUpdate', pollUpdateCallback);
-
-	await connection.start();
-}
-
-export function getPoll(pollId: string): Promise<void> {
-	if (connection) {
-		return connection.invoke('GetPoll', pollId);
+export async function getPoll(pollId: string): Promise<PollData | undefined> {
+	const authFetch = (await wrapClient(fetch))?.fetch;
+	if (authFetch === undefined) {
+		return;
 	}
-	return Promise.resolve();
+	const res = await authFetch(`${POLL_ENDPOINT}/${encodeURIComponent(pollId)}`, {
+		method: 'GET',
+	});
+	if (res?.status === 200) {
+		return res.json();
+	}
 }
 
-export function createPoll(
+export async function createPoll(
 	duration: number,
 	options: Array<PollCreateOption>,
 	prefix: string,
 	title: string,
-): Promise<string> {
-	if (connection) {
-		return connection.invoke('CreatePoll', duration, options, prefix, title);
-	} else {
-		throw new Error('Connection not initialized');
+): Promise<string | undefined> {
+	const authFetch = (await wrapClient(fetch))?.fetch;
+	if (authFetch === undefined) {
+		return;
+	}
+	const res = await authFetch(POLL_ENDPOINT, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			duration,
+			options,
+			prefix,
+			title,
+		}),
+	});
+	if (res?.status === 200) {
+		return res.text();
 	}
 }
 
-export function abortPoll(pollId: string): Promise<void> {
-	if (connection) {
-		return connection.invoke('AbortPoll', pollId);
+export async function abortPoll(pollId: string): Promise<void> {
+	const authFetch = (await wrapClient(fetch))?.fetch;
+	if (authFetch === undefined) {
+		return;
 	}
-	return Promise.resolve();
+	const res = await authFetch(`${POLL_ENDPOINT}/${encodeURIComponent(pollId)}`, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			status: 'aborted',
+		}),
+	});
+	disablePollListeners();
+	if (res?.status === 200) {
+		return res.json();
+	}
 }
 
-export function endPoll(pollId: string) {
-	if (connection) {
-		return connection.invoke('AbortPoll', pollId);
+export async function endPoll(pollId: string) {
+	const authFetch = (await wrapClient(fetch))?.fetch;
+	if (authFetch === undefined) {
+		return;
 	}
-	return undefined;
+	const res = await authFetch(`${POLL_ENDPOINT}/${encodeURIComponent(pollId)}`, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			status: 'ended',
+		}),
+	});
+	if (res?.status === 200) {
+		return res.json();
+	}
 }
-export async function disconnectPollAPI() {
-	if (connection) {
-		await connection.stop();
+
+let socket: ReturnType<typeof io> | undefined;
+
+export async function enablePollListeners(pollUpdateCallback: (data: PollData) => void, handleErrorMessage: (error: string) => void) {
+	const token = get_token();
+	if (!token) {
+		return;
 	}
+	let once = true;
+	socket = io(`${API_URL}poll`, {
+		path: SOCKET_ENDPOINT,
+		reconnection: true,
+		reconnectionAttempts: 5,
+		transports: ['websocket'],
+		auth: {
+			token: token.access_token,
+		},
+	});
+
+	socket.on('connect_error', async () => {
+		if (once && socket !== undefined) {
+			const newToken = (await refresh(token.refresh_token)).refresh_token;
+			if (newToken === undefined) {
+				socket.disconnect();
+				return;
+			}
+			(socket.auth as { token: string }).token = newToken;
+			socket.connect();
+		} else {
+			socket?.disconnect();
+			await handle_refresh_error();
+		}
+		once = false;
+	});
+
+	socket.on('poll', (data: PollData) => {
+		pollUpdateCallback(data);
+	});
+
+	socket.on('error', (error: string) => {
+		handleErrorMessage(error);
+	});
+}
+
+export function disablePollListeners() {
+	socket?.disconnect();
 }
