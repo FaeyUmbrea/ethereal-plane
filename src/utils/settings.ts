@@ -4,7 +4,6 @@ import { TJSGameSettings } from '#runtime/svelte/store/fvtt/settings';
 import { Modes, MODULE_ID } from './const.js';
 import { getGame } from './helpers.js';
 import { Poll } from './polls.js';
-import { error } from './utils';
 
 const debouncedReload = foundry.utils.debounce(
 	() => window.location.reload(),
@@ -268,24 +267,6 @@ function SettingsShell(Application: new () => SvelteApplication) {
 			// ignored
 		};
 	};
-}
-
-export async function showNotifications(): Promise<void> {
-	try {
-		const { getLinks, getNotifications } = await import(
-			'../notifications/notifications.js'
-		);
-		const notifications = await getNotifications();
-		if (notifications.length > 0) {
-			const links = await getLinks();
-			const NotificationCenter = (
-				await import('../applications/notificationCenter.js')
-			).default;
-			new NotificationCenter(notifications, links).render(true);
-		}
-	} catch (e) {
-		error(e);
-	}
 }
 
 export const settings = new EtherealPlaneSettings();

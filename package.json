@@ -5,6 +5,10 @@
 	"private": true,
 	"packageManager": "yarn@4.5.3+sha512.3003a14012e2987072d244c720506549c1aab73ee728208f1b2580a9fd67b92d61ba6b08fe93f6dce68fd771e3af1e59a0afa28dd242dd0940d73b95fedd4e90",
 	"license": "AGPL3.0",
+	"imports": {
+		"#runtime/*": "@typhonjs-fvtt/runtime/*",
+		"#standard/*": "@typhonjs-fvtt/standard/*"
+	},
 	"module": "src/index.ts",
 	"scripts": {
 		"dev": "vite dev",
@@ -15,28 +19,19 @@
 		"lint:fix": "eslint --fix .",
 		"linkFoundry": "node tools/foundryLink.js"
 	},
-	"imports": {
-		"#runtime/*": "@typhonjs-fvtt/runtime/*",
-		"#standard/*": "@typhonjs-fvtt/standard/*"
-	},
 	"dependencies": {
 		"@castlenine/svelte-qrcode": "^2.3.0",
-		"@directus/sdk": "^19.1.0",
 		"@typhonjs-fvtt/runtime": "^0.3.0-next.2",
 		"@typhonjs-fvtt/standard": "^0.3.0-next.2",
 		"nanoid": "^5.1.5",
-		"oauth4webapi": "^3.5.2",
-		"svelte": "^4.2.19",
-		"svelte-exmarkdown": "^3.0.5"
+		"oauth4webapi": "^3.5.3",
+		"svelte": "^4.2.20"
 	},
 	"devDependencies": {
 		"@antfu/eslint-config": "^4.14.1",
-		"@eslint/js": "^9.29.0",
 		"@league-of-foundry-developers/foundry-vtt-types": "^13.340.1",
 		"@svelte-plugins/tooltips": "^3.0.3",
 		"@sveltejs/vite-plugin-svelte": "^3.1.2",
-		"@tsconfig/svelte": "^5.0.4",
-		"@typescript-eslint/parser": "^8.34.0",
 		"autoprefixer": "^10.4.21",
 		"cssnano": "^7.0.7",
 		"esbuild": "^0.25.5",
@@ -44,14 +39,13 @@
 		"eslint-plugin-antfu": "^3.1.1",
 		"eslint-plugin-format": "^1.0.1",
 		"eslint-plugin-svelte": "^2.46.1",
-		"globals": "^16.2.0",
 		"postcss-preset-env": "^10.2.3",
 		"rollup-plugin-visualizer": "^6.0.3",
 		"stylus": "^0.64.0",
 		"svelte-eslint-parser": "^0.43.0",
 		"svelte-preprocess": "^6.0.3",
 		"typescript": "^5.8.3",
-		"typescript-eslint": "^8.34.0",
+		"typescript-eslint": "^8.34.1",
 		"vite": "^6.3.5"
 	},
 	"browserslist": [

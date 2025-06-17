@@ -11,7 +11,6 @@ import {
 	runMigrations,
 	setSetting,
 	settings,
-	showNotifications,
 } from './utils/settings.js';
 import './utils/api.ts';
 import './server/patreon_auth';
@@ -65,7 +64,6 @@ Hooks.once('ready', async () => {
 	}
 	// @ts-expect-error get off my case
 	if (getGame().user?.isGM) {
-		await showNotifications();
 		getConnectionManager();
 		const campaignID = getSetting('campaign-id');
 		if (!campaignID) await setSetting('campaign-id', nanoid(64));
