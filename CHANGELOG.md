@@ -1,3 +1,13 @@
+## Version 2.5.0
+
+### Changed
+
+- Replaced the entire patreon backend implementation in preparation for 3.0.0
+
+### Removed
+
+- The notification center has been removed as it has been mostly unused
+
 ## Version 2.4.1
 
 ### Changed
