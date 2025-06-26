@@ -1,4 +1,4 @@
-<script>
+<script lang='ts'>
 	import { localize } from '#runtime/util/i18n';
 	import { tooltip } from '@svelte-plugins/tooltips';
 	import { onDestroy } from 'svelte';
@@ -191,46 +191,54 @@
 	</button>
 {/if}
 
-<style lang='stylus'>
-  button
-    width: 100%
-    height: 35px
-  a
-    color: darkred
-  .buttons
-    display: flex
+<style lang='scss'>
+  button {
+		width: 100%;
+		height: 35px;
+	}
+  a {
+		color: darkred;
+	}
+  .buttons {
+		display: flex;
+		button {
+			i {
+				font-size: 18px;
+			}
+		}
+	}
 
-    button
-      i
-        font-size 18px
+  .orange {
+		color: #f96854;
+	}
 
-  .orange
-    color: #f96854
+  .valignmid {
+		vertical-align: text-top;
+	}
+  .settings {
+		display: grid;
+		grid-template-columns: min-content auto;
+		row-gap: 5px;
+		column-gap: 2px;
+		text-align: center;
+		vertical-align: middle;
+		white-space: nowrap;
+	}
 
-  .valignmid
-    vertical-align text-top
+    span {
+			padding-top: 5px;
+		}
+    input {
+			justify-self: right;
+		}
+    .buttonbox {
+			display: flex;
 
-  .settings
-    display: grid
-    grid-template-columns: min-content auto
-    row-gap: 5px
-    column-gap: 2px
-    text-align: center
-    vertical-align: middle
-    white-space: nowrap
-
-    span
-      padding-top: 5px
-
-    input
-      justify-self: right
-
-    .buttonbox
-      display: flex
-
-      button
-        width: 27px
-        height: 27px
-        padding-top: 0
+			button {
+				width: 27px;
+				height: 27px;
+				padding-top: 0;
+			}
+		}
 
 </style>

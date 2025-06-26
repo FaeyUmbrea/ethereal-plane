@@ -1,4 +1,4 @@
-<script>
+<script lang='ts'>
 	import { onDestroy } from 'svelte';
 	import { PollStatus } from '../../utils/polls.ts';
 	import { getSetting } from '../../utils/settings.ts';

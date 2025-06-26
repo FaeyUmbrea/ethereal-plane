@@ -1,4 +1,4 @@
-<script>
+<script lang='ts'>
 	export let user;
 	export let message;
 </script>
@@ -7,12 +7,13 @@
 	<header class='message-header flexrow'>
 		<h4 class='message-sender'>{user}</h4>
 	</header>
-	<div class='message-content' id>{message}</div>
+	<div class='message-content'>{message}</div>
 </li>
 
-<style lang='stylus'>
-  .chat-message
-    height fit-content
-    min-height fit-content
-    overflow-anchor none
+<style lang='scss'>
+  .chat-message {
+		height: fit-content;
+		min-height: fit-content;
+		overflow-anchor: none;
+	}
 </style>

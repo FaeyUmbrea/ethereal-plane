@@ -1,6 +1,6 @@
 <svelte:options accessors={true} />
 
-<script>
+<script lang='ts'>
 	import { ApplicationShell } from '#runtime/svelte/component/application';
 	import { localize } from '#runtime/util/i18n';
 	import { QRCode } from '@castlenine/svelte-qrcode';
@@ -66,27 +66,31 @@
 	</main>
 </ApplicationShell>
 
-<style lang='stylus'>
-  button
-    width 100%
-    height 35px
-  .user-code
-    background-color black
-    padding-left 2px
-    padding-right 2px
-    color white
-    border-radius 4px
+<style lang='scss'>
+  button {
+		width: 100%;
+		height: 35px;
+	}
+  .user-code {
+		background-color: black;
+		padding-left: 2px;
+		padding-right: 2px;
+		color: white;
+		border-radius: 4px;
+	}
 
-  .text
-    display flex
-    flex-direction column
-    gap 6px
+  .text {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
 
-  .buttons
-    padding-top 4px
-    display flex
-
-  .QR
-    display flex
-    justify-content center
+  .buttons {
+		padding-top: 4px;
+		display: flex;
+	}
+  .QR {
+		display: flex;
+		justify-content: center;
+	}
 </style>

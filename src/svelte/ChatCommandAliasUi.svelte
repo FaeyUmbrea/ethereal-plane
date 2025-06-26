@@ -52,51 +52,50 @@
 	</div>
 </ApplicationShell>
 
-<style lang='stylus'>
+<style lang='scss'>
     button {
-        height 35px
+        height: 35px;
     }
     footer {
-        width 100%
-				display grid
-				grid-template-columns 35px auto
+        width: 100%;
+				display: grid;
+				grid-template-columns: 35px auto;
     }
 
 		li {
-			display grid
-			grid-template-columns auto 35px
-			height 35px
-			min-height 35px
-			padding-left 4px
-			padding-right 4px
+			display: grid;
+			grid-template-columns: auto 35px;
+			height: 35px;
+			min-height: 35px;
+			padding-left: 4px;
+			padding-right: 4px;
 			input {
-				height 100%
+				height: 100%;
 			}
 		}
 
 		ul {
-			list-style-type none
-			padding 0
-			padding-top 10px
-			height 100%
-			max-height 100%
-			overflow-y scroll
-			display flex
-			flex-direction column
-			row-gap 5px
+			list-style-type: none;
+			padding: 10px 0 0;
+			height: 100%;
+			max-height: 100%;
+			overflow-y: scroll;
+			display: flex;
+			flex-direction: column;
+			row-gap: 5px;
 		}
 
 		.content {
-			display grid
-			grid-template-rows auto 2px 35px
-			grid-template-columns auto
-			width 100%
-			height 100%
-			max-height 100%
-			grid-row-gap 5px
+			display: grid;
+			grid-template-rows: auto 2px 35px;
+			grid-template-columns: auto;
+			width: 100%;
+			height: 100%;
+			max-height: 100%;
+			grid-row-gap: 5px;
 		}
 
 		hr {
-			width 100%
+			width: 100%;
 		}
 </style>

@@ -1,6 +1,6 @@
 <svelte:options accessors={true} />
 
-<script>
+<script lang='ts'>
 	import { ApplicationShell } from '#runtime/svelte/component/application';
 
 	export let elementRoot = void 0;

@@ -55,7 +55,7 @@
 	</div>
 </div>
 
-<style lang='stylus'>
+<style lang='scss'>
   .display {
     height: 100%;
     min-height: 100%;
@@ -83,8 +83,8 @@
     white-space: nowrap;
   }
 	button{
-		height 35px
-		width 100%
+		height: 35px;
+		width: 100%;
 	}
   #abort {
     background: lightcoral;

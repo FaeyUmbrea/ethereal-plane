@@ -1,4 +1,4 @@
-<script>
+<script lang='ts'>
 	import { TJSDocument } from '#runtime/svelte/store/fvtt/document';
 	import ChatCommandAliasApplication from '../../applications/chatCommandAliasApplication.js';
 
@@ -73,37 +73,44 @@
 	{/if}
 </section>
 
-<style lang='stylus'>
-  button
-    height 35px
-  .macro
-    border grey 1px solid;
-    border-radius 5px;
-    height 35px;
-    width 35px;
-    justify-self center
+<style lang='scss'>
+  button {
+		height: 35px
+	}
+  .macro {
+		border: grey 1px solid;
+		border-radius: 5px;
+		height: 35px;
+		width: 35px;
+		justify-self: center;
+	}
 
-  input
-    height 35px
+  input {
+		height: 35px;
+	}
 
-  input[type=checkbox]
-    display none
+  input[type=checkbox] {
+		display: none;
+	}
 
-  label
-    border grey 1px solid;
-    border-radius 5px;
-    height 35px;
-    width 35px;
-    font-size 25px;
-    display inline-flex;
-    justify-content: center;
-    align-items: center;
-    justify-self center;
+  label {
+		border: grey 1px solid;
+		border-radius: 5px;
+		height: 35px;
+		width: 35px;
+		font-size: 25px;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+		justify-self: center;
+	}
 
-	.command-prefix
-		display grid;
-		grid-template-columns auto 35px;
+	.command-prefix {
+		display: grid;
+		grid-template-columns: auto 35px;
+	}
 
-		button
-			width 35px;
+		button {
+			width: 35px;
+		}
 </style>

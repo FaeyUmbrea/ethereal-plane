@@ -24,6 +24,8 @@
 		"@typhonjs-fvtt/standard": "^0.3.0-next.2",
 		"nanoid": "^5.1.5",
 		"oauth4webapi": "^3.5.3",
+		"postcss": "^8.5.6",
+		"sass": "^1.89.2",
 		"svelte": "^4.2.20"
 	},
 	"devDependencies": {
@@ -40,7 +42,6 @@
 		"fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#commit=c25ecedb344909dcaf781ea5c47d40c8b6e27432",
 		"postcss-preset-env": "^10.2.3",
 		"rollup-plugin-visualizer": "^6.0.3",
-		"stylus": "^0.64.0",
 		"svelte-eslint-parser": "^0.43.0",
 		"svelte-preprocess": "^6.0.3",
 		"typescript": "^5.8.3",

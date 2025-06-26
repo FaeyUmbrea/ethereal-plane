@@ -1,4 +1,4 @@
-<script>
+<script lang='ts'>
 	import { TJSDocument } from '#runtime/svelte/store/fvtt/document';
 	import { localize } from '#runtime/util/i18n';
 	import { getConnectionManager } from '../../server/patreon.ts';
@@ -125,7 +125,7 @@
 	</div>
 </div>
 
-<style lang='stylus'>
+<style lang='scss'>
   .config {
     display: grid;
 		gap: 2px;
@@ -168,8 +168,8 @@
   }
 
 	button {
-		height 35px
-		width 100%
+		height: 35px;
+		width: 100%;
 	}
 
   button.addrem {

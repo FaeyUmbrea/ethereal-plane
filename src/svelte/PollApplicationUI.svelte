@@ -1,6 +1,6 @@
 <svelte:options accessors={true} />
 
-<script>
+<script lang='ts'>
 	import { ApplicationShell } from '#runtime/svelte/component/application';
 	import { Poll, PollStatus } from '../utils/polls.ts';
 	import { settings } from '../utils/settings.ts';
@@ -26,7 +26,7 @@
 	</main>
 </ApplicationShell>
 
-<style lang='stylus'>
+<style lang='scss'>
   main {
     text-align: center;
     display: flex;

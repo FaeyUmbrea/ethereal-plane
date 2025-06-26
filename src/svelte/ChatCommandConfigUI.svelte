@@ -1,6 +1,6 @@
 <svelte:options accessors={true} />
 
-<script>
+<script lang='ts'>
 	import { ApplicationShell } from '#runtime/svelte/component/application';
 	import { localize } from '#runtime/util/i18n';
 	import { getContext } from 'svelte';
@@ -76,51 +76,60 @@
 	</main>
 </ApplicationShell>
 
-<style lang='stylus'>
-  main
-    height 100%
-    display grid
-    grid-template-rows 75px auto 35px 40px
-    gap 2px
-  button
-    width 100%
-    height 35px
-  .footer
-    display grid
-    grid-template-columns 35px auto
-    grid-column-gap 3px
+<style lang='scss'>
+  main {
+		height: 100%;
+		display: grid;
+		grid-template-rows: 75px auto 35px 40px;
+		gap: 2px;
+	}
+  button {
+		width: 100%;
+		height: 35px;
+	}
+  .footer {
+		display: grid;
+		grid-template-columns: 35px auto;
+		grid-column-gap: 3px;
+	}
 
-  .add
-    width 35px
+  .add {
+		width: 35px;
+	}
 
-	.header-section
-		display grid
-		grid-template-columns 40px 2fr 3fr 40px 40px 40px 40px 3fr 40px 35px
-		grid-template-rows 15px 20px;
+	.header-section {
+		display: grid;
+		grid-template-columns: 40px 2fr 3fr 40px 40px 40px 40px 3fr 40px 35px;
+		grid-template-rows: 15px 20px;
+	}
 
-	.command-section
-    display grid
-    max-height 100%
-    overflow-y scroll
-    overflow-x hidden
-    gap 2px
-    grid-template-columns 40px 2fr 3fr 40px 40px 40px 40px 3fr 40px 35px
-    grid-auto-rows 35px;
+	.command-section {
+		display: grid;
+		max-height: 100%;
+		overflow-y: scroll;
+		overflow-x: hidden;
+		gap: 2px;
+		grid-template-columns: 40px 2fr 3fr 40px 40px 40px 40px 3fr 40px 35px;
+		grid-auto-rows: 35px;
+	}
 
-  span
-    text-align center
-    border-left 1px solid grey
+  span {
+		text-align: center;
+		border-left: 1px solid grey;
+	}
+  .config {
+		grid-column: 1 / 4;
+	}
+  .cooldown {
+		grid-column: 4 / 9;
+	}
 
-  .config
-    grid-column 1 / 4
+  .user {
+		grid-column: 4 / 6;
+	}
 
-  .cooldown
-    grid-column 4 / 9
-
-  .user
-    grid-column 4 / 6
-
-  .target
-    grid-column 6/8
+  .target {
+		grid-column: 6/8;
+	}
 
 </style>

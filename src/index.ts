@@ -25,7 +25,13 @@ function buildButtons(buttons: any) {
 	) {
 		return;
 	}
-	const buttonGroup = buttons.tokens;
+	let buttonGroup;
+	if (getGame().version.startsWith('12.')) {
+		// @ts-expect-error V12 compat
+		buttonGroup = buttons.find(element => element.name === 'token');
+	} else {
+		buttonGroup = buttons.tokens;
+	}
 
 	const pollsButton: SceneControls.Tool = {
 		icon: 'fa-solid fa-square-poll-vertical',
