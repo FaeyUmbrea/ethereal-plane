@@ -181,7 +181,9 @@ export async function refresh(refreshToken: string) {
 
 		const { access_token, refresh_token } = result;
 		await setSetting('authentication-token', access_token);
-		await setSetting('refresh-token', refresh_token);
+		if (refresh_token !== undefined) {
+			await setSetting('refresh-token', refresh_token);
+		}
 		return { access_token, refresh_token };
 	}
 	throw new Error('Refresh Token is not set');

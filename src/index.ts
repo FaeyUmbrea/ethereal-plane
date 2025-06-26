@@ -2,7 +2,7 @@ import type PollApplication from './applications/pollApplication.js';
 import { localize } from '#runtime/util/i18n';
 import { nanoid } from 'nanoid';
 import { registerHandlers } from './handlers';
-import { getConnectionManager } from './server/connectionManager.js';
+import { getConnectionManager } from './server/patreon.js';
 import { getGame } from './utils/helpers.js';
 import { registerOverlay } from './utils/overlay.js';
 import {
@@ -17,28 +17,23 @@ import './server/patreon_auth';
 
 let polls: unknown | undefined;
 
-function buildButtons(buttons) {
+function buildButtons(buttons: any) {
 	if (
-		// @ts-expect-error broken mixin
 		!getGame().user?.isGM
 		|| !getSetting('polls-enabled')
 		|| !getSetting('enabled')
 	) {
 		return;
 	}
-	let buttonGroup;
-	if (getGame().version.startsWith('12.')) {
-		buttonGroup = buttons.find(element => element.name === 'token');
-	} else {
-		buttonGroup = buttons.tokens;
-	}
+	const buttonGroup = buttons.tokens;
 
-	const pollsButton = {
+	const pollsButton: SceneControls.Tool = {
 		icon: 'fa-solid fa-square-poll-vertical',
 		name: 'openPolls',
 		title: 'ethereal-plane.ui.open-polls-button',
 		toggle: true,
-		onClick: async () => await openPolls(pollsButton),
+		order: 100,
+		onChange: async () => await openPolls(pollsButton),
 	};
 	if ((game as ReadyGame).version.startsWith('12.')) {
 		buttonGroup?.tools.push(pollsButton);
@@ -47,7 +42,7 @@ function buildButtons(buttons) {
 	}
 }
 
-async function openPolls(button: SceneControlTool) {
+async function openPolls(button: SceneControls.Tool) {
 	if (!polls) {
 		const PollApplication = (await import('./applications/pollApplication.js'))
 			.default;
@@ -62,7 +57,6 @@ Hooks.once('ready', async () => {
 	if (getSetting('enabled')) {
 		registerHandlers();
 	}
-	// @ts-expect-error get off my case
 	if (getGame().user?.isGM) {
 		getConnectionManager();
 		const campaignID = getSetting('campaign-id');
@@ -78,11 +72,10 @@ Hooks.on('init', () => {
 });
 Hooks.once('ready', () => registerMenus());
 
-Hooks.on('obsUtilsInit', registerOverlay);
+Hooks.on('obs-utils.init', registerOverlay);
 
 Hooks.once('renderSidebar', async () => {
 	if (
-		// @ts-expect-error get off my case
 		getGame().user?.isGM
 		&& getSetting('enable-chat-tab')
 		&& getSetting('enabled')

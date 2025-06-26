@@ -49,6 +49,7 @@ export async function addSidebar(
 	});
 
 	const popout = new SvelteApplication({
+		// @ts-expect-error types not updated
 		title: tooltip,
 		resizable: true,
 		svelte: {

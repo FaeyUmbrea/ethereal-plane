@@ -140,7 +140,7 @@ export class ChatCommandApplication extends SvelteApplication {
 function exportChatCommands(withMacro: boolean) {
 	const commands = foundry.utils.deepClone(
 		getSetting('chat-commands'),
-	) as ExportChatCommand[];
+	) as unknown as ExportChatCommand[];
 
 	if (withMacro) {
 		commands.forEach((command) => {
@@ -202,17 +202,14 @@ async function importChatCommands(data: string, withMacros: boolean) {
 		folder => folder.name === 'Ethereal Plane',
 	);
 	if (folder === undefined && withMacros) {
-		// @ts-expect-error get off my case
 		folder = await Folder.create(
-			new Folder({ type: 'Macro', name: 'Ethereal Plane' }),
+			{ type: 'Macro', name: 'Ethereal Plane' },
 		);
 	}
 	for (const command of imported.commands) {
 		if (typeof command.macro !== 'string' && withMacros) {
-			// @ts-expect-error get off my case
 			command.macro.folder = folder?.id;
-			// @ts-expect-error get off my case
-			command.macro = (await Macro.create(command.macro)).id;
+			command.macro = (await Macro.create(command.macro))?.id ?? { folder: undefined };
 		} else {
 			command.macro = '';
 		}

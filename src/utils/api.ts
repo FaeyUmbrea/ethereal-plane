@@ -1,6 +1,6 @@
-import { getConnectionManager } from '../server/connectionManager.js';
-import { getGame } from './helpers.js';
-import { getSetting } from './settings.js';
+import { getConnectionManager } from '../server/patreon.ts';
+import { getGame } from './helpers.ts';
+import { getSetting } from './settings.ts';
 
 export function getApi() {
 	const moduleData = getGame()?.modules?.get('ethereal-plane');
@@ -17,9 +17,9 @@ export class EtherealPlaneAPI {
 }
 
 Hooks.once('init', async () => {
-	const moduleData = game?.modules?.get('ethereal-plane');
+	const moduleData = (game as InitGame)?.modules?.get('ethereal-plane');
 	if (moduleData) {
 		moduleData.api = new EtherealPlaneAPI();
-		Hooks.call('etherealPlaneInit');
+		Hooks.call('ethereal-plane.init');
 	}
 });

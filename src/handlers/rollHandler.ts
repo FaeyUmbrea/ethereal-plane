@@ -1,4 +1,4 @@
-import { getConnectionManager } from '../server/connectionManager';
+import { getConnectionManager } from '../server/patreon';
 import { getGame } from '../utils/helpers';
 import { getSetting } from '../utils/settings';
 import { sendRollToGM } from '../utils/sockets';
@@ -19,12 +19,11 @@ export function registerHandler(): void {
 					'',
 				);
 				const result = msg.rolls.reduce(
-					(accumulator, currentValue) => accumulator + currentValue.total,
+					(accumulator, currentValue) => accumulator + (currentValue.total ?? 0),
 					0,
 				);
 
 				if (getSetting('send-rolls-to-chat')) {
-					// @ts-expect-error why
 					if (!msg.author.name || !formula || !result) return;
 					sendRoll(msg.author!.name, formula, result.toString());
 				}

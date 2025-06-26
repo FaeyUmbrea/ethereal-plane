@@ -1,11 +1,10 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte';
-import {
-	postcssConfig,
-	terserConfig,
-} from '@typhonjs-fvtt/runtime/rollup';
+import { postcssConfig, terserConfig } from '@typhonjs-fvtt/runtime/rollup';
 import { visualizer } from 'rollup-plugin-visualizer';
+
 import { sveltePreprocess } from 'svelte-preprocess';
 import { defineConfig } from 'vite';
+import { configDefaults } from 'vitest/config';
 import moduleJSON from './module.json' with { type: 'json' };
 
 // ATTENTION!
@@ -16,7 +15,7 @@ const s_PACKAGE_ID = `modules/${moduleJSON.id}`;
 // A short additional string to add to Svelte CSS hash values to make yours unique. This reduces the amount of
 // duplicated framework CSS overlap between many TRL packages enabled on Foundry VTT at the same time. 'tst' is chosen
 // by shortening 'template-svelte-ts'.
-const s_SVELTE_HASH_ID = 'tst';
+const s_SVELTE_HASH_ID = 'ethpla';
 
 const s_COMPRESS = false; // Set to true to compress the module bundle.
 const s_SOURCEMAPS = true; // Generate sourcemaps for the bundle (recommended).
@@ -28,7 +27,7 @@ export default defineConfig(({ mode }) => {
 	// TRL components and makes it easier to review styles in the browser debugger.
 	const compilerOptions = mode === 'production'
 		? {
-				cssHash: ({ hash, css }) => `svelte-${s_SVELTE_HASH_ID}-${hash(css)}`,
+				cssHash: ({ hash, css }: { hash: (css: string) => string; css: string }) => `svelte-${s_SVELTE_HASH_ID}-${hash(css)}`,
 			}
 		: {};
 
@@ -44,6 +43,19 @@ export default defineConfig(({ mode }) => {
 
 		esbuild: {
 			target: ['es2022'],
+		},
+
+		test: {
+			globals: true,
+			environment: 'jsdom',
+			exclude: [...configDefaults.exclude, 'tests/**'],
+			coverage: {
+				enabled: true,
+				provider: 'istanbul',
+				reporter: ['json'],
+				exclude: ['node_modules/', 'tests/'],
+				reportsDirectory: '../test-results/coverage/vitest',
+			},
 		},
 
 		css: {
@@ -86,7 +98,7 @@ export default defineConfig(({ mode }) => {
 			sourcemap: s_SOURCEMAPS,
 			brotliSize: true,
 			minify: s_COMPRESS ? 'terser' : false,
-			target: ['es2022'],
+			target: ['esnext', 'chrome127'],
 			terserOptions: s_COMPRESS ? { ...terserConfig(), ecma: 2022 } : void 0,
 			lib: {
 				entry: './index.ts',
@@ -105,7 +117,7 @@ export default defineConfig(({ mode }) => {
 		// Necessary when using the dev server for top-level await usage inside TRL.
 		optimizeDeps: {
 			esbuildOptions: {
-				target: 'es2022',
+				target: ['esnext', 'chrome127'],
 			},
 		},
 

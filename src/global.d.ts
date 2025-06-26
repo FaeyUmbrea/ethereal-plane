@@ -1,7 +1,8 @@
+import type { AllHooks } from 'fvtt-types/src/foundry/client/hooks';
 import type { ComponentConstructorOptions, SvelteComponent } from 'svelte';
 import type { EtherealPlaneAPI } from './utils/api.js';
 import type { ChatCommand } from './utils/chatCommands.js';
-import type { Modes } from './utils/const.js';
+import type { Modes } from './utils/const.ts';
 import type { Poll } from './utils/polls.js';
 
 declare global {
@@ -38,7 +39,6 @@ declare global {
 		'ethereal-plane.enable-chat-tab': boolean;
 		'ethereal-plane.authentication-token': string;
 		'ethereal-plane.refresh-token': string;
-		'ethereal-plane.mode': Modes;
 		'ethereal-plane.version': number;
 		'ethereal-plane.chat-message-template': string;
 		'ethereal-plane.campaign-id': string;
@@ -51,9 +51,11 @@ declare global {
 	interface World {
 		id: string;
 	}
-	namespace Hooks {
-		interface StaticCallbacks {
+
+	namespace HookConfig {
+		interface HookConfig extends AllHooks {
 			'ethereal-plane.patreon-login': () => void;
+			'ethereal-plane.init': () => void;
 			'ethereal-plane.patreon-logout': () => void;
 			'ethereal-plane.patreon-connect': () => void;
 			'ethereal-plane.patreon-disconnect': () => void;
@@ -64,6 +66,10 @@ declare global {
 			'ethereal-plane.set-version': (version: number) => void;
 			'ethereal-plane.set-chat-message-template': (template: string) => void;
 			'ethereal-plane.set-chat-commands': (commands: ChatCommand[]) => void;
+			'midi-qol.DamageRollComplete': (workflow: DamageWorkflow) => void;
+			'midi-qol.AttackRollComplete': (workflow: Workflow) => void;
+			'obs-utils.init': () => void;
+			'getSceneControlButtons': (controls: SceneControls) => void;
 		}
 	}
 }

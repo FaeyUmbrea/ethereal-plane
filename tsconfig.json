@@ -1,14 +1,13 @@
 {
 	"compilerOptions": {
-		"target": "ES2022",
+		"target": "ESNext",
 		"baseUrl": ".",
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
 
-		"types": ["@league-of-foundry-developers/foundry-vtt-types"],
+		"types": ["fvtt-types"],
 		"allowImportingTsExtensions": true,
-		"strict": false,
-		"strictNullChecks": true,
+		"strict": true,
 		"noEmit": true,
 		"sourceMap": true,
 		"forceConsistentCasingInFileNames": true,

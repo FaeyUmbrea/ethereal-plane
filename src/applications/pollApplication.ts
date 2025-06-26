@@ -4,9 +4,9 @@ import PollApplicationUi from '../svelte/PollApplicationUI.svelte';
 // @ts-expect-error get off my case
 export default class PollApplication extends SvelteApplication {
 	/** */
-	sidebarButton: SceneControlTool;
+	sidebarButton: SceneControls.Tool;
 
-	constructor(sidebarButton: SceneControlTool) {
+	constructor(sidebarButton: SceneControls.Tool) {
 		super();
 		this.sidebarButton = sidebarButton;
 	}

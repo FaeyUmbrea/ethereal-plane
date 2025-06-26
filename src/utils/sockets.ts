@@ -15,9 +15,9 @@ async function handleEvent({
 	targetUser: string;
 	payload: { user: string; formula: string; result: string };
 }) {
-	if (!!targetUser && game.userId !== targetUser) return;
+	if (!!targetUser && (game as ReadyGame).userId !== targetUser) return;
 
-	if (eventType === 'roll' && game.user?.isGM) {
+	if (eventType === 'roll' && (game as ReadyGame).user?.isGM) {
 		sendRollIfAllowed(payload.user, payload.formula, payload.result);
 	}
 }

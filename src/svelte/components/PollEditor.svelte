@@ -1,7 +1,7 @@
 <script>
 	import { TJSDocument } from '#runtime/svelte/store/fvtt/document';
 	import { localize } from '#runtime/util/i18n';
-	import { getConnectionManager } from '../../server/connectionManager.ts';
+	import { getConnectionManager } from '../../server/patreon.ts';
 	import { PollStatus } from '../../utils/polls.ts';
 	import { setSetting, settings } from '../../utils/settings.ts';
 	import { log } from '../../utils/utils.ts';

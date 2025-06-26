@@ -2,16 +2,13 @@ import type {
 	Poll,
 	PollOption,
 } from '../utils/polls.js';
+import type { ChatDeletionCallback, ChatMessageCallback } from '../utils/types.ts';
 import type {
 	ChatMessage,
 } from './chat_api.js';
-import type {
-	ChatConnector,
-	ChatDeletionCallback,
-	ChatMessageCallback,
-} from './chatConnector.js';
-import type { PollConnector } from './pollConnector.js';
+import type { PollData } from './poll_api.js';
 import { localize } from '#runtime/util/i18n';
+import { chatMessages } from '../svelte/stores/chatMessages.ts';
 import { API_URL } from '../utils/const.js';
 import {
 	executePollMacro,
@@ -33,31 +30,52 @@ import {
 	waitForPatreonVerification,
 } from './patreon_auth.js';
 import {
-	disablePollListeners,
-	enablePollListeners,
-	type PollData,
-} from './poll_api.js';
-import {
 	abortPoll,
 	createPoll,
+	disablePollListeners,
+	enablePollListeners,
+
 } from './poll_api.js';
 
-export class PatreonConnector implements ChatConnector, PollConnector {
-	callback?: ChatMessageCallback;
-	chatDeletionCallback?: ChatDeletionCallback;
+export class PatreonConnector {
+	messageListeners: ChatMessageCallback[] = [];
 
-	setDeletionCallback(callback: ChatDeletionCallback) {
-		this.chatDeletionCallback = callback;
-	}
+	messageDeletionListeners: ChatDeletionCallback[] = [];
 
 	constructor() {
 		Hooks.on('ethereal-plane.patreon-login', () => this.login());
 		Hooks.on('ethereal-plane.patreon-logout', () => this.logout());
 		Hooks.on('ethereal-plane.patreon-connect', () => this.connect());
 		Hooks.on('ethereal-plane.patreon-disconnect', () => this.deleteClient());
-		Hooks.on('ethereal-plane.set-youtube-id', async (id) => {
+		Hooks.on('ethereal-plane.set-youtube-id', async (id: string) => {
 			await this.setYoutubeID(id);
 		});
+		Hooks.on('ethereal-plane.reconnect', () => this.reconnect());
+
+		this.messageListeners.push(
+			(message: string, user: string, _subscribed: boolean, id: string) => {
+				chatMessages.update(
+					(messages: { user: string; message: string; id: string }[]) => {
+						messages.push({ user, message, id });
+						return messages;
+					},
+				);
+			},
+		);
+
+		this.messageDeletionListeners.push((id) => {
+			chatMessages.update((messages) => {
+				return messages.filter(message => message.id !== id);
+			});
+		});
+	}
+
+	async reconnect() {
+		ui.notifications?.warn(
+			`${localize('ethereal-plane.strings.notification-prefix')}${localize('ethereal-plane.notifications.reconnecting')}`,
+		);
+		await this.disconnect();
+		await this.init();
 	}
 
 	async connect() {
@@ -89,25 +107,33 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 		}
 		log('Ethereal Plane | Client OK');
 		await fetchFeatures();
+		if ((getSetting('enable-chat-tab') || getSetting('chat-commands-active')) && getSetting('enabled')) {
+			log('Enable Chat Listener');
+			await this.enableChatListener();
+		} else {
+			await this.disableChatListener();
+		}
 		log('Ethereal Plane | Connected');
 	}
 
 	getHandleChatMessageReceived() {
 		return (message: ChatMessage) => {
-			if (this.callback === undefined) return;
-			this.callback(
-				message.message_content,
-				message.display_name,
-				message.is_member,
-				message.message_id,
-			);
+			this.messageListeners.forEach((listener) => {
+				listener(
+					message.message_content,
+					message.display_name,
+					message.is_member,
+					message.message_id,
+				);
+			});
 		};
 	}
 
 	getHandleChatMessageDeleted() {
 		return (messageId: string) => {
-			if (this.chatDeletionCallback === undefined) return;
-			this.chatDeletionCallback(messageId);
+			this.messageDeletionListeners.forEach((listener) => {
+				listener(messageId);
+			});
 		};
 	}
 
@@ -181,7 +207,7 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 		await sendChatMessage(message);
 	}
 
-	async startPoll(poll: Poll) {
+	async createPoll(poll: Poll) {
 		try {
 			await enablePollListeners(this.getPollUpdateCallback(), this.getHandleErrorMessage());
 			const pollId = await createPoll(
@@ -212,10 +238,6 @@ export class PatreonConnector implements ChatConnector, PollConnector {
 		disableChatListeners();
 	}
 
-	setCallback(callback: ChatMessageCallback): void | Promise<void> {
-		this.callback = callback;
-	}
-
 	async abortPoll() {
 		const poll = getSetting('currentPoll') as Poll;
 		await abortPoll(poll.id);
@@ -244,4 +266,12 @@ export async function fetchFeatures() {
 	return (await fetch(`${API_URL}api/v2/Features`, {
 		headers: { Authorization: `Bearer ${access_token}` },
 	})).json();
+}
+
+let connectionManager: PatreonConnector | undefined;
+
+export function getConnectionManager(): PatreonConnector {
+	if (connectionManager) return connectionManager;
+	connectionManager = new PatreonConnector();
+	return connectionManager;
 }

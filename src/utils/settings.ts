@@ -1,7 +1,7 @@
 import type { SvelteApplication } from '#runtime/svelte/application';
 import type { ChatCommand } from './chatCommands.ts';
 import { TJSGameSettings } from '#runtime/svelte/store/fvtt/settings';
-import { Modes, MODULE_ID } from './const.js';
+import { MODULE_ID } from './const.js';
 import { getGame } from './helpers.js';
 import { Poll } from './polls.js';
 
@@ -46,7 +46,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
 				config: false,
 				onChange: () => {
 					if (canvas?.activeLayer?.name === 'TokenLayer') {
-						ui?.controls?.initialize({ layer: 'tokens', tool: 'select' });
+
 					}
 				},
 			}),
@@ -92,18 +92,6 @@ class EtherealPlaneSettings extends TJSGameSettings {
 				scope: 'client',
 				config: false,
 				default: '',
-			}),
-		);
-		settings.push(
-			createSetting('mode', {
-				type: String,
-				choices: Object.values(Modes).reduce(
-					(a, v) => ({ ...a, [v]: `ethereal-plane.settings.mode.${v}` }),
-					{},
-				),
-				scope: 'world',
-				config: false,
-				default: Modes.patreon,
 			}),
 		);
 		settings.push(
@@ -195,7 +183,6 @@ function createSetting(
 }
 
 export async function registerMenus() {
-	// @ts-expect-error ayo
 	if ((getGame().user)?.isGM) {
 		const { ConfigApplication } = await import(
 			'../applications/configApplication.js'
@@ -231,9 +218,9 @@ export function getSetting(
 	return getGame().settings.get(MODULE_ID, settingName);
 }
 
-export async function setSetting(
-	settingName: ClientSettings.KeyFor<'ethereal-plane'>,
-	value: unknown,
+export async function setSetting<T extends ClientSettings.KeyFor<'ethereal-plane'>>(
+	settingName: T,
+	value: ClientSettings.SettingCreateData<'ethereal-plane', T>,
 ) {
 	await getGame().settings.set(MODULE_ID, settingName, value);
 }
@@ -242,7 +229,7 @@ function SettingsShell(Application: new () => SvelteApplication) {
 	return class Shell extends FormApplication {
 		static #mceSettingsApp: SvelteApplication;
 
-		constructor(object: object = {}, options: Partial<FormApplicationOptions> = {}) {
+		constructor(object: object = {}, options: Partial<FormApplication.Options> = {}) {
 			super(object, options);
 			Shell.showSettings();
 		}

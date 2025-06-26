@@ -11,29 +11,6 @@ export interface ChatMessage {
 	time_stamp: Date;
 }
 
-/*
-export async function initChatAPI(
-	accessToken: string,
-	baseURL: string,
-): Promise<void> {
-	connection = new signalR.HubConnectionBuilder()
-		.withUrl(`${baseURL}api/v2/hubs/chat`, {
-			accessTokenFactory: () => accessToken,
-			withCredentials: false,
-		})
-		.configureLogging(signalR.LogLevel.Information)
-		.build();
-
-	connection.on('ChatMessageReceived', handleChatMessageReceived);
-	connection.on('ChatMessageDeleted', handleChatMessageDeleted);
-	connection.onclose(() => {
-		log('disconnected');
-	});
-
-	await connection.start();
-}
-*/
-
 export async function sendChatMessage(message: string) {
 	const authFetch = (await wrapClient(fetch))?.fetch;
 	if (authFetch === undefined) {
