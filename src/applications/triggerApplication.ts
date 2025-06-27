@@ -7,13 +7,13 @@ import {
 	SvelteApplication,
 } from '#runtime/svelte/application';
 import { localize } from '#runtime/util/i18n';
-import ChatCommandConfigUI from '../svelte/ChatCommandConfigUI.svelte';
+import TriggerConfigUi from '../svelte/TriggerConfigUI.svelte';
 import { getGame } from '../utils/helpers.js';
 import { getSetting, setSetting } from '../utils/settings.js';
 import { readTextFromFile } from '../utils/utils';
 
 // @ts-expect-error get off my case
-export class ChatCommandApplication extends SvelteApplication {
+export class TriggerApplication extends SvelteApplication {
 	/** @static */
 	static override get defaultOptions() {
 		return foundry.utils.mergeObject(
@@ -29,7 +29,7 @@ export class ChatCommandApplication extends SvelteApplication {
 				positionOrtho: false,
 				transformOrigin: null,
 				svelte: {
-					class: ChatCommandConfigUI,
+					class: TriggerConfigUi,
 					target: document.body,
 					intro: true,
 				},

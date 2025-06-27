@@ -1,7 +1,6 @@
 import type { SvelteApplication } from '#runtime/svelte/application';
-import type { ChatCommand } from './chatCommands.ts';
 import { TJSGameSettings } from '#runtime/svelte/store/fvtt/settings';
-import { MODULE_ID } from './const.js';
+import { MODULE_ID, SETTINGS_VERSION } from './const.js';
 import { getGame } from './helpers.js';
 import { Poll } from './polls.js';
 
@@ -9,8 +8,6 @@ const debouncedReload = foundry.utils.debounce(
 	() => window.location.reload(),
 	100,
 );
-
-const SETTINGS_VERSION = 1;
 
 class EtherealPlaneSettings extends TJSGameSettings {
 	constructor() {
@@ -46,7 +43,8 @@ class EtherealPlaneSettings extends TJSGameSettings {
 				config: false,
 				onChange: () => {
 					if (canvas?.activeLayer?.name === 'TokenLayer') {
-
+						// @ts-expect-error old code
+						ui?.controls?.initialize({ layer: 'tokens', tool: 'select' });
 					}
 				},
 			}),
@@ -99,7 +97,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
 				type: Number,
 				scope: 'world',
 				config: false,
-				default: 0,
+				default: -1,
 			}),
 		);
 		settings.push(
@@ -144,7 +142,7 @@ class EtherealPlaneSettings extends TJSGameSettings {
 			}),
 		);
 		settings.push(
-			createSetting('chat-commands', {
+			createSetting('chat-trigger-macros', {
 				type: Object,
 				scope: 'world',
 				config: false,
@@ -197,8 +195,8 @@ export async function registerMenus() {
 			type: SettingsShell(ConfigApplication),
 		});
 
-		const { ChatCommandApplication } = await import(
-			'../applications/chatCommandApplication.js'
+		const { TriggerApplication } = await import(
+			'../applications/triggerApplication.ts'
 		);
 
 		getGame().settings.registerMenu(MODULE_ID, 'chat-commands', {
@@ -207,7 +205,7 @@ export async function registerMenus() {
 			hint: '',
 			icon: 'fas fa-bars',
 			restricted: true,
-			type: SettingsShell(ChatCommandApplication),
+			type: SettingsShell(TriggerApplication),
 		});
 	}
 }
@@ -260,19 +258,12 @@ export const settings = new EtherealPlaneSettings();
 
 export function runMigrations() {
 	const version = getSetting('version') as number ?? 0;
-	if (version < SETTINGS_VERSION) {
-		console.warn('Running Ethereal Plane Migrations');
-		if (version < 1) {
-			console.warn('Migrations for Data-Model Version 1');
-			const chatCommands = getSetting('chat-commands') as ChatCommand[];
-			chatCommands.forEach((command) => {
-				if (!command.commandAliases) {
-					command.commandAliases = [];
-				}
-			});
-			setSetting('chat-commands', chatCommands);
-		}
-		console.warn('OBS Utils Migrations Finished');
+	if (version === SETTINGS_VERSION) return;
+	if (version === -1) {
 		setSetting('version', SETTINGS_VERSION);
+		return;
+	}
+	if (version < SETTINGS_VERSION) {
+		import('./migrations.ts').then(migrate => migrate.migrate(version));
 	}
 }

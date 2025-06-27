@@ -4,6 +4,7 @@ import type { EtherealPlaneAPI } from './utils/api.js';
 import type { ChatCommand } from './utils/chatCommands.js';
 import type { Modes } from './utils/const.ts';
 import type { Poll } from './utils/polls.js';
+import type { TriggerMacro } from './utils/types.ts';
 
 declare global {
 	interface obsAPI {
@@ -45,7 +46,7 @@ declare global {
 		'ethereal-plane.last-read-notification': string;
 		'ethereal-plane.allow-socket': boolean;
 		'ethereal-plane.allow-api': boolean;
-		'ethereal-plane.chat-commands': ChatCommand[];
+		'ethereal-plane.chat-trigger-macros': TriggerMacro[];
 		'ethereal-plane.chat-commands-active': boolean;
 	}
 	interface World {
@@ -59,6 +60,7 @@ declare global {
 			'ethereal-plane.patreon-logout': () => void;
 			'ethereal-plane.patreon-connect': () => void;
 			'ethereal-plane.patreon-disconnect': () => void;
+			'ethereal-plane.reconnect': () => void;
 			'ethereal-plane.set-youtube-id': (id: string) => void;
 			'ethereal-plane.set-patreon-id': (id: string) => void;
 			'ethereal-plane.set-campaign-id': (id: string) => void;

@@ -2,13 +2,19 @@ import type {
 	Poll,
 	PollOption,
 } from '../utils/polls.js';
-import type { ChatDeletionCallback, ChatMessageCallback } from '../utils/types.ts';
+import type {
+	ChatDeletionCallback,
+	ChatMessageCallback,
+	ChatTriggerCallback,
+	ChatTriggerEvent,
+} from '../utils/types.ts';
 import type {
 	ChatMessage,
 } from './chat_api.js';
 import type { PollData } from './poll_api.js';
 import { localize } from '#runtime/util/i18n';
 import { chatMessages } from '../svelte/stores/chatMessages.ts';
+import { processTrigger } from '../utils/chatCommands.ts';
 import { API_URL } from '../utils/const.js';
 import {
 	executePollMacro,
@@ -36,11 +42,14 @@ import {
 	enablePollListeners,
 
 } from './poll_api.js';
+import { disableTriggerListeners, enableTriggerListeners } from './trigger_api.ts';
 
 export class PatreonConnector {
 	messageListeners: ChatMessageCallback[] = [];
 
 	messageDeletionListeners: ChatDeletionCallback[] = [];
+
+	chatTriggerListeners: ChatTriggerCallback[] = [];
 
 	constructor() {
 		Hooks.on('ethereal-plane.patreon-login', () => this.login());
@@ -67,6 +76,10 @@ export class PatreonConnector {
 			chatMessages.update((messages) => {
 				return messages.filter(message => message.id !== id);
 			});
+		});
+
+		this.chatTriggerListeners.push((trigger: ChatTriggerEvent) => {
+			return processTrigger(trigger);
 		});
 	}
 
@@ -107,11 +120,17 @@ export class PatreonConnector {
 		}
 		log('Ethereal Plane | Client OK');
 		await fetchFeatures();
-		if ((getSetting('enable-chat-tab') || getSetting('chat-commands-active')) && getSetting('enabled')) {
+		if (getSetting('enable-chat-tab') || getSetting('enabled')) {
 			log('Enable Chat Listener');
 			await this.enableChatListener();
 		} else {
 			await this.disableChatListener();
+		}
+		if (getSetting('chat-commands-active') || getSetting('enabled')) {
+			log('Enable Trigger Listener');
+			await this.enableTriggerListener();
+		} else {
+			await this.disableTriggerListener();
 		}
 		log('Ethereal Plane | Connected');
 	}
@@ -126,6 +145,15 @@ export class PatreonConnector {
 					message.message_id,
 				);
 			});
+		};
+	}
+
+	getHandleChatTriggerReceived() {
+		return (trigger: ChatTriggerEvent): Promise<boolean> => {
+			return this.chatTriggerListeners.reduce(async (accumP, current) => {
+				const accum = await accumP;
+				return accum && await current(trigger);
+			}, Promise.resolve(true));
 		};
 	}
 
@@ -197,6 +225,14 @@ export class PatreonConnector {
 
 	async disableChatListener() {
 		disableChatListeners();
+	}
+
+	async enableTriggerListener() {
+		await enableTriggerListeners(this.getHandleChatTriggerReceived());
+	}
+
+	async disableTriggerListener() {
+		disableTriggerListeners();
 	}
 
 	async enableChatListener(): Promise<void> {

@@ -1,10 +1,11 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte';
-import { postcssConfig, terserConfig } from '@typhonjs-fvtt/runtime/rollup';
+import {
+	postcssConfig,
+	terserConfig,
+} from '@typhonjs-fvtt/runtime/rollup';
 import { visualizer } from 'rollup-plugin-visualizer';
-
 import { sveltePreprocess } from 'svelte-preprocess';
 import { defineConfig } from 'vite';
-import { configDefaults } from 'vitest/config';
 import moduleJSON from './module.json' with { type: 'json' };
 
 // ATTENTION!
@@ -43,19 +44,6 @@ export default defineConfig(({ mode }) => {
 
 		esbuild: {
 			target: ['es2022'],
-		},
-
-		test: {
-			globals: true,
-			environment: 'jsdom',
-			exclude: [...configDefaults.exclude, 'tests/**'],
-			coverage: {
-				enabled: true,
-				provider: 'istanbul',
-				reporter: ['json'],
-				exclude: ['node_modules/', 'tests/'],
-				reportsDirectory: '../test-results/coverage/vitest',
-			},
 		},
 
 		css: {
@@ -98,7 +86,7 @@ export default defineConfig(({ mode }) => {
 			sourcemap: s_SOURCEMAPS,
 			brotliSize: true,
 			minify: s_COMPRESS ? 'terser' : false,
-			target: ['esnext', 'chrome127'],
+			target: ['es2022'],
 			terserOptions: s_COMPRESS ? { ...terserConfig(), ecma: 2022 } : void 0,
 			lib: {
 				entry: './index.ts',
@@ -117,7 +105,7 @@ export default defineConfig(({ mode }) => {
 		// Necessary when using the dev server for top-level await usage inside TRL.
 		optimizeDeps: {
 			esbuildOptions: {
-				target: ['esnext', 'chrome127'],
+				target: 'es2022',
 			},
 		},
 

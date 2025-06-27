@@ -60,11 +60,12 @@ async function openPolls(button: SceneControls.Tool) {
 }
 
 Hooks.once('ready', async () => {
+	runMigrations();
 	if (getSetting('enabled')) {
 		registerHandlers();
 	}
 	if (getGame().user?.isGM) {
-		getConnectionManager();
+		await getConnectionManager().init();
 		const campaignID = getSetting('campaign-id');
 		if (!campaignID) await setSetting('campaign-id', nanoid(64));
 	}
@@ -74,7 +75,6 @@ Hooks.on('getSceneControlButtons', buildButtons);
 
 Hooks.on('init', () => {
 	settings.init();
-	runMigrations();
 });
 Hooks.once('ready', () => registerMenus());
 

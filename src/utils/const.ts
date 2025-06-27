@@ -13,3 +13,7 @@ export const POLL_ENDPOINT = `${API_URL}api/v2/poll`;
 export const SOCKET_ENDPOINT = `/api/v2/socket/socket.io`;
 
 export const CONFIG_ENDPOINT = `${API_URL}api/v2/config`;
+
+export const TRIGGER_ENDPOINT = `${API_URL}api/v2/trigger`;
+
+export const SETTINGS_VERSION = 2;

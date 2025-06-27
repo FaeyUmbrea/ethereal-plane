@@ -70,16 +70,10 @@
 			"chat-welcome": "This is your stream chat! Messages will appear here as they are posted. Reloading the page will clear this.",
 			"system": "Ethereal Plane",
 			"commands": {
-				"base": "Base Config",
-				"cooldown": "Cooldown (seconds)",
 				"active": "Active",
 				"name": "Name",
-				"template": "Template",
-				"user": "User",
-				"target": "Target",
-				"target-identifier": "Target identifier",
-				"subscriber": "Sub",
-				"non-subscriber": "Non-Sub",
+				"created_at": "Created At",
+				"updated_at": "Updated At",
 				"macro": "Macro",
 				"import": {
 					"button": "Import",
