@@ -1,12 +1,9 @@
-import type {
-	ChatCommand,
-	ExportChatCommand,
-	ImportChatCommand,
-} from '../utils/chatCommands.js';
+import type { ExportTriggerMacro, TriggerMacro } from '../utils/types.ts';
 import {
 	SvelteApplication,
 } from '#runtime/svelte/application';
 import { localize } from '#runtime/util/i18n';
+import { getTriggers } from '../server/trigger_api.ts';
 import TriggerConfigUi from '../svelte/TriggerConfigUI.svelte';
 import { getGame } from '../utils/helpers.js';
 import { getSetting, setSetting } from '../utils/settings.js';
@@ -139,13 +136,13 @@ export class TriggerApplication extends SvelteApplication {
 
 function exportChatCommands(withMacro: boolean) {
 	const commands = foundry.utils.deepClone(
-		getSetting('chat-commands'),
-	) as unknown as ExportChatCommand[];
+		getSetting('chat-trigger-macros'),
+	) as unknown as ExportTriggerMacro[];
 
 	if (withMacro) {
 		commands.forEach((command) => {
 			const macro = command.macro as string;
-			const macroExport = (getGame().macros?.get(macro) as any)?.toCompendium();
+			const macroExport: Macro = (getGame().macros?.get(macro) as any)?.toCompendium();
 			if (macroExport !== undefined) {
 				command.macro = macroExport;
 			} else {
@@ -160,14 +157,14 @@ function exportChatCommands(withMacro: boolean) {
 
 	const data = {
 		type: 'EthPlaExport',
-		version: 2,
+		version: 3,
 		commands,
 	};
 
 	const filename = [
 		'ethpla',
 		getGame()?.world?.id,
-		'chat_commands',
+		'triggers',
 		withMacro ? 'with_macros' : '',
 		new Date().toString(),
 	].filterJoin('-');
@@ -186,14 +183,18 @@ async function importChatCommands(data: string, withMacros: boolean) {
 	const imported = JSON.parse(data) as {
 		version: number;
 		type: string;
-		commands: ImportChatCommand[];
+		commands: ExportTriggerMacro[];
 	};
+	const triggers = await getTriggers();
+	if (triggers === undefined) {
+		return;
+	}
 	if (imported.type !== 'EthPlaExport') {
 		throw new Error(
 			localize('ethereal-plane.ui.commands.import.wrong-file-error'),
 		);
 	}
-	if (imported.version > 2 || imported.version < 1) {
+	if (imported.version > 3 || imported.version < 3) {
 		throw new Error(
 			localize('ethereal-plane.ui.commands.import.wrong-version-error'),
 		);
@@ -206,19 +207,34 @@ async function importChatCommands(data: string, withMacros: boolean) {
 			{ type: 'Macro', name: 'Ethereal Plane' },
 		);
 	}
+	const triggerMacros: TriggerMacro[] = [];
 	for (const command of imported.commands) {
-		if (typeof command.macro !== 'string' && withMacros) {
-			command.macro.folder = folder?.id;
-			command.macro = (await Macro.create(command.macro))?.id ?? { folder: undefined };
-		} else {
-			command.macro = '';
+		if (!triggers.find(trigger => trigger.id === command.id)) {
+			// Do not import macros for triggers we don't have
+			continue;
 		}
-		if (imported.version === 1) {
-			// @ts-expect-error get off my case
-			command.commandAliases = [];
+		if (typeof command.macro === 'string') {
+			const macro = getGame()?.macros.get(command.macro);
+			if (macro !== undefined) {
+				triggerMacros.push({
+					id: command.id,
+					macro: macro.id,
+				});
+			}
+		} else {
+			if (folder !== undefined) {
+				command.macro.folder = folder;
+			}
+			const macro = (await Macro.create(command.macro))?.id;
+			if (macro !== undefined) {
+				triggerMacros.push({
+					id: command.id,
+					macro,
+				});
+			}
 		}
 	}
-	const commandData = getSetting('chat-commands') as ChatCommand[];
-	commandData.push(...(imported.commands as unknown as ChatCommand[]));
-	await setSetting('chat-commands', commandData);
+	const commandData = getSetting('chat-trigger-macros') as TriggerMacro[];
+	commandData.push(...(triggerMacros));
+	await setSetting('chat-trigger-macros', commandData);
 }

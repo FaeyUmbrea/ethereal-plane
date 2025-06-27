@@ -1,3 +1,14 @@
+## Version 3.0.0
+
+### Added
+
+- New feature for serverside triggers has been added to allow future expansion, like channel points and donation integration
+
+### Removed
+
+- Chat Commands have been removed in favor of the new Triggers feature
+- Local Mode compatibility has been discontinued 
+
 ## Version 2.5.0
 
 ### Changed

@@ -33,3 +33,5 @@ export interface TriggerConfig {
 }
 
 export interface TriggerMacro { id: string; macro: string }
+
+export interface ExportTriggerMacro { id: string; macro: string | Macro }
