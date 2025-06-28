@@ -1,7 +1,7 @@
 <script>
 	import { localize } from '#runtime/util/i18n';
 	import { tooltip } from '@svelte-plugins/tooltips';
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { fetchFeatures } from '../../server/patreon.js';
 	import { disconnectClient } from '../../server/patreon_auth.ts';
 	import { FRONTEND_URL } from '../../utils/const.js';
@@ -26,7 +26,9 @@
 		polls: pollsEnabled,
 	};
 
-	features = fetchFeatures();
+	onMount(async () => {
+		features = await fetchFeatures();
+	});
 
 	function login() {
 		Hooks.call('ethereal-plane.patreon-login');
