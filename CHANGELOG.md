@@ -1,3 +1,9 @@
+## Version 2.5.1
+
+### Fixed
+
+- Youtube ID and Poll Settings won't show up
+
 ## Version 2.5.0
 
 ### Changed
