@@ -89,6 +89,9 @@
 					"button": "Export",
 					"title": "Ethereal Plane | Export with Buttons?",
 					"content": "Do you want to export the Macros? (Otherwise Macro data will be deleted)"
+				},
+				"export-legacy": {
+					"button": "Export Legacy Config",
 				}
 			},
 			"login": {

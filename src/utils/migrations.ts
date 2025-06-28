@@ -23,7 +23,7 @@ export async function migrate(version: number) {
 	await setSetting('version', SETTINGS_VERSION);
 }
 
-function exportChatCommands() {
+export function exportChatCommands() {
 	// @ts-expect-error legacy migration
 	(game as ReadyGame).settings.register('ethereal-plane', 'chat-commands', {
 		type: Object,

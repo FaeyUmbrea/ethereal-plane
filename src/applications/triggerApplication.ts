@@ -39,6 +39,15 @@ export class TriggerApplication extends SvelteApplication {
 
 		buttons.unshift(
 			{
+				icon: 'fas fa-file-export',
+				label: localize('ethereal-plane.ui.commands.export-legacy.button'),
+				class: 'export-data',
+
+				onclick() {
+					import('../utils/migrations.ts').then(migrations => migrations.exportChatCommands());
+				},
+			},
+			{
 				icon: 'fas fa-file-import',
 				class: 'import-data',
 				label: localize('ethereal-plane.ui.commands.import.button'),
