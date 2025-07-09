@@ -6,7 +6,6 @@
 	import { getSetting, setSetting } from '../../utils/settings.ts';
 
 	export let trigger: TriggerConfig;
-	export let index: number;
 
 	let macro: Macro | undefined;
 

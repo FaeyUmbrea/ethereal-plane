@@ -1,5 +1,4 @@
 import type PollApplication from './applications/pollApplication.js';
-import { localize } from '#runtime/util/i18n';
 import { nanoid } from 'nanoid';
 import { registerHandlers } from './handlers';
 import { getConnectionManager } from './server/patreon.js';
@@ -79,23 +78,3 @@ Hooks.on('init', () => {
 Hooks.once('ready', () => registerMenus());
 
 Hooks.on('obs-utils.init', registerOverlay);
-
-Hooks.once('renderSidebar', async () => {
-	if (
-		getGame().user?.isGM
-		&& getSetting('enable-chat-tab')
-		&& getSetting('enabled')
-	) {
-		const { addSidebar } = await import('./utils/sidebar.js');
-		const StreamChat = (await import('./svelte/components/StreamChat.svelte'))
-			.default;
-
-		await addSidebar(
-			'directory ep-chat',
-			localize('ethereal-plane.ui.chat-tab-name'),
-			'fas fa-message-bot',
-			'combat',
-			StreamChat,
-		);
-	}
-});
