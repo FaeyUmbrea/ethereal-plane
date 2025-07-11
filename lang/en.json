@@ -10,8 +10,8 @@
 				"Hint": "If this is not checked, the module will not connect to the server"
 			},
 			"chat-commands-active": {
-				"Name": "Enable Chat Commands",
-				"Hint": "If this is not checked, the module will not run chat commands"
+				"Name": "Enable Triggers",
+				"Hint": "If this is not checked, the module will not run triggers"
 			},
 			"send-rolls-to-chat": {
 				"Name": "Send Rolls to Chat",
@@ -33,8 +33,8 @@
 				"Label": "Open Setup Menu"
 			},
 			"chat-commands": {
-				"Name": "Chat Commands",
-				"Label": "Open Chat Command Setup"
+				"Name": "Triggers",
+				"Label": "Open Trigger Setup"
 			},
 			"chat-message-template": {
 				"Name": "Chat Message Template"
@@ -62,7 +62,7 @@
 			"hosted-tab": "Hosted",
 			"local-tab": "Local Server",
 			"config-application-title": "Ethereal Plane | Connection Config",
-			"chat-command-application-title": "Ethereal Plane | Chat Command Config",
+			"chat-command-application-title": "Ethereal Plane | Trigger Config",
 			"login-application-title": "Ethereal Plane | Hosted Login",
 			"notification-application-title": "Ethereal Plane | Notification Center",
 			"polls-application-title": "Ethereal Plane | Polls",
@@ -78,7 +78,7 @@
 				"import": {
 					"button": "Import",
 					"title": "Ethereal Plane | Import Data",
-					"hint1": "You are about to import and exported Chat Command configuration.",
+					"hint1": "You are about to import and exported Trigger configuration.",
 					"hint2": "Data will be appended to the list. Please choose if you want to import Macros as well.",
 					"data-file-error": "You did not import a data file!",
 					"with-macros": "Import /w Macros",
@@ -111,7 +111,7 @@
 			"title": "Title",
 			"open": "Open",
 			"copy": "Copy",
-			"chat-command-alias-application-title": "Chat Command Alias Editor"
+			"chat-command-alias-application-title": "Trigger Alias Editor"
 		},
 		"notifications": {
 			"login-copy": "Login link copied to clipboard",

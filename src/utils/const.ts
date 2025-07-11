@@ -16,4 +16,4 @@ export const CONFIG_ENDPOINT = `${API_URL}api/v2/config`;
 
 export const TRIGGER_ENDPOINT = `${API_URL}api/v2/trigger`;
 
-export const SETTINGS_VERSION = 2;
+export const SETTINGS_VERSION = 1;
