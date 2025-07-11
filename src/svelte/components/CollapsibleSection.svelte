@@ -11,13 +11,11 @@
 
 <div class='collapsable-section'>
 	<section class='header' on:click={click} role='none'>
-		▼<span>{title}</span>▼
+		<span>{title}</span>
 	</section>
-	{#if !collapsed}
-		<section class='content' in:slide out:slide>
-			<slot></slot>
-		</section>
-	{/if}
+	<section class='content' in:slide out:slide>
+		<slot></slot>
+	</section>
 </div>
 
 <style lang='scss'>

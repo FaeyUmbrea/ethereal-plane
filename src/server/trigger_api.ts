@@ -37,13 +37,8 @@ export async function enableTriggerListeners(handleTriggerReceived: (chatMessage
 	});
 
 	socket.on('trigger', async (triggerEvent: TriggerEvent, callback: (trigger_lock: boolean) => void | Promise<void>) => {
-		switch (triggerEvent.trigger_type) {
-			case 'ChatCommand': {
-				const trigger_lock = await handleTriggerReceived(triggerEvent as ChatTriggerEvent);
-				await callback(trigger_lock);
-				break;
-			}
-		}
+		const trigger_lock = await handleTriggerReceived(triggerEvent as ChatTriggerEvent);
+		await callback(trigger_lock);
 	});
 }
 

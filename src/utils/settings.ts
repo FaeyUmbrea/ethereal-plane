@@ -66,17 +66,6 @@ class EtherealPlaneSettings extends TJSGameSettings {
 			}),
 		);
 		settings.push(
-			createSetting('enable-chat-tab', {
-				type: Boolean,
-				scope: 'world',
-				config: true,
-				default: false,
-				onChange: () => {
-					debouncedReload();
-				},
-			}),
-		);
-		settings.push(
 			createSetting('authentication-token', {
 				type: String,
 				scope: 'client',

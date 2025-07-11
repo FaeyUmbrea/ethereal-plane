@@ -39,7 +39,7 @@ export class TriggerApplication extends SvelteApplication {
 
 		buttons.unshift(
 			{
-				icon: 'fas fa-file-export',
+				icon: 'far fa-file-arrow-up',
 				label: localize('ethereal-plane.ui.commands.export-legacy.button'),
 				class: 'export-data',
 

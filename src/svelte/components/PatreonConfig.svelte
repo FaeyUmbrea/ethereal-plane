@@ -1,4 +1,6 @@
 <script lang='ts'>
+	import type { MinimalWritable } from '#runtime/svelte/store/util';
+	import type { ModuleConfig } from '../../utils/types.ts';
 	import { localize } from '#runtime/util/i18n';
 	import { tooltip } from '@svelte-plugins/tooltips';
 	import { onDestroy, onMount } from 'svelte';
@@ -9,7 +11,7 @@
 	import InfoBox from './InfoBox.svelte';
 
 	const key = settings.getStore('authentication-token');
-	const pollsEnabled = settings.getStore('polls-enabled');
+	const pollsEnabled = settings.getStore('polls-enabled') as MinimalWritable<boolean> | undefined;
 	const moduleEnabled = settings.getStore('enabled');
 
 	let clientIdExists = false;
@@ -21,10 +23,7 @@
 			clientIdExists = !!(await v.text());
 		});
 
-	let features = {
-		youtube: false,
-		polls: pollsEnabled,
-	};
+	let features: ModuleConfig;
 
 	onMount(async () => {
 		features = await fetchFeatures();
@@ -67,15 +66,15 @@
 		Hooks.off('ethereal-plane.patreon-disconnected', hook2);
 	});
 
-	/**
-	 * @type {string}
-	 */
-	let youtubeID;
+	let youtubeID: string;
 
 	const ytRegex = /(.*?)(^|\/|v=)([\w-]{11})(.*)/i;
 
 	function setYoutubeID() {
 		const id = youtubeID.match(ytRegex);
+		if (id === null) {
+			return;
+		}
 		youtubeID = id.length >= 4 ? id[3] : '';
 		if (youtubeID) {
 			Hooks.call('ethereal-plane.set-youtube-id', youtubeID);
@@ -96,7 +95,7 @@
 			>
 		</div>
 		{#if $moduleEnabled}
-			{#if features.polls}
+			{#if features?.features.poll?.includes('editors')}
 				<hr />
 				<section class='settings'>
 					<span>{localize('ethereal-plane.settings.polls-enabled.Name')}</span>
@@ -104,7 +103,7 @@
 				</section>
 			{/if}
 
-			{#if features.youtube}
+			{#if features?.providers.includes('youtube')}
 				<section class='settings'>
 					<span>{localize('ethereal-plane.strings.youtube-id')}</span>
 					<div
@@ -114,6 +113,7 @@
 							position: 'top',
 							autoPosition: true,
 							align: 'center',
+							// @ts-expect-error why tho
 							style: { backgroundColor: 'white', color: 'black' },
 						}}
 					>

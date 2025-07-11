@@ -25,7 +25,7 @@
 				"Name": "Mode",
 				"localchat": "Hosted Polls /w Local Chat Bridge",
 				"localonly": "Local Bridge only",
-				"patreon": "Hosted"
+				"patreon": "Server Settings"
 			},
 			"setup": {
 				"Name": "Setup",
@@ -91,7 +91,7 @@
 					"content": "Do you want to export the Macros? (Otherwise Macro data will be deleted)"
 				},
 				"export-legacy": {
-					"button": "Export Legacy Config",
+					"button": "Export Legacy Config"
 				}
 			},
 			"login": {

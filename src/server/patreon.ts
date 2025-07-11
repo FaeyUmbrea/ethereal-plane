@@ -7,13 +7,13 @@ import type {
 	ChatMessageCallback,
 	ChatTriggerCallback,
 	ChatTriggerEvent,
+	ModuleConfig,
 } from '../utils/types.ts';
 import type {
 	ChatMessage,
 } from './chat_api.js';
 import type { PollData } from './poll_api.js';
 import { localize } from '#runtime/util/i18n';
-import { chatMessages } from '../svelte/stores/chatMessages.ts';
 import { processTrigger } from '../utils/chatCommands.ts';
 import { API_URL } from '../utils/const.js';
 import {
@@ -61,23 +61,6 @@ export class PatreonConnector {
 		});
 		Hooks.on('ethereal-plane.reconnect', () => this.reconnect());
 
-		this.messageListeners.push(
-			(message: string, user: string, _subscribed: boolean, id: string) => {
-				chatMessages.update(
-					(messages: { user: string; message: string; id: string }[]) => {
-						messages.push({ user, message, id });
-						return messages;
-					},
-				);
-			},
-		);
-
-		this.messageDeletionListeners.push((id) => {
-			chatMessages.update((messages) => {
-				return messages.filter(message => message.id !== id);
-			});
-		});
-
 		this.chatTriggerListeners.push((trigger: ChatTriggerEvent) => {
 			return processTrigger(trigger);
 		});
@@ -120,12 +103,6 @@ export class PatreonConnector {
 		}
 		log('Ethereal Plane | Client OK');
 		await fetchFeatures();
-		if (getSetting('enable-chat-tab') || getSetting('enabled')) {
-			log('Enable Chat Listener');
-			await this.enableChatListener();
-		} else {
-			await this.disableChatListener();
-		}
 		if (getSetting('chat-commands-active') || getSetting('enabled')) {
 			log('Enable Trigger Listener');
 			await this.enableTriggerListener();
@@ -294,12 +271,17 @@ export class PatreonConnector {
 	}
 }
 
-export async function fetchFeatures() {
+export async function fetchFeatures(): Promise<ModuleConfig> {
 	const access_token = get_token()?.access_token;
 	if (!access_token) {
-		return;
+		return {
+			features: {
+				poll: [],
+			},
+			providers: [],
+		};
 	}
-	return (await fetch(`${API_URL}api/v2/Features`, {
+	return (await fetch(`${API_URL}api/v2/config/module`, {
 		headers: { Authorization: `Bearer ${access_token}` },
 	})).json();
 }
