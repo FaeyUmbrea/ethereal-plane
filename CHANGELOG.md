@@ -6,8 +6,9 @@
 
 ### Removed
 
-- Chat Commands have been removed in favor of the new Triggers feature
-- Local Mode compatibility has been discontinued 
+- In-Module Chat Commands have been removed in favor of the new Triggers feature
+- Local Mode compatibility has been discontinued
+- The Chat Tab has been removed 
 
 ## Version 2.5.0
 
