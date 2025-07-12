@@ -61,7 +61,7 @@
 			"status": "Connection Status",
 			"poll-status": "Polls",
 			"chat-status": "Chat",
-			"trigger-status": "Triggers",
+			"trigger-status": "Triggers (including Chat Command Triggers)",
 			"connected": "Connected",
 			"disconnected": "Disconnected",
 			"inactive":  "Inactive",

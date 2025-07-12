@@ -1,3 +1,22 @@
+## Version 3.0.1
+
+### Added
+
+- A link to the documentation was added to the top of the config menu
+- Status indicators were added to the config menu showing the status of polls, chat and triggers
+  - Connected
+  - Disconnected (due to an error or otherwise)
+  - Connecting
+  - Inactive (not currently expected to be running)
+
+Note: The "Chat" connection does not need to be active for Chat Command Triggers to work
+
+### Changed
+
+- Several links in the Config have been adjusted
+  - References to Patreon have been removed as subscription is not required
+  - Open user profile was repurposed to "Go to Control Panel"
+
 ## Version 3.0.0
 
 ### Added
