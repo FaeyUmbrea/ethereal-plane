@@ -1,5 +1,6 @@
 import { API_URL, CHAT_ENDPOINT, CONFIG_ENDPOINT, SOCKET_ENDPOINT } from '../utils/const.ts';
 import { get_token, handle_refresh_error, refresh, wrapClient } from './patreon_auth.ts';
+import { chatStatus, ServerStatus } from './status.ts';
 
 export interface ChatMessage {
 	display_name: string;
@@ -35,6 +36,7 @@ export async function enableChatListeners(handleChatMessageReceived: (chatMessag
 		return;
 	}
 	let once = true;
+	chatStatus.set(ServerStatus.Connecting);
 	socket = io(`${API_URL}chat`, {
 		path: SOCKET_ENDPOINT,
 		reconnection: true,
@@ -43,6 +45,16 @@ export async function enableChatListeners(handleChatMessageReceived: (chatMessag
 		auth: {
 			token: token.access_token,
 		},
+	});
+
+	socket.on('disconnect', (reason) => {
+		if (reason === 'io client disconnect') {
+			chatStatus.set(ServerStatus.Inactive);
+		}
+		chatStatus.set(ServerStatus.Disconnected);
+	});
+	socket.on('connect', () => {
+		chatStatus.set(ServerStatus.Connected);
 	});
 
 	socket.on('connect_error', async () => {

@@ -1,6 +1,7 @@
 import type { ChatTriggerEvent, TriggerConfig, TriggerEvent } from '../utils/types.ts';
 import { API_URL, SOCKET_ENDPOINT, TRIGGER_ENDPOINT } from '../utils/const.ts';
 import { get_token, handle_refresh_error, refresh, wrapClient } from './patreon_auth.ts';
+import { ServerStatus, triggerStatus } from './status.ts';
 
 let socket: ReturnType<typeof io> | undefined;
 
@@ -9,6 +10,7 @@ export async function enableTriggerListeners(handleTriggerReceived: (chatMessage
 	if (!token) {
 		return;
 	}
+	triggerStatus.set(ServerStatus.Connecting);
 	let once = true;
 	socket = io(`${API_URL}trigger`, {
 		path: SOCKET_ENDPOINT,
@@ -18,6 +20,16 @@ export async function enableTriggerListeners(handleTriggerReceived: (chatMessage
 		auth: {
 			token: token.access_token,
 		},
+	});
+
+	socket.on('disconnect', (reason) => {
+		if (reason === 'io client disconnect') {
+			triggerStatus.set(ServerStatus.Inactive);
+		}
+		triggerStatus.set(ServerStatus.Disconnected);
+	});
+	socket.on('connect', () => {
+		triggerStatus.set(ServerStatus.Connected);
 	});
 
 	socket.on('connect_error', async () => {

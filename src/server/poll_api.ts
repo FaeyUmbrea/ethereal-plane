@@ -1,5 +1,6 @@
 import { API_URL, POLL_ENDPOINT, SOCKET_ENDPOINT } from '../utils/const.ts';
 import { get_token, handle_refresh_error, refresh, wrapClient } from './patreon_auth.ts';
+import { pollStatus, ServerStatus } from './status.ts';
 
 export interface PollData {
 	id: string;
@@ -104,6 +105,7 @@ export async function enablePollListeners(pollUpdateCallback: (data: PollData) =
 		return;
 	}
 	let once = true;
+	pollStatus.set(ServerStatus.Connecting);
 	socket = io(`${API_URL}poll`, {
 		path: SOCKET_ENDPOINT,
 		reconnection: true,
@@ -113,7 +115,15 @@ export async function enablePollListeners(pollUpdateCallback: (data: PollData) =
 			token: token.access_token,
 		},
 	});
-
+	socket.on('disconnect', (reason) => {
+		if (reason === 'io client disconnect') {
+			pollStatus.set(ServerStatus.Inactive);
+		}
+		pollStatus.set(ServerStatus.Disconnected);
+	});
+	socket.on('connect', () => {
+		pollStatus.set(ServerStatus.Connected);
+	});
 	socket.on('connect_error', async () => {
 		if (once && socket !== undefined) {
 			const newToken = (await refresh(token.refresh_token)).refresh_token;
@@ -141,4 +151,5 @@ export async function enablePollListeners(pollUpdateCallback: (data: PollData) =
 
 export function disablePollListeners() {
 	socket?.disconnect();
+	pollStatus.set(ServerStatus.Inactive);
 }

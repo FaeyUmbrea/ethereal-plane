@@ -4,10 +4,12 @@
 	import { ApplicationShell } from '#runtime/svelte/component/application';
 	import { localize } from '#runtime/util/i18n';
 	import { tooltip } from '@svelte-plugins/tooltips';
+	import { chatStatus, pollStatus, triggerStatus } from '../server/status.ts';
 	import { settings } from '../utils/settings.ts';
 	import CollapsibleSection from './components/CollapsibleSection.svelte';
 	import InfoBox from './components/InfoBox.svelte';
 	import PatreonConfig from './components/PatreonConfig.svelte';
+	import StatusIcon from './components/StatusIcon.svelte';
 
 	const sendRollsToChat = settings.getStore<boolean>('send-rolls-to-chat');
 	const chatMessageTemplate = settings.getStore<string>('chat-message-template');
@@ -20,11 +22,34 @@
 
 <ApplicationShell bind:elementRoot={elementRoot}>
 	<main>
-		{#if !$moduleEnabled}
-			<InfoBox variant='error'>
-				{localize('ethereal-plane.strings.disabled')}
-			</InfoBox>
-		{/if}
+
+		<CollapsibleSection
+			collapsed={false}
+			title={localize('ethereal-plane.ui.status')}
+		>
+			<section>
+				{#if !$moduleEnabled}
+					<InfoBox variant='error'>
+						{localize('ethereal-plane.strings.disabled')}
+					</InfoBox>
+				{/if}
+				<div class='status'>
+					<span>{localize('ethereal-plane.ui.poll-status')}</span>
+					<span class='status-text'>{localize(`ethereal-plane.ui.${$pollStatus}`)}</span>
+					<StatusIcon status={$pollStatus} />
+				</div>
+				<div class='status'>
+					<span>{localize('ethereal-plane.ui.chat-status')}</span>
+					<span class='status-text'>{localize(`ethereal-plane.ui.${$chatStatus}`)}</span>
+					<StatusIcon status={$chatStatus} />
+				</div>
+				<div class='status'>
+					<span>{localize('ethereal-plane.ui.trigger-status')}</span>
+					<span class='status-text'>{localize(`ethereal-plane.ui.${$triggerStatus}`)}</span>
+					<StatusIcon status={$triggerStatus} />
+				</div>
+			</section>
+		</CollapsibleSection>
 		<CollapsibleSection
 			collapsed={false}
 			title={localize('ethereal-plane.ui.general-tab')}
@@ -108,4 +133,14 @@
 			resize: vertical;
 		}
 
+		.status-text {
+			text-align: right;
+		}
+
+		.status {
+			width: 100%;
+			display: grid;
+			grid-template-columns: auto 70px 25px;
+			grid-gap: 10px;
+		}
 </style>

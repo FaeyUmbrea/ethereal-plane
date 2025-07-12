@@ -85,13 +85,13 @@
 {#if clientIdExists}
 	{#if !!$key}
 		<div class='buttons'>
-			<button on:click={() => open_patreon_site('Account/Manage')}
-			>{localize('ethereal-plane.strings.profile')}</button
+			<button on:click={() => open_patreon_site('')}
+			>{localize('ethereal-plane.strings.profile')}<i
+				class='fas fa-wrench valignmid'
+			></i></button
 			>
 			<button on:click={logout}
-			>{localize('ethereal-plane.strings.log-out')}&nbsp;<i
-				class='fa-brands fa-patreon orange valignmid'
-			></i></button
+			>{localize('ethereal-plane.strings.log-out')}</button
 			>
 		</div>
 		{#if $moduleEnabled}
@@ -155,15 +155,11 @@
 			>
 		</InfoBox>
 		<button on:click={login}
-		>{localize('ethereal-plane.strings.log-in')}&nbsp;<i
-			class='fa-brands fa-patreon orange'
-		></i>
+		>{localize('ethereal-plane.strings.log-in')}
 		</button>
 
 		<button on:click={disconnect}
-		>{localize('ethereal-plane.strings.disconnect')}&nbsp;<i
-			class='fa-brands fa-patreon orange'
-		></i>
+		>{localize('ethereal-plane.strings.disconnect')}
 		</button>
 	{/if}
 {:else}
@@ -187,9 +183,7 @@
 	>{localize('ethereal-plane.strings.account-setup')}</button
 	>
 	<button on:click={connect}
-	>{localize('ethereal-plane.strings.connect')}&nbsp;<i
-		class='fa-brands fa-patreon orange'
-	></i>
+	>{localize('ethereal-plane.strings.connect')}
 	</button>
 {/if}
 
