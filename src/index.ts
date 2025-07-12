@@ -38,7 +38,8 @@ function buildButtons(buttons: any) {
 		title: 'ethereal-plane.ui.open-polls-button',
 		toggle: true,
 		order: 100,
-		onChange: async () => await openPolls(pollsButton),
+		// @ts-expect-error v12 compat
+		onClick: async () => await openPolls(pollsButton),
 	};
 	if ((game as ReadyGame).version.startsWith('12.')) {
 		buttonGroup?.tools.push(pollsButton);
