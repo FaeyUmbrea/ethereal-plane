@@ -1,4 +1,4 @@
-# Looking for a guide? Check out the [Wiki](https://github.com/FaeyUmbrea/ethereal-plane/wiki).
+# Looking for a guide? Check out the [Docs](https://docs.void.monster/ethereal-plane/getting-started/).
 
 ## Want to support the Module? Check the [Patreon](https://patreon.com/voidmonster)
 
