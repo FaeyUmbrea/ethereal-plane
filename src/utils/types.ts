@@ -16,7 +16,7 @@ export interface TriggerEvent {
 
 export interface ChatTriggerEvent extends TriggerEvent {
 	type: 'ChatCommand';
-	macro_arguments: unknown;
+	macro_arguments: object;
 	raw_message: string;
 	message_overflow: string[];
 	message_parts: string[];

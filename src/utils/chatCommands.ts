@@ -10,6 +10,8 @@ export async function processTrigger(
 
 	if (!macro) return true;
 
-	const result = await getGame().macros?.get(macro)?.execute(command.macro_arguments as Macro.UnknownScope);
+	const macro_args = command as unknown;
+
+	const result = await getGame().macros?.get(macro)?.execute(macro_args as Macro.UnknownScope);
 	return result === undefined || !!result;
 }
