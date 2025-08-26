@@ -1,3 +1,9 @@
+## Version 3.0.3
+
+### Fixed
+
+- Fixed a bug that caused the youtube id select to not appear
+
 ## Version 3.0.2
 
 ### Fixed

@@ -103,7 +103,7 @@
 				</section>
 			{/if}
 
-			{#if features?.providers.includes('youtube')}
+			{#if features?.providers.includes('google')}
 				<section class='settings'>
 					<span>{localize('ethereal-plane.strings.youtube-id')}</span>
 					<div
