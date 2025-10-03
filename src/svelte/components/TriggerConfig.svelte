@@ -1,13 +1,13 @@
+<svelte:options runes={true} />
 <script lang='ts'>
 	import type { TriggerConfig, TriggerMacro } from '../../utils/types.ts';
-	import { TJSDocument } from '#runtime/svelte/store/fvtt/document';
 	import { onMount } from 'svelte';
 	import { getGame } from '../../utils/helpers.ts';
 	import { getSetting, setSetting } from '../../utils/settings.ts';
 
-	export let trigger: TriggerConfig;
+	let { trigger = $bindable() }: { trigger: TriggerConfig } = $props();
 
-	let macro: Macro | undefined;
+	let macro: Macro | undefined = $state();
 
 	function getMacro() {
 		const macro_map = getSetting('chat-trigger-macros') as TriggerMacro[];
@@ -32,28 +32,31 @@
 		await setSetting('chat-trigger-macros', macros);
 	}
 
-	const doc = new TJSDocument<Macro>();
-
-	async function dropMacro(event: TJSDocument.Data.UUIDDataTransfer) {
+	async function dropMacro(event: DragEvent) {
+		if (!event.dataTransfer) {
+			return;
+		}
 		try {
-			await doc.setFromDataTransfer(
-				JSON.parse(event.dataTransfer.getData('text/plain')),
-			);
-			const macro_data = doc.get();
-			if (macro_data && macro_data.id) {
-				const macro_map = getSetting('chat-trigger-macros') as TriggerMacro[];
-				const macro_entry = macro_map?.find(data => data.id === trigger.id);
-				if (macro_entry) {
-					macro_entry.macro = macro_data.id;
-				} else {
-					macro_map.push({
-						id: trigger.id,
-						macro: macro_data.id,
-					});
+			const data = JSON.parse(event.dataTransfer.getData('text/plain'));
+			if (Object.keys(data).includes('type') && Object.keys(data).includes('uuid')) {
+				if (data.type === 'Macro') {
+					const macro_data = (game as ReadyGame).macros.get(data.uuid.split('.')[1]);
+					if (macro_data && macro_data.id) {
+						const macro_map = getSetting('chat-trigger-macros') as TriggerMacro[];
+						const macro_entry = macro_map?.find(data => data.id === trigger.id);
+						if (macro_entry) {
+							macro_entry.macro = macro_data.id;
+						} else {
+							macro_map.push({
+								id: trigger.id,
+								macro: macro_data.id,
+							});
+						}
+						await setSetting('chat-trigger-macros', macro_map);
+					}
+					macro = macro_data;
 				}
-				await setSetting('chat-trigger-macros', macro_map);
 			}
-			macro = macro_data;
 		} catch (err) {
 			console.error(err);
 		}
@@ -89,9 +92,9 @@
 <section
 	role='none'
 	class='macro'
-	on:auxclick={deleteMacro}
-	on:click={openMacro}
-	on:drop|preventDefault|stopPropagation={dropMacro}
+	onauxclick={deleteMacro}
+	onclick={openMacro}
+	ondrop={dropMacro}
 >
 	{#if macro}
 		<section class='macro'>

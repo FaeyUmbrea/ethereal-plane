@@ -1,47 +1,38 @@
-import { SvelteApplication } from '#runtime/svelte/application';
-import DocsButton from '../svelte/components/DocsButton.svelte';
 import ConfigUI from '../svelte/ConfigUI.svelte';
 import { DOCS_URL } from '../utils/const.ts';
+import { SvelteApplicationMixin } from './mixin.svelte.ts';
 
-// @ts-expect-error get off my case
-export class ConfigApplication extends SvelteApplication {
+export class ConfigApplication extends SvelteApplicationMixin(foundry.applications.api.ApplicationV2) {
 	/** @static */
-	static override get defaultOptions() {
-		return foundry.utils.mergeObject(super.defaultOptions, {
-			classes: ['eppolls'],
-			minimizable: true,
+
+	protected override root = ConfigUI;
+
+	static override DEFAULT_OPTIONS = {
+		classes: ['eppolls'],
+
+		position: {
 			width: 600,
 			height: 610,
-			id: 'config-application',
-			title: 'ethereal-plane.ui.config-application-title',
+		},
+		window: {
+			minimizable: true,
 			resizable: true,
-			positionOrtho: false,
-			transformOrigin: null,
-			svelte: {
-				class: ConfigUI,
-				target: document.body,
-				intro: true,
-			},
-		});
-	}
-
-	override _getHeaderButtons() {
-		const buttons = super._getHeaderButtons();
-
-		buttons.unshift(
-			{
-				icon: 'fas fa-book',
-				class: 'ethereal-plane-docs-button',
-				title: 'ethereal-plane.ui.docs',
-				label: 'ethereal-plane.ui.docs',
-				svelte: {
-					class: DocsButton,
+			controls: [
+				{
+					icon: 'fas fa-book',
+					label: 'ethereal-plane.ui.docs',
+					action: 'open_docs',
 				},
-				onclick() {
-					window.open(DOCS_URL, '_blank');
-				},
-			},
-		);
-		return buttons;
+			],
+		},
+		id: 'config-application',
+		title: 'ethereal-plane.ui.config-application-title',
+		actions: {
+			open_docs: ConfigApplication.open_docs,
+		},
+	};
+
+	static open_docs() {
+		window.open(DOCS_URL, '_blank');
 	}
 }

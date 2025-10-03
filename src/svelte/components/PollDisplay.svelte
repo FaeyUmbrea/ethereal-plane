@@ -1,13 +1,12 @@
+<svelte:options runes={true} />
 <script lang='ts'>
-	import type { MinimalWritable } from '#runtime/svelte/store/util';
-	import { localize } from '#runtime/util/i18n';
 	import { getConnectionManager } from '../../server/patreon.ts';
 	import { Poll, PollStatus } from '../../utils/polls.ts';
 	import { setSetting, settings } from '../../utils/settings.ts';
 
-	const pollStore: MinimalWritable<Poll> = settings.getStore('currentPoll')!;
+	const pollStore = settings.getStore('currentPoll')!;
 
-	const disableEnd = false;
+	const disableEnd = $state(false);
 
 	function abortPoll() {
 		const poll = $pollStore;
@@ -41,15 +40,15 @@
 	<div class='buttons'>
 		{#if $pollStore.status === PollStatus.starting}
 			<button id='end' disabled
-			>{localize('ethereal-plane.ui.starting')}</button
+			>{game.i18n?.localize('ethereal-plane.ui.starting')}</button
 			>
 		{:else if $pollStore.status <= PollStatus.started}
-			<button id='abort' on:click={abortPoll}
-			>{localize('ethereal-plane.ui.abort')}</button
+			<button id='abort' onclick={abortPoll}
+			>{game.i18n?.localize('ethereal-plane.ui.abort')}</button
 			>
 		{:else}
-			<button id='end' disabled={disableEnd} on:click={endPoll}
-			>{localize('ethereal-plane.ui.end')}</button
+			<button id='end' disabled={disableEnd} onclick={endPoll}
+			>{game.i18n?.localize('ethereal-plane.ui.end')}</button
 			>
 		{/if}
 	</div>

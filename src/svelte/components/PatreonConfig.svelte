@@ -1,7 +1,6 @@
+<svelte:options runes={true} />
 <script lang='ts'>
-	import type { MinimalWritable } from '#runtime/svelte/store/util';
 	import type { ModuleConfig } from '../../utils/types.ts';
-	import { localize } from '#runtime/util/i18n';
 	import { tooltip } from '@svelte-plugins/tooltips';
 	import { onDestroy, onMount } from 'svelte';
 	import { fetchFeatures } from '../../server/patreon.js';
@@ -11,10 +10,10 @@
 	import InfoBox from './InfoBox.svelte';
 
 	const key = settings.getStore('authentication-token');
-	const pollsEnabled = settings.getStore('polls-enabled') as MinimalWritable<boolean> | undefined;
+	const pollsEnabled = settings.getStore('polls-enabled');
 	const moduleEnabled = settings.getStore('enabled');
 
-	let clientIdExists = false;
+	let clientIdExists = $state(false);
 	foundry.utils
 		.fetchWithTimeout(
 			`${window.location.protocol}//${window.location.host}/modules/ethereal-plane/storage/client_id.txt`,
@@ -23,7 +22,7 @@
 			clientIdExists = !!(await v.text());
 		});
 
-	let features: ModuleConfig;
+	let features: ModuleConfig | undefined = $state();
 
 	onMount(async () => {
 		features = await fetchFeatures();
@@ -66,13 +65,13 @@
 		Hooks.off('ethereal-plane.patreon-disconnected', hook2);
 	});
 
-	let youtubeID: string;
+	let youtubeID: string | undefined = $state();
 
 	const ytRegex = /(.*?)(^|\/|v=)([\w-]{11})(.*)/i;
 
 	function setYoutubeID() {
-		const id = youtubeID.match(ytRegex);
-		if (id === null) {
+		const id = youtubeID?.match(ytRegex);
+		if (id === null || id === undefined) {
 			return;
 		}
 		youtubeID = id.length >= 4 ? id[3] : '';
@@ -85,31 +84,31 @@
 {#if clientIdExists}
 	{#if !!$key}
 		<div class='buttons'>
-			<button on:click={() => open_patreon_site('')}
-			>{localize('ethereal-plane.strings.profile')}<i
+			<button onclick={() => open_patreon_site('')}
+			>{game.i18n?.localize('ethereal-plane.strings.profile')}<i
 				class='fas fa-wrench valignmid'
 			></i></button
 			>
-			<button on:click={logout}
-			>{localize('ethereal-plane.strings.log-out')}</button
+			<button onclick={logout}
+			>{game.i18n?.localize('ethereal-plane.strings.log-out')}</button
 			>
 		</div>
 		{#if $moduleEnabled}
 			{#if features?.features.poll?.includes('editors')}
 				<hr />
 				<section class='settings'>
-					<span>{localize('ethereal-plane.settings.polls-enabled.Name')}</span>
+					<span>{game.i18n?.localize('ethereal-plane.settings.polls-enabled.Name')}</span>
 					<input bind:checked={$pollsEnabled} type='checkbox' />
 				</section>
 			{/if}
 
 			{#if features?.providers.includes('google')}
 				<section class='settings'>
-					<span>{localize('ethereal-plane.strings.youtube-id')}</span>
+					<span>{game.i18n?.localize('ethereal-plane.strings.youtube-id')}</span>
 					<div
 						class='buttonbox'
 						use:tooltip={{
-							content: localize('ethereal-plane.strings.youtube-id-hint'),
+							content: game.i18n?.localize('ethereal-plane.strings.youtube-id-hint'),
 							position: 'top',
 							autoPosition: true,
 							align: 'center',
@@ -120,11 +119,11 @@
 						<input
 							bind:value={youtubeID}
 							type='text'
-							placeholder={localize(
+							placeholder={game.i18n?.localize(
 								'ethereal-plane.strings.youtube-id-placeholder',
 							)}
 						/>
-						<button on:click={setYoutubeID}
+						<button aria-label='set youtube id' onclick={setYoutubeID}
 						><i class='fas fa-save'></i></button
 						>
 					</div>
@@ -132,58 +131,58 @@
 			{/if}
 		{/if}
 		<InfoBox variant='info'>
-			<span>{localize('ethereal-plane.strings.youtube')} </span><a
+			<span>{game.i18n?.localize('ethereal-plane.strings.youtube')} </span><a
 				href='https://www.youtube.com/t/terms'
-			>{localize('ethereal-plane.strings.tos')}</a
+			>{game.i18n?.localize('ethereal-plane.strings.tos')}</a
 			><br />
-			<span>{localize('ethereal-plane.strings.twitch')} </span><a
+			<span>{game.i18n?.localize('ethereal-plane.strings.twitch')} </span><a
 				href='https://www.twitch.tv/p/terms-of-service'
-			>{localize('ethereal-plane.strings.tos')}</a
+			>{game.i18n?.localize('ethereal-plane.strings.tos')}</a
 			><br />
 		</InfoBox>
 	{:else}
 		<InfoBox variant='error'>
-			<span>{localize('ethereal-plane.strings.patreon-logged-out')}</span><br />
-			<span>{localize('ethereal-plane.strings.accept-text')}</span><a
+			<span>{game.i18n?.localize('ethereal-plane.strings.patreon-logged-out')}</span><br />
+			<span>{game.i18n?.localize('ethereal-plane.strings.accept-text')}</span><a
 				href='https://github.com/FaeyUmbrea/ethereal-plane/blob/main/TERM_OF_USE.md'
-			>{localize('ethereal-plane.strings.tos')}</a
+			>{game.i18n?.localize('ethereal-plane.strings.tos')}</a
 			>
 			&
 			<a
 				href='https://github.com/FaeyUmbrea/ethereal-plane/blob/main/PRIVACY_POLICY.md'
-			>{localize('ethereal-plane.strings.privacy-policy')}</a
+			>{game.i18n?.localize('ethereal-plane.strings.privacy-policy')}</a
 			>
 		</InfoBox>
-		<button on:click={login}
-		>{localize('ethereal-plane.strings.log-in')}
+		<button onclick={login}
+		>{game.i18n?.localize('ethereal-plane.strings.log-in')}
 		</button>
 
-		<button on:click={disconnect}
-		>{localize('ethereal-plane.strings.disconnect')}
+		<button onclick={disconnect}
+		>{game.i18n?.localize('ethereal-plane.strings.disconnect')}
 		</button>
 	{/if}
 {:else}
 	<InfoBox variant='info'>
-		<span>{localize('ethereal-plane.strings.account-setup-reminder')}</span><br
+		<span>{game.i18n?.localize('ethereal-plane.strings.account-setup-reminder')}</span><br
 		/>
 	</InfoBox>
 	<InfoBox variant='error'>
-		<span>{localize('ethereal-plane.strings.patreon-logged-out')}</span><br />
-		<span>{localize('ethereal-plane.strings.accept-text')}</span><a
+		<span>{game.i18n?.localize('ethereal-plane.strings.patreon-logged-out')}</span><br />
+		<span>{game.i18n?.localize('ethereal-plane.strings.accept-text')}</span><a
 			href='https://github.com/FaeyUmbrea/ethereal-plane/blob/main/TERM_OF_USE.md'
-		>{localize('ethereal-plane.strings.tos')}</a
+		>{game.i18n?.localize('ethereal-plane.strings.tos')}</a
 		>
 		&
 		<a
 			href='https://github.com/FaeyUmbrea/ethereal-plane/blob/main/PRIVACY_POLICY.md'
-		>{localize('ethereal-plane.strings.privacy-policy')}</a
+		>{game.i18n?.localize('ethereal-plane.strings.privacy-policy')}</a
 		>
 	</InfoBox>
-	<button on:click={() => open_patreon_site()}
-	>{localize('ethereal-plane.strings.account-setup')}</button
+	<button onclick={() => open_patreon_site()}
+	>{game.i18n?.localize('ethereal-plane.strings.account-setup')}</button
 	>
-	<button on:click={connect}
-	>{localize('ethereal-plane.strings.connect')}
+	<button onclick={connect}
+	>{game.i18n?.localize('ethereal-plane.strings.connect')}
 	</button>
 {/if}
 
@@ -202,10 +201,6 @@
 				font-size: 18px;
 			}
 		}
-	}
-
-  .orange {
-		color: #f96854;
 	}
 
   .valignmid {

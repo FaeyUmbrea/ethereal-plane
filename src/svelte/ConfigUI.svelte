@@ -1,8 +1,6 @@
-<svelte:options accessors={true} />
+<svelte:options runes={true} />
 
 <script lang='ts'>
-	import { ApplicationShell } from '#runtime/svelte/component/application';
-	import { localize } from '#runtime/util/i18n';
 	import { tooltip } from '@svelte-plugins/tooltips';
 	import { chatStatus, pollStatus, triggerStatus } from '../server/status.ts';
 	import { settings } from '../utils/settings.ts';
@@ -11,102 +9,99 @@
 	import PatreonConfig from './components/PatreonConfig.svelte';
 	import StatusIcon from './components/StatusIcon.svelte';
 
-	const sendRollsToChat = settings.getStore<boolean>('send-rolls-to-chat');
-	const chatMessageTemplate = settings.getStore<string>('chat-message-template');
-	const moduleEnabled = settings.getStore<boolean>('enabled');
-	const allowSocket = settings.getStore<boolean>('allow-socket');
-	const allowAPI = settings.getStore<boolean>('allow-api');
-
-	export let elementRoot = void 0;
+	const sendRollsToChat = settings.getStore('send-rolls-to-chat');
+	const chatMessageTemplate = settings.getStore('chat-message-template');
+	const moduleEnabled = settings.getStore('enabled');
+	const allowSocket = settings.getStore('allow-socket');
+	const allowAPI = settings.getStore('allow-api');
 </script>
 
-<ApplicationShell bind:elementRoot={elementRoot}>
-	<main>
+<main>
 
-		<CollapsibleSection
-			collapsed={false}
-			title={localize('ethereal-plane.ui.status')}
-		>
-			<section>
-				{#if !$moduleEnabled}
-					<InfoBox variant='error'>
-						{localize('ethereal-plane.strings.disabled')}
-					</InfoBox>
-				{/if}
-				<div class='status'>
-					<span>{localize('ethereal-plane.ui.poll-status')}</span>
-					<span class='status-text'>{localize(`ethereal-plane.ui.${$pollStatus}`)}</span>
-					<StatusIcon status={$pollStatus} />
-				</div>
-				<div class='status'>
-					<span>{localize('ethereal-plane.ui.chat-status')}</span>
-					<span class='status-text'>{localize(`ethereal-plane.ui.${$chatStatus}`)}</span>
-					<StatusIcon status={$chatStatus} />
-				</div>
-				<div class='status'>
-					<span>{localize('ethereal-plane.ui.trigger-status')}</span>
-					<span class='status-text'>{localize(`ethereal-plane.ui.${$triggerStatus}`)}</span>
-					<StatusIcon status={$triggerStatus} />
-				</div>
-			</section>
-		</CollapsibleSection>
-		<CollapsibleSection
-			collapsed={false}
-			title={localize('ethereal-plane.ui.general-tab')}
-		>
-			<section class='settings'>
+	<CollapsibleSection
+		collapsed={false}
+		title={game.i18n?.localize('ethereal-plane.ui.status')}
+	>
+		<section>
+			{#if !$moduleEnabled}
+				<InfoBox variant='error'>
+					{game.i18n?.localize('ethereal-plane.strings.disabled')}
+				</InfoBox>
+			{/if}
+			<div class='status'>
+				<span>{game.i18n?.localize('ethereal-plane.ui.poll-status')}</span>
+				<span class='status-text'>{game.i18n?.localize(`ethereal-plane.ui.${$pollStatus}`)}</span>
+				<StatusIcon status={pollStatus} />
+			</div>
+			<div class='status'>
+				<span>{game.i18n?.localize('ethereal-plane.ui.chat-status')}</span>
+				<span class='status-text'>{game.i18n?.localize(`ethereal-plane.ui.${$chatStatus}`)}</span>
+				<StatusIcon status={chatStatus} />
+			</div>
+			<div class='status'>
+				<span>{game.i18n?.localize('ethereal-plane.ui.trigger-status')}</span>
+				<span class='status-text'>{game.i18n?.localize(`ethereal-plane.ui.${$triggerStatus}`)}</span>
+				<StatusIcon status={triggerStatus} />
+			</div>
+		</section>
+	</CollapsibleSection>
+	<CollapsibleSection
+		collapsed={false}
+		title={game.i18n?.localize('ethereal-plane.ui.general-tab')}
+	>
+		<section class='settings'>
+			<span
+			>{game.i18n?.localize('ethereal-plane.settings.send-rolls-to-chat.Name')}</span
+			>
+			<input bind:checked={$sendRollsToChat} type='checkbox' />
+			{#if $sendRollsToChat}
 				<span
-				>{localize('ethereal-plane.settings.send-rolls-to-chat.Name')}</span
+				>{game.i18n?.localize(
+					'ethereal-plane.settings.chat-message-template.Name',
+				)}</span
 				>
-				<input bind:checked={$sendRollsToChat} type='checkbox' />
-				{#if $sendRollsToChat}
-					<span
-					>{localize(
-						'ethereal-plane.settings.chat-message-template.Name',
-					)}</span
-					>
-					<textarea bind:value={$chatMessageTemplate}></textarea>
-				{/if}
-				<span>{localize('ethereal-plane.settings.allow-socket.Name')}</span>
-				<div
-					use:tooltip={{
-						content: localize('ethereal-plane.settings.allow-socket.Hint'),
-						position: 'left',
-						autoPosition: true,
-						align: 'center',
-					}}
+				<textarea bind:value={$chatMessageTemplate}></textarea>
+			{/if}
+			<span>{game.i18n?.localize('ethereal-plane.settings.allow-socket.Name')}</span>
+			<div
+				use:tooltip={{
+					content: game.i18n?.localize('ethereal-plane.settings.allow-socket.Hint'),
+					position: 'left',
+					autoPosition: true,
+					align: 'center',
+				}}
+			>
+				<input bind:checked={$allowSocket} type='checkbox' />
+			</div>
+			<span>{game.i18n?.localize('ethereal-plane.settings.allow-api.Name')}</span>
+			<div
+				use:tooltip={{
+					content: game.i18n?.localize('ethereal-plane.settings.allow-api.Hint'),
+					position: 'left',
+					autoPosition: true,
+					align: 'center',
+				}}
+			>
+				<input bind:checked={$allowAPI} type='checkbox' />
+			</div>
+			<span>{game.i18n?.localize('ethereal-plane.ui.reconnect')}</span>
+			<div>
+				<button
+					aria-label='reconnect'
+					onclick={() => {
+						Hooks.call('ethereal-plane.reconnect');
+					}}><i class='fa-solid fa-arrows-rotate'></i></button
 				>
-					<input bind:checked={$allowSocket} type='checkbox' />
-				</div>
-				<span>{localize('ethereal-plane.settings.allow-api.Name')}</span>
-				<div
-					use:tooltip={{
-						content: localize('ethereal-plane.settings.allow-api.Hint'),
-						position: 'left',
-						autoPosition: true,
-						align: 'center',
-					}}
-				>
-					<input bind:checked={$allowAPI} type='checkbox' />
-				</div>
-				<span>{localize('ethereal-plane.ui.reconnect')}</span>
-				<div>
-					<button
-						on:click={() => {
-							Hooks.call('ethereal-plane.reconnect');
-						}}><i class='fa-solid fa-arrows-rotate'></i></button
-					>
-				</div>
-			</section>
-		</CollapsibleSection>
-		<CollapsibleSection
-			collapsed={false}
-			title={localize('ethereal-plane.ui.hosted-tab')}
-		>
-			<PatreonConfig />
-		</CollapsibleSection>
-	</main>
-</ApplicationShell>
+			</div>
+		</section>
+	</CollapsibleSection>
+	<CollapsibleSection
+		collapsed={false}
+		title={game.i18n?.localize('ethereal-plane.ui.hosted-tab')}
+	>
+		<PatreonConfig />
+	</CollapsibleSection>
+</main>
 
 <style lang='scss'>
   .settings {

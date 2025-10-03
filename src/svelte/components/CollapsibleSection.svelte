@@ -1,8 +1,8 @@
+<svelte:options runes={true} />
 <script lang='ts'>
 	import { slide } from 'svelte/transition';
 
-	export let collapsed = true;
-	export let title = 'Section';
+	let { collapsed = $bindable(true), title = $bindable('Section'), children } = $props();
 
 	function click() {
 		collapsed = !collapsed;
@@ -10,11 +10,11 @@
 </script>
 
 <div class='collapsable-section'>
-	<section class='header' on:click={click} role='none'>
+	<section class='header' onclick={click} role='none'>
 		<span>{title}</span>
 	</section>
 	<section class='content' in:slide out:slide>
-		<slot></slot>
+		{@render children?.()}
 	</section>
 </div>
 

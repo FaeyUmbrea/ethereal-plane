@@ -1,136 +1,122 @@
 import type { ExportTriggerMacro, TriggerMacro } from '../utils/types.ts';
-import {
-	SvelteApplication,
-} from '#runtime/svelte/application';
-import { localize } from '#runtime/util/i18n';
+
 import { getTriggers } from '../server/trigger_api.ts';
 import TriggerConfigUi from '../svelte/TriggerConfigUI.svelte';
 import { getGame } from '../utils/helpers.js';
 import { getSetting, setSetting } from '../utils/settings.js';
 import { readTextFromFile } from '../utils/utils';
+import { SvelteApplicationMixin } from './mixin.svelte.ts';
 
-// @ts-expect-error get off my case
-export class TriggerApplication extends SvelteApplication {
-	/** @static */
-	static override get defaultOptions() {
-		return foundry.utils.mergeObject(
-			super.defaultOptions,
-			{
-				classes: ['ep-chat-commands'],
-				minimizable: true,
-				width: 800,
-				height: 520,
-				id: 'chat-command-config-application',
-				title: 'ethereal-plane.ui.chat-command-application-title',
-				resizable: true,
-				positionOrtho: false,
-				transformOrigin: null,
-				svelte: {
-					class: TriggerConfigUi,
-					target: document.body,
-					intro: true,
+export class TriggerApplication extends SvelteApplicationMixin(foundry.applications.api.ApplicationV2) {
+	protected override root = TriggerConfigUi;
+
+	static override DEFAULT_OPTIONS = {
+		classes: ['ep-chat-commands'],
+		id: 'chat-command-config-application',
+		title: 'ethereal-plane.ui.chat-command-application-title',
+		position: {
+			width: 800,
+			height: 520,
+		},
+		window: {
+			minimizable: true,
+			resizable: true,
+			controls: [
+				{
+					icon: 'fas fa-file-import',
+					label: 'ethereal-plane.ui.commands.import.button',
+					action: 'import-data',
 				},
+				{
+					icon: 'fas fa-file-export',
+					label: 'ethereal-plane.ui.commands.export.button',
+					action: 'export-data',
+				},
+			],
+		},
+		actions: {
+			'import-data': TriggerApplication.import_data,
+			'export-data': TriggerApplication.export_data,
+		},
+	};
+
+	static async import_data() {
+		new Dialog(
+			{
+				title: (game as ReadyGame).i18n.localize('ethereal-plane.ui.commands.import.title'),
+				content: await renderTemplate(`templates/apps/import-data.${getGame().version.startsWith('12.') ? 'html' : 'hbs'}`, {
+					hint1: (game as ReadyGame).i18n.localize('ethereal-plane.ui.commands.import.hint1'),
+					hint2: (game as ReadyGame).i18n.localize('ethereal-plane.ui.commands.import.hint2'),
+				}),
+				buttons: {
+					import: {
+						icon: '<i class="fas fa-file-import"></i>',
+						label: (game as ReadyGame).i18n.localize('ethereal-plane.ui.commands.import.button'),
+						callback: (html) => {
+							const form = (html as JQuery<HTMLElement>).find(
+								'form',
+							)[0] as HTMLFormElement;
+							if (!form.data.files.length) {
+								ui?.notifications?.error(
+									(game as ReadyGame).i18n.localize(
+										'ethereal-plane.ui.commands.import.data-file-error',
+									),
+								);
+							}
+							const file = form.data.files[0];
+							readTextFromFile(file).then(json =>
+								importChatCommands(json, false),
+							);
+						},
+					},
+					withMacros: {
+						icon: '<i class="fas fa-file-import"></i>',
+						label:
+              (game as ReadyGame).i18n.localize('ethereal-plane.ui.commands.import.with-macros'),
+						callback: (html) => {
+							const form = (html as JQuery<HTMLElement>).find(
+								'form',
+							)[0] as HTMLFormElement;
+							if (!form.data.files.length) {
+								ui?.notifications?.error(
+									(game as ReadyGame).i18n.localize(
+										'ethereal-plane.ui.commands.import.data-file-error',
+									),
+								);
+							}
+							readTextFromFile(form.data.files[0]).then(json =>
+								importChatCommands(json, true),
+							);
+						},
+					},
+					no: {
+						icon: '<i class="fas fa-times"></i>',
+						label: (game as ReadyGame).i18n.localize('ethereal-plane.ui.cancel'),
+					},
+				},
+				default: 'import',
 			},
-		);
+			{
+				width: 400,
+			},
+		).render(true);
 	}
 
-	override _getHeaderButtons() {
-		const buttons = super._getHeaderButtons();
-
-		buttons.unshift(
-			{
-				icon: 'fas fa-file-import',
-				class: 'import-data',
-				label: localize('ethereal-plane.ui.commands.import.button'),
-
-				async onclick() {
-					new Dialog(
-						{
-							title: `${localize('ethereal-plane.ui.commands.import.title')}`,
-							content: await renderTemplate(`templates/apps/import-data.${getGame().version.startsWith('12.') ? 'html' : 'hbs'}`, {
-								hint1: localize('ethereal-plane.ui.commands.import.hint1'),
-								hint2: localize('ethereal-plane.ui.commands.import.hint2'),
-							}),
-							buttons: {
-								import: {
-									icon: '<i class="fas fa-file-import"></i>',
-									label: localize('ethereal-plane.ui.commands.import.button'),
-									callback: (html) => {
-										const form = (html as JQuery<HTMLElement>).find(
-											'form',
-										)[0] as HTMLFormElement;
-										if (!form.data.files.length) {
-											ui?.notifications?.error(
-												localize(
-													'ethereal-plane.ui.commands.import.data-file-error',
-												),
-											);
-										}
-										const file = form.data.files[0];
-										readTextFromFile(file).then(json =>
-											importChatCommands(json, false),
-										);
-									},
-								},
-								withMacros: {
-									icon: '<i class="fas fa-file-import"></i>',
-									label: localize(
-										'ethereal-plane.ui.commands.import.with-macros',
-									),
-									callback: (html) => {
-										const form = (html as JQuery<HTMLElement>).find(
-											'form',
-										)[0] as HTMLFormElement;
-										if (!form.data.files.length) {
-											ui?.notifications?.error(
-												localize(
-													'ethereal-plane.ui.commands.import.data-file-error',
-												),
-											);
-										}
-										readTextFromFile(form.data.files[0]).then(json =>
-											importChatCommands(json, true),
-										);
-									},
-								},
-								no: {
-									icon: '<i class="fas fa-times"></i>',
-									label: localize('ethereal-plane.ui.cancel'),
-								},
-							},
-							default: 'import',
-						},
-						{
-							width: 400,
-						},
-					).render(true);
+	static export_data() {
+		new Dialog({
+			title: (game as ReadyGame).i18n.localize('ethereal-plane.ui.commands.export.title'),
+			content: (game as ReadyGame).i18n.localize('ethereal-plane.ui.commands.export.content'),
+			buttons: {
+				yes: {
+					label: (game as ReadyGame).i18n.localize('ethereal-plane.ui.yes'),
+					callback: () => exportChatCommands(true),
+				},
+				no: {
+					label: (game as ReadyGame).i18n.localize('ethereal-plane.ui.no'),
+					callback: () => exportChatCommands(false),
 				},
 			},
-			{
-				icon: 'fas fa-file-export',
-				label: localize('ethereal-plane.ui.commands.export.button'),
-				class: 'export-data',
-
-				onclick() {
-					new Dialog({
-						title: localize('ethereal-plane.ui.commands.export.title'),
-						content: localize('ethereal-plane.ui.commands.export.content'),
-						buttons: {
-							yes: {
-								label: localize('ethereal-plane.ui.yes'),
-								callback: () => exportChatCommands(true),
-							},
-							no: {
-								label: localize('ethereal-plane.ui.no'),
-								callback: () => exportChatCommands(false),
-							},
-						},
-					}).render(true);
-				},
-			},
-		);
-
-		return buttons;
+		}).render(true);
 	}
 }
 
@@ -191,12 +177,12 @@ async function importChatCommands(data: string, withMacros: boolean) {
 	}
 	if (imported.type !== 'EthPlaExport') {
 		throw new Error(
-			localize('ethereal-plane.ui.commands.import.wrong-file-error'),
+			(game as ReadyGame).i18n.localize('ethereal-plane.ui.commands.import.wrong-file-error'),
 		);
 	}
 	if (imported.version > 3 || imported.version < 3) {
 		throw new Error(
-			localize('ethereal-plane.ui.commands.import.wrong-version-error'),
+			(game as ReadyGame).i18n.localize('ethereal-plane.ui.commands.import.wrong-version-error'),
 		);
 	}
 	let folder: Folder | undefined = getGame().macros?.folders.find(
@@ -223,6 +209,7 @@ async function importChatCommands(data: string, withMacros: boolean) {
 			}
 		} else {
 			if (folder !== undefined) {
+				// @ts-expect-error wrong type
 				command.macro.folder = folder;
 			}
 			const macro = (await Macro.create(command.macro))?.id;

@@ -1,18 +1,13 @@
-<svelte:options accessors={true} />
-
+<svelte:options runes={true} />
 <script lang='ts'>
 	import type { TriggerConfig } from '../utils/types.ts';
-	import { ApplicationShell } from '#runtime/svelte/component/application';
-	import { localize } from '#runtime/util/i18n';
 	import { onMount } from 'svelte';
 	import { getTriggers } from '../server/trigger_api.ts';
 	import Trigger from './components/TriggerConfig.svelte';
 
-	let triggers: TriggerConfig[] = [];
+	let triggers: TriggerConfig[] = $state([]);
 
-	export let elementRoot = void 0;
-
-	let load = false;
+	let load = $state(false);
 
 	async function reload_triggers() {
 		load = true;
@@ -25,28 +20,26 @@
 	});
 </script>
 
-<ApplicationShell bind:elementRoot={elementRoot}>
-	<main>
-		<div class='header-section'>
-			<span>{localize('ethereal-plane.ui.commands.active')}</span>
-			<span>{localize('ethereal-plane.ui.commands.name')}</span>
-			<span>{localize('ethereal-plane.ui.commands.created_at')}</span>
-			<span>{localize('ethereal-plane.ui.commands.updated_at')}</span>
-			<span class='macro'>{localize('ethereal-plane.ui.commands.macro')}</span>
+<main>
+	<div class='header-section'>
+		<span>{game.i18n?.localize('ethereal-plane.ui.commands.active')}</span>
+		<span>{game.i18n?.localize('ethereal-plane.ui.commands.name')}</span>
+		<span>{game.i18n?.localize('ethereal-plane.ui.commands.created_at')}</span>
+		<span>{game.i18n?.localize('ethereal-plane.ui.commands.updated_at')}</span>
+		<span class='macro'>{game.i18n?.localize('ethereal-plane.ui.commands.macro')}</span>
+	</div>
+	<hr />
+	<div class='command-section'>
+		{#each triggers as trigger, index (index)}
+			<Trigger trigger={trigger} />
+		{/each}
+	</div>
+	{#if load}
+		<div class='loader'>
+			<i class='fa-solid fa-spinner-third'></i>
 		</div>
-		<hr />
-		<div class='command-section'>
-			{#each triggers as trigger, index (index)}
-				<Trigger trigger={trigger} index={index} />
-			{/each}
-		</div>
-		{#if load}
-			<div class='loader'>
-				<i class='fa-solid fa-spinner-third'></i>
-			</div>
-		{/if}
-	</main>
-</ApplicationShell>
+	{/if}
+</main>
 
 <style lang='scss'>
   main {

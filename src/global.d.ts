@@ -1,7 +1,6 @@
-import type { AllHooks } from 'fvtt-types/src/foundry/client/hooks';
 import type { ComponentConstructorOptions, SvelteComponent } from 'svelte';
 import type { EtherealPlaneAPI } from './utils/api.js';
-import type { ChatCommand } from './utils/chatCommands.js';
+import type { ChatCommand } from './utils/chatCommands.ts';
 import type { Modes } from './utils/const.ts';
 import type { Poll } from './utils/polls.js';
 import type { TriggerMacro } from './utils/types.ts';
@@ -52,10 +51,15 @@ declare global {
 	interface World {
 		id: string;
 	}
+}
 
-	namespace HookConfig {
-		interface HookConfig extends AllHooks {
+declare module 'fvtt-types/configuration' {
+	namespace Hooks {
+		interface HookConfig {
 			'ethereal-plane.patreon-login': () => void;
+			'ethereal-plane.patreon-logged-in': () => void;
+			'ethereal-plane.patreon-connected': () => void;
+			'ethereal-plane.patreon-disconnected': () => void;
 			'ethereal-plane.init': () => void;
 			'ethereal-plane.patreon-logout': () => void;
 			'ethereal-plane.patreon-connect': () => void;

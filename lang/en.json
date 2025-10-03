@@ -64,7 +64,7 @@
 			"trigger-status": "Triggers (including Chat Command Triggers)",
 			"connected": "Connected",
 			"disconnected": "Disconnected",
-			"inactive":  "Inactive",
+			"inactive": "Inactive",
 			"connecting": "Connecting",
 			"reconnect": "Reconnect",
 			"general-tab": "General",

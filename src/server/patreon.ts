@@ -13,7 +13,6 @@ import type {
 	ChatMessage,
 } from './chat_api.js';
 import type { PollData } from './poll_api.js';
-import { localize } from '#runtime/util/i18n';
 import { processTrigger } from '../utils/chatCommands.ts';
 import { API_URL } from '../utils/const.js';
 import {
@@ -68,7 +67,7 @@ export class PatreonConnector {
 
 	async reconnect() {
 		ui.notifications?.warn(
-			`${localize('ethereal-plane.strings.notification-prefix')}${localize('ethereal-plane.notifications.reconnecting')}`,
+			`${(game as ReadyGame).i18n.localize('ethereal-plane.strings.notification-prefix')}${(game as ReadyGame).i18n.localize('ethereal-plane.notifications.reconnecting')}`,
 		);
 		await this.disconnect();
 		await this.init();
@@ -84,7 +83,7 @@ export class PatreonConnector {
 		const apiVersion = await (await fetch(`${API_URL}version`)).text();
 		if (apiVersion !== '2') {
 			ui.notifications?.error(
-				`${localize('ethereal-plane.strings.notification-prefix')}${localize('ethereal-plane.notifications.api-version-mismatch')}`,
+				`${(game as ReadyGame).i18n.localize('ethereal-plane.strings.notification-prefix')}${(game as ReadyGame).i18n.localize('ethereal-plane.notifications.api-version-mismatch')}`,
 			);
 			return;
 		}
@@ -97,7 +96,7 @@ export class PatreonConnector {
 		if (!clientConnected) {
 			log('Ethereal Plane | No client connected, please connect');
 			ui.notifications?.warn(
-				`${localize('ethereal-plane.strings.notification-prefix')}${localize('ethereal-plane.notifications.please-log-in')}`,
+				`${(game as ReadyGame).i18n.localize('ethereal-plane.strings.notification-prefix')}${(game as ReadyGame).i18n.localize('ethereal-plane.notifications.please-log-in')}`,
 			);
 			return;
 		}
@@ -189,10 +188,10 @@ export class PatreonConnector {
 		const LoginApplication = (
 			await import('../applications/loginApplication.js')
 		).default;
-		const d = new LoginApplication(user_code, verification_uri_complete);
-		d.render(true);
+		const d = new LoginApplication({}, user_code, verification_uri_complete ?? '');
+		await d.render(true);
 		const { access_token, refresh_token }
-      = await waitForPatreonVerification(device_code);
+			= await waitForPatreonVerification(device_code);
 		if (!refresh_token) throw new Error('Refresh token is undefined');
 		await setSetting('authentication-token', access_token);
 		await setSetting('refresh-token', refresh_token);
@@ -249,6 +248,7 @@ export class PatreonConnector {
 	async disconnect(): Promise<void> {
 		disablePollListeners();
 		disableChatListeners();
+		disableTriggerListeners();
 	}
 
 	async abortPoll() {

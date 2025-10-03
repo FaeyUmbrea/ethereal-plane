@@ -1,4 +1,3 @@
-import { localize } from '#runtime/util/i18n';
 import { getGame } from './helpers.js';
 import { getSetting } from './settings.js';
 
@@ -13,8 +12,8 @@ export enum PollStatus {
 export class Poll {
 	title: string = 'Poll';
 	options: PollOption[] = [
-		{ text: localize('ethereal-plane.ui.yes'), name: '1' },
-		{ text: localize('ethereal-plane.ui.no'), name: '2' },
+		{ text: (game as ReadyGame).i18n.localize('ethereal-plane.ui.yes'), name: '1' },
+		{ text: (game as ReadyGame).i18n.localize('ethereal-plane.ui.no'), name: '2' },
 	];
 
 	tally: number[] = [0, 0];

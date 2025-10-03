@@ -1,14 +1,11 @@
-<svelte:options accessors={true} />
-
+<svelte:options runes={true} />
 <script lang='ts'>
-	import { ApplicationShell } from '#runtime/svelte/component/application';
 	import { Poll, PollStatus } from '../utils/polls.ts';
 	import { settings } from '../utils/settings.ts';
 	import PollDisplay from './components/PollDisplay.svelte';
 	import PollEditor from './components/PollEditor.svelte';
 
 	const poll = settings.getStore('currentPoll');
-	export let elementRoot = void 0;
 
 	if (!$poll) {
 		console.warn('No Poll Found');
@@ -16,15 +13,13 @@
 	}
 </script>
 
-<ApplicationShell bind:elementRoot={elementRoot}>
-	<main>
-		{#if $poll.status > PollStatus.notStarted}
-			<PollDisplay />
-		{:else}
-			<PollEditor />
-		{/if}
-	</main>
-</ApplicationShell>
+<main>
+	{#if $poll.status > PollStatus.notStarted}
+		<PollDisplay />
+	{:else}
+		<PollEditor />
+	{/if}
+</main>
 
 <style lang='scss'>
   main {

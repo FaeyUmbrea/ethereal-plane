@@ -2,7 +2,6 @@ import type {
 	DeviceAuthorizationResponse,
 	TokenEndpointResponse,
 } from 'oauth4webapi';
-import { localize } from '#runtime/util/i18n';
 import { nanoid } from 'nanoid';
 import * as oauth from 'oauth4webapi';
 import { FRONTEND_URL, ISSUER_URL as issuer, MODULE_ID } from '../utils/const.js';
@@ -86,7 +85,7 @@ export async function patreonLogin() {
 
 	try {
 		const result: DeviceAuthorizationResponse | void
-      = await oauth.processDeviceAuthorizationResponse(as, client, response);
+			= await oauth.processDeviceAuthorizationResponse(as, client, response);
 		log('Device Authorization Response', result);
 		({
 			device_code,
@@ -206,7 +205,7 @@ export function get_token() {
 	if (access_token === '' || refresh_token === '') {
 		log('Ethereal Plane | No credentials present, please log in');
 		ui.notifications?.warn(
-			`${localize('ethereal-plane.strings.notification-prefix')}${localize('ethereal-plane.notifications.please-log-in')}`,
+			`${(game as ReadyGame).i18n.localize('ethereal-plane.strings.notification-prefix')}${(game as ReadyGame).i18n.localize('ethereal-plane.notifications.please-log-in')}`,
 		);
 		return;
 	}
@@ -220,7 +219,7 @@ export async function handle_refresh_error() {
 	await setSetting('authentication-token', '');
 	await setSetting('refresh-token', '');
 	ui.notifications?.error(
-		`${localize('ethereal-plane.strings.notification-prefix')}${localize('ethereal-plane.notifications.invalid-credential')}`,
+		`${(game as ReadyGame).i18n.localize('ethereal-plane.strings.notification-prefix')}${(game as ReadyGame).i18n.localize('ethereal-plane.notifications.invalid-credential')}`,
 	);
 	throw new Error(
 		'Ethereal Plane | Credentials Invalid, please log in again',

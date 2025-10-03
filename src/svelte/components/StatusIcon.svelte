@@ -1,11 +1,11 @@
+<svelte:options runes={true} />
 <script lang='ts'>
-	import { ServerStatus } from '../../server/status.ts';
 
-	export let status: ServerStatus = ServerStatus.Inactive;
+	let { status = $bindable() } = $props();
 </script>
 
 <div class='status-icon'>
-	<i class='far fa-circle-dot inner {status}'></i>
+	<i class='far fa-circle-dot inner {$status}'></i>
 </div>
 
 <style>

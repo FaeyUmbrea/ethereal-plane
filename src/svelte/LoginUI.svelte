@@ -1,27 +1,22 @@
-<svelte:options accessors={true} />
+<svelte:options runes={true} />
 
 <script lang='ts'>
-	import { ApplicationShell } from '#runtime/svelte/component/application';
-	import { localize } from '#runtime/util/i18n';
+	import type LoginApplication from '../applications/loginApplication.ts';
 	import { QRCode } from '@castlenine/svelte-qrcode';
-	import { getContext, onDestroy } from 'svelte';
+	import { onDestroy } from 'svelte';
 
-	export let user_code;
-	export let uri;
-	export let elementRoot = void 0;
+	const { foundryApp }: { foundryApp: LoginApplication } = $props();
 
 	const hook = Hooks.on('ethereal-plane.patreon-logged-in', close);
 
-	const context = getContext('#external');
-
 	async function close() {
-		await context.application.close();
+		await foundryApp.close();
 	}
 
 	async function copy() {
-		await navigator.clipboard.writeText(uri);
+		await navigator.clipboard.writeText(foundryApp.uri);
 		ui.notifications?.info(
-			`${localize('ethereal-plane.strings.notification-prefix')}${localize('ethereal-plane.notifications.login-copy')}`,
+			`${game.i18n?.localize('ethereal-plane.strings.notification-prefix')}${game.i18n?.localize('ethereal-plane.notifications.login-copy')}`,
 		);
 	}
 
@@ -30,41 +25,39 @@
 	});
 </script>
 
-<ApplicationShell bind:elementRoot={elementRoot}>
-	<main>
-		<div class='text'>
-			<span>
-				{localize('ethereal-plane.ui.login.device-code')}:&nbsp;<code
-					class='user-code'>{user_code}</code
-				>.
-			</span>
-			<span>
-				{localize('ethereal-plane.ui.login.hint1')}
-			</span>
-			<span>
-				{localize('ethereal-plane.ui.login.hint2')}
-			</span>
-		</div>
-		<div class='QR'>
-			<QRCode data={uri} />
-		</div>
-		<div class='buttons'>
-			<button
-				on:click={() => {
-					window.open(
-						uri,
-						'_blank',
-						'location=yes,height=570,width=520,scrollbars=yes,status=yes',
-					);
-				}}
-			>
-				{localize('ethereal-plane.ui.open')}
-			</button>
-			<button on:click={copy}>{localize('ethereal-plane.ui.copy')}</button>
-			<button on:click={close}>{localize('ethereal-plane.ui.cancel')}</button>
-		</div>
-	</main>
-</ApplicationShell>
+<main>
+	<div class='text'>
+		<span>
+			{game.i18n?.localize('ethereal-plane.ui.login.device-code')}:&nbsp;<code
+				class='user-code'>{foundryApp.user_code}</code
+			>.
+		</span>
+		<span>
+			{game.i18n?.localize('ethereal-plane.ui.login.hint1')}
+		</span>
+		<span>
+			{game.i18n?.localize('ethereal-plane.ui.login.hint2')}
+		</span>
+	</div>
+	<div class='QR'>
+		<QRCode data={foundryApp.uri} />
+	</div>
+	<div class='buttons'>
+		<button
+			onclick={() => {
+				window.open(
+					foundryApp.uri,
+					'_blank',
+					'location=yes,height=570,width=520,scrollbars=yes,status=yes',
+				);
+			}}
+		>
+			{game.i18n?.localize('ethereal-plane.ui.open')}
+		</button>
+		<button onclick={copy}>{game.i18n?.localize('ethereal-plane.ui.copy')}</button>
+		<button onclick={close}>{game.i18n?.localize('ethereal-plane.ui.cancel')}</button>
+	</div>
+</main>
 
 <style lang='scss'>
   button {

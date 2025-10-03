@@ -6,10 +6,10 @@ import { getGame } from './utils/helpers.js';
 import { registerOverlay } from './utils/overlay.js';
 import {
 	getSetting,
+	initSettings,
 	registerMenus,
 	runMigrations,
 	setSetting,
-	settings,
 } from './utils/settings.js';
 import './utils/api.ts';
 import './server/patreon_auth';
@@ -52,7 +52,7 @@ async function openPolls(button: SceneControls.Tool) {
 	if (!polls) {
 		const PollApplication = (await import('./applications/pollApplication.js'))
 			.default;
-		polls = new PollApplication(button);
+		polls = new PollApplication({}, button);
 	}
 	if (!(polls as PollApplication)?.rendered)
 		(polls as PollApplication)?.render(true);
@@ -74,7 +74,7 @@ Hooks.once('ready', async () => {
 Hooks.on('getSceneControlButtons', buildButtons);
 
 Hooks.on('init', () => {
-	settings.init();
+	initSettings();
 });
 Hooks.once('ready', () => registerMenus());
 

@@ -1,38 +1,34 @@
-import { SvelteApplication } from '#runtime/svelte/application';
+import type { DeepPartial } from 'fvtt-types/utils';
 import PollApplicationUi from '../svelte/PollApplicationUI.svelte';
+import { SvelteApplicationMixin } from './mixin.svelte.ts';
 
-// @ts-expect-error get off my case
-export default class PollApplication extends SvelteApplication {
+export default class PollApplication extends SvelteApplicationMixin(foundry.applications.api.ApplicationV2) {
 	/** */
 	sidebarButton: SceneControls.Tool;
 
-	constructor(sidebarButton: SceneControls.Tool) {
-		super();
+	constructor(options: DeepPartial<foundry.applications.api.ApplicationV2.Configuration>, sidebarButton: SceneControls.Tool) {
+		super(options);
 		this.sidebarButton = sidebarButton;
 	}
 
-	/** @static */
-	static override get defaultOptions() {
-		return foundry.utils.mergeObject(super.defaultOptions, {
-			classes: ['eppolls'],
-			minimizable: true,
+	protected override root = PollApplicationUi;
+
+	static override DEFAULT_OPTIONS = {
+		classes: ['eppolls'],
+		position: {
 			width: 500,
 			height: 330,
-			id: 'polls-application',
-			title: 'ethereal-plane.ui.polls-application-title',
-			positionOrtho: false,
-			transformOrigin: null,
-			svelte: {
-				class: PollApplicationUi,
-				target: document.body,
-				intro: true,
-			},
-		});
-	}
+		},
+		window: {
+			minimizable: true,
+		},
+		id: 'polls-application',
+		title: 'ethereal-plane.ui.polls-application-title',
+	};
 
-	override async close() {
-		await super.close();
+	override async close(options?: DeepPartial<foundry.applications.api.ApplicationV2.ClosingOptions>) {
 		$('[data-tool=openStreamDirector]').removeClass('active');
 		this.sidebarButton.active = false;
+		return await super.close(options);
 	}
 }

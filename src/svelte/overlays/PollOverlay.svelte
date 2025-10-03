@@ -1,23 +1,26 @@
+<svelte:options runes={true} />
 <script lang='ts'>
 	import { onDestroy } from 'svelte';
-	import { PollStatus } from '../../utils/polls.ts';
+	import { Poll, PollStatus } from '../../utils/polls.ts';
 	import { getSetting } from '../../utils/settings.ts';
 
-	let poll = getSetting('currentPoll');
-	let total = tallyTotal();
+	let poll = $state(getSetting('currentPoll') as Poll);
+	let total = $state(tallyTotal());
 
 	const hook = Hooks.on('updateSetting', (setting, change) => {
 		if (setting.key === 'ethereal-plane.currentPoll' && change != null) {
-			poll = JSON.parse(change.value);
+			poll = JSON.parse(change.value as string);
 			total = tallyTotal();
 		}
 	});
 
 	onDestroy(() => {
+		// @ts-expect-error wha
 		Hooks.off('updateSettings', hook);
 	});
 
 	function tallyTotal() {
+		// @ts-expect-error why
 		return poll.tally.reduce((prev, val) => prev + val[1], 0);
 	}
 </script>

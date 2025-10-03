@@ -1,9 +1,10 @@
+<svelte:options runes={true} />
 <script lang='ts'>
-	export let variant;
+	let { variant = $bindable(), children } = $props();
 </script>
 
 <div class={`infobox ${variant}`}>
-	<slot></slot>
+	{@render children?.()}
 </div>
 
 <style lang='scss'>
