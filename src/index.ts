@@ -3,7 +3,6 @@ import { nanoid } from 'nanoid';
 import { registerHandlers } from './handlers';
 import { getConnectionManager } from './server/patreon.js';
 import { getGame } from './utils/helpers.js';
-import { registerOverlay } from './utils/overlay.js';
 import {
 	getSetting,
 	initSettings,
@@ -77,5 +76,3 @@ Hooks.on('init', () => {
 	initSettings();
 });
 Hooks.once('ready', () => registerMenus());
-
-Hooks.on('obs-utils.init', registerOverlay);

@@ -1,3 +1,17 @@
+## Version 3.1.0
+
+### Changed
+
+- Migrated the entire module to use ApplicationV2 in preparation for Foundry V14
+
+### Fixed
+
+- Fixed a bug in the authentication workflow that caused trigger api to not properly reconnect
+
+### Removed
+
+- Removed the old PollOverlay that was broken since 3.0.0 released, it might be re-developed at a later date
+
 ## Version 3.0.3
 
 ### Fixed
