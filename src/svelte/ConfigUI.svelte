@@ -1,7 +1,6 @@
 <svelte:options runes={true} />
 
 <script lang='ts'>
-	import { tooltip } from '@svelte-plugins/tooltips';
 	import { chatStatus, pollStatus, triggerStatus } from '../server/status.ts';
 	import { settings } from '../utils/settings.ts';
 	import CollapsibleSection from './components/CollapsibleSection.svelte';
@@ -63,25 +62,11 @@
 				<textarea bind:value={$chatMessageTemplate}></textarea>
 			{/if}
 			<span>{game.i18n?.localize('ethereal-plane.settings.allow-socket.Name')}</span>
-			<div
-				use:tooltip={{
-					content: game.i18n?.localize('ethereal-plane.settings.allow-socket.Hint'),
-					position: 'left',
-					autoPosition: true,
-					align: 'center',
-				}}
-			>
+			<div>
 				<input bind:checked={$allowSocket} type='checkbox' />
 			</div>
 			<span>{game.i18n?.localize('ethereal-plane.settings.allow-api.Name')}</span>
-			<div
-				use:tooltip={{
-					content: game.i18n?.localize('ethereal-plane.settings.allow-api.Hint'),
-					position: 'left',
-					autoPosition: true,
-					align: 'center',
-				}}
-			>
+			<div>
 				<input bind:checked={$allowAPI} type='checkbox' />
 			</div>
 			<span>{game.i18n?.localize('ethereal-plane.ui.reconnect')}</span>

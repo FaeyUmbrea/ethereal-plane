@@ -226,6 +226,10 @@ export async function handle_refresh_error() {
 	);
 }
 
+export async function testToken() {
+	const token = get_token();
+}
+
 export async function wrapClient(providedFetch: typeof fetch) {
 	try {
 		const currentToken = get_token();
@@ -238,15 +242,14 @@ export async function wrapClient(providedFetch: typeof fetch) {
 			async fetch(url: RequestInfo, options: RequestInit = {}) {
 				const token = currentToken.access_token;
 
+				const response = await providedFetch(url, {
+					...options,
+					headers: {
+						...options.headers,
+						Authorization: `Bearer ${token}`,
+					},
+				});
 				try {
-					const response = await providedFetch(url, {
-						...options,
-						headers: {
-							...options.headers,
-							Authorization: `Bearer ${token}`,
-						},
-					});
-
 					if (response.status === 401) {
 						// Retry once after a silent token refresh
 						const newToken = (await refresh(currentToken.refresh_token)).access_token;
@@ -259,11 +262,10 @@ export async function wrapClient(providedFetch: typeof fetch) {
 							},
 						});
 					}
-
-					return response;
 				} catch {
 					await handle_refresh_error();
 				}
+				return response;
 			},
 		};
 	} catch (error) {

@@ -2585,12 +2585,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@svelte-plugins/tooltips@npm:^3.0.3":
-  version: 3.0.3
-  resolution: "@svelte-plugins/tooltips@npm:3.0.3"
+"@svelte-plugins/tooltips@npm:beta":
+  version: 4.0.0-beta.1
+  resolution: "@svelte-plugins/tooltips@npm:4.0.0-beta.1"
   peerDependencies:
-    svelte: ^3.54.0 || ^4.0.0 || ^5.0.0-next.0
-  checksum: 10c0/041125387de91c3cfbdedf42dee4746b90cd7c5bb75692017c56d622151d30a901a2164619f6c6722a088ca69f21c38eb7dc95b58832b85e2ee01e367ed786f9
+    svelte: ^5.0.0
+  checksum: 10c0/9ae7d527eefe16c51479076b6e0aee2625bfdc8765338c582aef33de98dd9448ee64e6fe88d36173c6c01b7dc1e599210f66a75923e80fab4e048fb638f4212d
   languageName: node
   linkType: hard
 
@@ -5161,7 +5161,7 @@ __metadata:
   dependencies:
     "@antfu/eslint-config": "npm:^5.4.1"
     "@castlenine/svelte-qrcode": "npm:^2.3.0"
-    "@svelte-plugins/tooltips": "npm:^3.0.3"
+    "@svelte-plugins/tooltips": "npm:beta"
     "@sveltejs/vite-plugin-svelte": "npm:^6.2.1"
     autoprefixer: "npm:^10.4.21"
     cssnano: "npm:^7.1.1"

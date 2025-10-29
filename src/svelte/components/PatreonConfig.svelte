@@ -1,7 +1,6 @@
 <svelte:options runes={true} />
 <script lang='ts'>
 	import type { ModuleConfig } from '../../utils/types.ts';
-	import { tooltip } from '@svelte-plugins/tooltips';
 	import { onDestroy, onMount } from 'svelte';
 	import { fetchFeatures } from '../../server/patreon.js';
 	import { disconnectClient } from '../../server/patreon_auth.ts';
@@ -105,17 +104,7 @@
 			{#if features?.providers.includes('google')}
 				<section class='settings'>
 					<span>{game.i18n?.localize('ethereal-plane.strings.youtube-id')}</span>
-					<div
-						class='buttonbox'
-						use:tooltip={{
-							content: game.i18n?.localize('ethereal-plane.strings.youtube-id-hint'),
-							position: 'top',
-							autoPosition: true,
-							align: 'center',
-							// @ts-expect-error why tho
-							style: { backgroundColor: 'white', color: 'black' },
-						}}
-					>
+					<div class='buttonbox'>
 						<input
 							bind:value={youtubeID}
 							type='text'
@@ -144,12 +133,12 @@
 		<InfoBox variant='error'>
 			<span>{game.i18n?.localize('ethereal-plane.strings.patreon-logged-out')}</span><br />
 			<span>{game.i18n?.localize('ethereal-plane.strings.accept-text')}</span><a
-				href='https://github.com/FaeyUmbrea/ethereal-plane/blob/main/TERM_OF_USE.md'
+				href='https://s.void.monster/ep-tos'
 			>{game.i18n?.localize('ethereal-plane.strings.tos')}</a
 			>
 			&
 			<a
-				href='https://github.com/FaeyUmbrea/ethereal-plane/blob/main/PRIVACY_POLICY.md'
+				href='https://s.void.monster/ep-privacy'
 			>{game.i18n?.localize('ethereal-plane.strings.privacy-policy')}</a
 			>
 		</InfoBox>
