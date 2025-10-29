@@ -1,3 +1,10 @@
+## Version 3.1.1
+
+### Fixed
+
+- Replaced the TOS and Privacy Policy links with an editable link
+- Made the module more reliably detect if the tokens are expired
+
 ## Version 3.1.0
 
 ### Changed

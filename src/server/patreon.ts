@@ -30,7 +30,6 @@ import {
 import {
 	connectClient,
 	disconnectClient,
-	get_token,
 	patreonLogin,
 	waitForPatreonVerification,
 	wrapClient,
@@ -273,8 +272,9 @@ export class PatreonConnector {
 }
 
 export async function fetchFeatures(): Promise<ModuleConfig> {
-	const access_token = get_token()?.access_token;
-	if (!access_token) {
+	const wrapped = (await wrapClient(fetch));
+	const data = (await wrapped?.fetch(`${API_URL}api/v2/config/module`));
+	if (!data) {
 		return {
 			features: {
 				poll: [],
@@ -282,8 +282,7 @@ export async function fetchFeatures(): Promise<ModuleConfig> {
 			providers: [],
 		};
 	}
-	const wrapped = (await wrapClient(fetch));
-	return (await wrapped?.fetch(`${API_URL}api/v2/config/module`))?.json();
+	return data.json();
 }
 
 let connectionManager: PatreonConnector | undefined;
