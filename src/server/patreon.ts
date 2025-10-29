@@ -33,6 +33,7 @@ import {
 	get_token,
 	patreonLogin,
 	waitForPatreonVerification,
+	wrapClient,
 } from './patreon_auth.js';
 import {
 	abortPoll,
@@ -281,9 +282,8 @@ export async function fetchFeatures(): Promise<ModuleConfig> {
 			providers: [],
 		};
 	}
-	return (await fetch(`${API_URL}api/v2/config/module`, {
-		headers: { Authorization: `Bearer ${access_token}` },
-	})).json();
+	const wrapped = (await wrapClient(fetch));
+	return (await wrapped?.fetch(`${API_URL}api/v2/config/module`))?.json();
 }
 
 let connectionManager: PatreonConnector | undefined;
