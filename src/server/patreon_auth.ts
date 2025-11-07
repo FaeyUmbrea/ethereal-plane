@@ -198,16 +198,25 @@ export async function disconnectClient() {
 	Hooks.call('ethereal-plane.patreon-disconnected');
 }
 
-export function get_token() {
+export async function get_token() {
 	const access_token = getSetting('authentication-token') as string;
 	const refresh_token = getSetting('refresh-token') as string;
 
-	if (access_token === '' || refresh_token === '') {
+	if (refresh_token === '') {
 		log('Ethereal Plane | No credentials present, please log in');
 		ui.notifications?.warn(
 			`${(game as ReadyGame).i18n.localize('ethereal-plane.strings.notification-prefix')}${(game as ReadyGame).i18n.localize('ethereal-plane.notifications.please-log-in')}`,
 		);
 		return;
+	} else if (access_token === '') {
+		const tokens = await refresh(refresh_token);
+		if (tokens.refresh_token === undefined) {
+			return;
+		}
+		return {
+			access_token: tokens.access_token,
+			refresh_token: tokens.refresh_token,
+		};
 	}
 	return {
 		access_token,
@@ -226,13 +235,9 @@ export async function handle_refresh_error() {
 	);
 }
 
-export async function testToken() {
-	const token = get_token();
-}
-
 export async function wrapClient(providedFetch: typeof fetch) {
 	try {
-		const currentToken = get_token();
+		const currentToken = await get_token();
 		if (!currentToken) {
 			return;
 		}

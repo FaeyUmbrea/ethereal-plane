@@ -100,7 +100,7 @@ export async function endPoll(pollId: string) {
 let socket: ReturnType<typeof io> | undefined;
 
 export async function enablePollListeners(pollUpdateCallback: (data: PollData) => void, handleErrorMessage: (error: string) => void) {
-	const token = get_token();
+	const token = await get_token();
 	if (!token) {
 		return;
 	}

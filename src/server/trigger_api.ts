@@ -6,7 +6,7 @@ import { ServerStatus, triggerStatus } from './status.ts';
 let socket: ReturnType<typeof io> | undefined;
 
 export async function enableTriggerListeners(handleTriggerReceived: (chatMessage: ChatTriggerEvent) => Promise<boolean>) {
-	const token = get_token();
+	const token = await get_token();
 	if (!token) {
 		return;
 	}

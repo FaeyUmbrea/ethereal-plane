@@ -31,7 +31,7 @@ export async function sendChatMessage(message: string) {
 let socket: ReturnType<typeof io> | undefined;
 
 export async function enableChatListeners(handleChatMessageReceived: (chatMessage: ChatMessage) => void, handleChatMessageDeleted: (messageId: string) => void, handleErrorMessage: (error: string) => void) {
-	const token = get_token();
+	const token = await get_token();
 	if (!token) {
 		return;
 	}
