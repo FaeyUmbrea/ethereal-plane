@@ -1,3 +1,9 @@
+## Version 3.1.2
+
+### Fixed
+
+- This version is an attempt to fix module collision issues with other modules that use Svelte for their menus
+
 ## Version 3.1.1
 
 ### Fixed
