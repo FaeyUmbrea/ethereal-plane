@@ -195,7 +195,7 @@ async function importChatCommands(data: string, withMacros: boolean) {
 	}
 	const triggerMacros: TriggerMacro[] = [];
 	for (const command of imported.commands) {
-		if (!triggers.find(trigger => trigger.id === command.id)) {
+		if (!triggers.some(trigger => trigger.id === command.id)) {
 			// Do not import macros for triggers we don't have
 			continue;
 		}
