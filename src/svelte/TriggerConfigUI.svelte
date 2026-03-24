@@ -51,7 +51,7 @@
 
 	.header-section {
 		display: grid;
-		grid-template-columns: 40px auto 150px 150px 55px;
+		grid-template-columns: 40px auto 150px 150px 105px;
 		grid-template-rows: 15px;
 	}
 
@@ -64,7 +64,7 @@
 		overflow-y: scroll;
 		overflow-x: hidden;
 		gap: 2px;
-		grid-template-columns: 40px auto 150px 150px 35px;
+		grid-template-columns: 40px auto 150px 150px 105px;
 		grid-auto-rows: 35px;
 	}
 

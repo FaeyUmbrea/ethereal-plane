@@ -70,3 +70,36 @@ export async function getTriggers(): Promise<TriggerConfig[] | undefined> {
 export function disableTriggerListeners() {
 	socket?.disconnect();
 }
+
+export async function uploadTriggerMacro(triggerId: string, macro: string): Promise<boolean> {
+	const authFetch = (await wrapClient(fetch))?.fetch;
+	if (authFetch === undefined) {
+		return false;
+	}
+	const res = await authFetch(`${TRIGGER_ENDPOINT}/${triggerId}/macro`, {
+		method: 'POST',
+		body: JSON.stringify({
+			content: macro,
+		}),
+		headers: {
+			'Content-Type': 'Application/Json',
+		},
+	});
+	if (res?.status === 200) {
+		return true;
+	}
+	return false;
+}
+
+export async function downloadTriggerMacro(triggerId: string): Promise<string | undefined> {
+	const authFetch = (await wrapClient(fetch))?.fetch;
+	if (authFetch === undefined) {
+		return;
+	}
+	const res = await authFetch(`${TRIGGER_ENDPOINT}/${triggerId}/macro`, {
+		method: 'GET',
+	});
+	if (res?.status === 200) {
+		return (await res.json())?.content;
+	}
+}

@@ -1,3 +1,9 @@
+## Version 3.2.0
+
+### Added
+
+Macro Sync is here!!! Upload macro code directly to the EP Servers for all of your triggers (one macro per trigger)
+
 ## Version 3.1.2
 
 ### Fixed
