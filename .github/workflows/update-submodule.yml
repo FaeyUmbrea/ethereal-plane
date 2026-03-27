@@ -1,4 +1,6 @@
 name: Notify Main Repository
+permissions:
+  contents: read
 
 on:
   push:
