@@ -1,3 +1,11 @@
+## Version 3.3.0
+
+### Update
+
+- Dropped Foundry 12 Support
+
+- Added Foundry 14 Support
+
 ## Version 3.2.0
 
 ### Added

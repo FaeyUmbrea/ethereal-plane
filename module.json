@@ -7,9 +7,9 @@
 	"manifestPlusVersion": "1.2.0",
 	"persistentStorage": true,
 	"compatibility": {
-		"maximum": 13,
-		"verified": 13,
-		"minimum": 12
+		"maximum": 14,
+		"verified": 14,
+		"minimum": 13
 	},
 	"authors": [
 		{
@@ -21,7 +21,9 @@
 	"styles": [
 		"dist/ethereal-plane.css"
 	],
-	"esmodules": ["dist/ethereal-plane.js"],
+	"esmodules": [
+		"dist/ethereal-plane.js"
+	],
 	"languages": [
 		{
 			"lang": "en",
