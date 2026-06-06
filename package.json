@@ -51,5 +51,8 @@
 	"lint-staged": {
 		"*.js": "eslint --fix",
 		"*.svelte": "eslint --fix"
+	},
+	"resolutions": {
+		"tar": "^7"
 	}
 }
