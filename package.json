@@ -53,6 +53,7 @@
 		"*.svelte": "eslint --fix"
 	},
 	"resolutions": {
-		"tar": "^7"
+		"tar": "^7",
+		"ip": "^2.0.1"
 	}
 }

@@ -5288,7 +5288,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ip@npm:^2.0.0":
+"ip@npm:^2.0.1":
   version: 2.0.1
   resolution: "ip@npm:2.0.1"
   checksum: 10c0/cab8eb3e88d0abe23e4724829621ec4c4c5cb41a7f936a2e626c947128c1be16ed543448d42af7cca95379f9892bfcacc1ccd8d09bc7e8bea0e86d492ce33616
