@@ -48,12 +48,12 @@
 		">5%",
 		"not IE 11"
 	],
+	"resolutions": {
+		"socks": "^2.8",
+		"tar": "^7"
+	},
 	"lint-staged": {
 		"*.js": "eslint --fix",
 		"*.svelte": "eslint --fix"
-	},
-	"resolutions": {
-		"tar": "^7",
-		"socks": "^2.8"
 	}
 }
