@@ -2,14 +2,11 @@
 	"id": "ethereal-plane",
 	"title": "Ethereal Plane",
 	"description": "",
-	"version": "This is auto replaced",
-	"library": "false",
-	"manifestPlusVersion": "1.2.0",
-	"persistentStorage": true,
+	"version": "0.0.0",
 	"compatibility": {
-		"maximum": 14,
-		"verified": 14,
-		"minimum": 13
+		"minimum": "13",
+		"verified": "14",
+		"maximum": "14"
 	},
 	"authors": [
 		{
@@ -18,11 +15,15 @@
 			"discord": "Faey#0001"
 		}
 	],
-	"styles": [
-		"dist/ethereal-plane.css"
-	],
+	"relationships": {
+		"requires": [],
+		"systems": []
+	},
 	"esmodules": [
 		"dist/ethereal-plane.js"
+	],
+	"styles": [
+		"dist/ethereal-plane.css"
 	],
 	"languages": [
 		{
@@ -31,16 +32,18 @@
 			"path": "lang/en.json"
 		}
 	],
-	"url": "This is auto replaced",
-	"socket": true,
-	"manifest": "This is auto replaced",
-	"download": "This is auto replaced",
+	"url": "https://github.com/FaeyUmbrea/ethereal-plane",
+	"manifest": "https://github.com/FaeyUmbrea/ethereal-plane/releases/latest/download/module.json",
+	"download": "https://github.com/FaeyUmbrea/ethereal-plane/releases/latest/download/module.zip",
+	"readme": "https://github.com/FaeyUmbrea/ethereal-plane/blob/main/README.md",
 	"license": "AGPL-3.0-only",
-	"readme": "https://github.com/FaeyUmbrea/obs-utils/blob/master/README.md",
+	"socket": true,
+	"persistentStorage": true,
+	"library": false,
 	"media": [
 		{
 			"type": "icon",
-			"url": "https://avatars2.githubusercontent.com/u/71292812?s=400&u=ccdb4eeb7abf551ca8f314e5a9bfd0479a4d3d41&v=4"
+			"url": "https://avatars2.githubusercontent.com/u/71292812?s=400\u0026u=ccdb4eeb7abf551ca8f314e5a9bfd0479a4d3d41\u0026v=4"
 		}
 	]
 }

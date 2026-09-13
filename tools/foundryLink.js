@@ -1,86 +1,163 @@
 /* eslint-disable no-console */
 import * as fs from 'node:fs';
+import * as os from 'node:os';
 import * as path from 'node:path';
 import * as process from 'node:process';
 import * as readline from 'node:readline';
 
-async function foundryLink() {
-	const winPath = `${process.env.LOCALAPPDATA}/FoundryVTT/Config/options.json`;
-	const distDir = '/';
-	const moduleDir = '/Data/modules/';
-	const moduleJsonPath = '/module.json';
-
-	let moduleJsonPathFull = '';
-	let cwd = process.cwd();
-	while (cwd) {
-		if (fs.existsSync(cwd + moduleJsonPath)) {
-			moduleJsonPathFull = cwd + moduleJsonPath;
-			break;
-		}
-		const newcwd = path.resolve(`${cwd}/..`);
-		if (newcwd === cwd) cwd = '';
-		cwd = newcwd;
-	}
-	if (!moduleJsonPathFull) throw new Error('This has to be run in a project');
-	const name = JSON.parse(
-		(await fs.promises.readFile(moduleJsonPathFull)).toString(),
-	).id;
-
-	function askQuestion(query) {
-		const rl = readline.createInterface({
-			input: process.stdin,
-			output: process.stdout,
-		});
-
-		return new Promise(resolve =>
-			rl.question(query, (ans) => {
-				rl.close();
-				resolve(ans);
-			}),
-		);
-	}
-
-	let dataPath = '';
+// Default location of Foundry VTT's `Config/options.json` per platform.
+function defaultOptionsPath() {
+	const home = os.homedir();
 	if (process.platform === 'win32') {
-		if (!fs.existsSync(winPath)) {
-			dataPath = await askQuestion(
-				'Please enter the path to your Foundry Modules Directory \n',
-			);
-		} else {
-			const options = JSON.parse(
-				(await fs.promises.readFile(winPath)).toString(),
-			);
-			dataPath = options?.dataPath;
-		}
-	} else {
-		dataPath = await askQuestion(
-			'Please enter the path to your Foundry modules directory',
-		);
+		const localAppData = process.env.LOCALAPPDATA ?? path.join(home, 'AppData', 'Local');
+		return path.join(localAppData, 'FoundryVTT', 'Config', 'options.json');
 	}
-	if (dataPath) {
-		if (fs.existsSync(dataPath + moduleDir + name)) {
-			console.log(
-				'The file is already present in the detected modules directory:',
-			);
-			console.log(dataPath + moduleDir + name);
-			const otherDir = await askQuestion(
-				'Do you want to write to a different directory? Y/N (Default:N)',
-			);
-			if (otherDir === 'y' || otherDir === 'Y') {
-				dataPath = await askQuestion(
-					'Please enter the full path you want to link to \n',
-				);
-				fs.symlinkSync(
-					cwd + distDir,
-					dataPath,
-					process.platform === 'win32' ? 'junction' : 'dir',
-				);
-			}
-		} else {
-			fs.symlinkSync(cwd + distDir, dataPath + moduleDir + name, 'junction');
-		}
+	if (process.platform === 'darwin') {
+		return path.join(home, 'Library', 'Application Support', 'FoundryVTT', 'Config', 'options.json');
 	}
-	console.log('All good! You seem to be set up correctly!');
+	// Linux and other Unix-likes.
+	return path.join(home, '.local', 'share', 'FoundryVTT', 'Config', 'options.json');
 }
 
-foundryLink();
+// A single shared readline interface with a line queue. Buffering lines as they
+// arrive keeps prompts working for both interactive and piped/non-interactive
+// stdin (a per-prompt interface drops buffered lines and hangs on EOF).
+let sharedRl = null;
+const lineQueue = [];
+const waiters = [];
+
+function ensureReadline() {
+	if (sharedRl) return;
+	sharedRl = readline.createInterface({ input: process.stdin });
+	sharedRl.on('line', (line) => {
+		const waiter = waiters.shift();
+		if (waiter) waiter(line);
+		else lineQueue.push(line);
+	});
+	sharedRl.on('close', () => {
+		// At EOF, resolve any pending prompts with the empty (default) answer.
+		while (waiters.length) waiters.shift()('');
+	});
+}
+
+function askQuestion(query) {
+	ensureReadline();
+	process.stdout.write(query);
+	if (lineQueue.length) return Promise.resolve(lineQueue.shift());
+	return new Promise(resolve => waiters.push(resolve));
+}
+
+function closeQuestions() {
+	if (sharedRl) {
+		sharedRl.close();
+		sharedRl = null;
+	}
+}
+
+async function foundryLink() {
+	// Locate the project's module.json by walking up from the current directory.
+	let projectRoot = '';
+	let cwd = process.cwd();
+	while (cwd) {
+		if (fs.existsSync(path.join(cwd, 'module.json'))) {
+			projectRoot = cwd;
+			break;
+		}
+		const parent = path.resolve(cwd, '..');
+		if (parent === cwd) break;
+		cwd = parent;
+	}
+	if (!projectRoot) {
+		throw new Error('This has to be run inside a module project (no module.json found).');
+	}
+
+	const name = JSON.parse(
+		(await fs.promises.readFile(path.join(projectRoot, 'module.json'))).toString(),
+	).id;
+
+	// Resolve the Foundry data path: read it from options.json when available, else ask.
+	let dataPath = '';
+	const optionsPath = defaultOptionsPath();
+	if (fs.existsSync(optionsPath)) {
+		try {
+			const options = JSON.parse(
+				(await fs.promises.readFile(optionsPath)).toString(),
+			);
+			dataPath = options?.dataPath ?? '';
+		} catch {
+			dataPath = '';
+		}
+	}
+	if (!dataPath) {
+		dataPath = (await askQuestion(
+			'Please enter the path to your Foundry data directory (the folder containing "Data"): ',
+		)).trim();
+	}
+	if (!dataPath) {
+		throw new Error('No Foundry data path provided.');
+	}
+
+	// `junction` is Windows-only; every other platform uses a directory symlink.
+	const linkType = process.platform === 'win32' ? 'junction' : 'dir';
+	const modulesDir = path.join(dataPath, 'Data', 'modules');
+	const target = path.join(modulesDir, name);
+	const desired = fs.realpathSync(projectRoot);
+
+	// Inspect anything already at the target without following the link.
+	let existing = null;
+	try {
+		existing = fs.lstatSync(target);
+	} catch {
+		existing = null;
+	}
+
+	if (existing) {
+		if (!existing.isSymbolicLink()) {
+			console.log('A non-symlink file or directory already occupies the target; leaving it untouched:');
+			console.log(`  ${target}`);
+			return;
+		}
+
+		// Resolve where the existing link currently points (null if broken).
+		let currentTarget = null;
+		try {
+			currentTarget = fs.realpathSync(target);
+		} catch {
+			currentTarget = null;
+		}
+
+		if (currentTarget === desired) {
+			console.log('Module is already linked correctly:');
+			console.log(`  ${target} -> ${desired}`);
+			return;
+		}
+
+		console.log('A link already exists but points elsewhere:');
+		console.log(`  ${target} -> ${currentTarget ?? fs.readlinkSync(target)}`);
+		const update = await askQuestion(
+			`Update it to point to ${projectRoot}? Y/n: `,
+		);
+		if (update.trim() !== '' && !update.trim().toLowerCase().startsWith('y')) {
+			console.log('Left the existing link unchanged.');
+			return;
+		}
+		fs.rmSync(target, { force: true, recursive: true });
+		fs.symlinkSync(projectRoot, target, linkType);
+		console.log('Link updated:');
+		console.log(`  ${target} -> ${projectRoot}`);
+		return;
+	}
+
+	fs.mkdirSync(modulesDir, { recursive: true });
+	fs.symlinkSync(projectRoot, target, linkType);
+
+	console.log('All good! Your module is linked at:');
+	console.log(`  ${target}`);
+}
+
+foundryLink()
+	.catch((err) => {
+		console.error(err.message ?? err);
+		globalThis.process.exitCode = 1;
+	})
+	.finally(closeQuestions);

@@ -1,0 +1,38 @@
+# Changes here are managed by Copier. Re-answer questions with `copier update`.
+_commit: v1.0.4
+_src_path: /Volumes/USBSSD/Projects/obs-utils/module-template
+additional_languages: []
+adopt_existing_module: true
+author_discord: Faey#0001
+author_name: Faey Umbrea
+author_url: https://github.com/FaeyUmbrea
+browser_tests: false
+default_branch: main
+exports_api_types: false
+foundry_maximum: '14'
+foundry_minimum: '13'
+foundry_verified: '14'
+github_owner: FaeyUmbrea
+has_packs: false
+is_library: false
+localization: true
+module_description: ''
+module_id: ethereal-plane
+module_kind: code
+module_license: AGPL-3.0-only
+module_media:
+-   type: icon
+    url: https://avatars2.githubusercontent.com/u/71292812?s=400&u=ccdb4eeb7abf551ca8f314e5a9bfd0479a4d3d41&v=4
+module_packs: []
+module_relationships:
+    requires: []
+    systems: []
+module_scripts: []
+module_title: Ethereal Plane
+persistent_storage: true
+release_strategy: custom
+repository_name: ethereal-plane
+unit_tests: false
+uses_socket: true
+uses_styles: true
+uses_svelte: true
