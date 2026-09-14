@@ -1,12 +1,14 @@
 # Changes here are managed by Copier. Re-answer questions with `copier update`.
-_commit: v1.0.4
-_src_path: /Volumes/USBSSD/Projects/obs-utils/module-template
+_commit: v1.0.4-3-g614f28d
+_src_path: gh:FaeyUmbrea/module-template
 additional_languages: []
 adopt_existing_module: true
 author_discord: Faey#0001
 author_name: Faey Umbrea
 author_url: https://github.com/FaeyUmbrea
 browser_tests: false
+checks_workflow: true
+community_files: true
 default_branch: main
 exports_api_types: false
 foundry_maximum: '14'
@@ -14,8 +16,11 @@ foundry_minimum: '13'
 foundry_verified: '14'
 github_owner: FaeyUmbrea
 has_packs: false
+has_templates: true
 is_library: false
 localization: true
+manage_gitignore: true
+manage_manifest: true
 module_description: ''
 module_id: ethereal-plane
 module_kind: code
@@ -31,7 +36,9 @@ module_scripts: []
 module_title: Ethereal Plane
 persistent_storage: true
 release_strategy: custom
+release_tag_pattern: '*'
 repository_name: ethereal-plane
+typecheck: false
 unit_tests: false
 uses_socket: true
 uses_styles: true
