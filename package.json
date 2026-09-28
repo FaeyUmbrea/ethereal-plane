@@ -17,9 +17,9 @@
 	},
 	"dependencies": {
 		"@castlenine/svelte-qrcode": "^2.3.0",
-		"nanoid": "^5.1.7",
+		"nanoid": "^5.1.16",
 		"oauth4webapi": "^3.8.5",
-		"postcss": "^8.5.23",
+		"postcss": "^8.5.24",
 		"sass": "^1.98.0",
 		"svelte": "^5.55.0"
 	},
@@ -42,7 +42,7 @@
 		"typescript": "^5.9.3",
 		"typescript-eslint": "^8.57.2",
 		"vite": "^8.0.2",
-		"vitest": "^4.1.1"
+		"vitest": "^5.0.2"
 	},
 	"browserslist": [
 		">5%",
