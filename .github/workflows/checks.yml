@@ -2,9 +2,6 @@ name: Checks
 
 on:
   pull_request:
-  push:
-    branches:
-      - "main"
   workflow_dispatch:
 
 permissions:
@@ -15,21 +12,48 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect build inputs
+        id: changes
+        working-directory: ${{ github.workspace }}
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        shell: bash
+        run: |
+          code=true
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            git diff --name-only --no-renames -z HEAD^1 HEAD > "$RUNNER_TEMP/changed-files"
+            code=false
+            while IFS= read -r -d '' path; do
+              case "$path" in
+                README.md|CHANGELOG.md|LICENSE|LICENSE.*|docs/*|.github/ISSUE_TEMPLATE/*) ;;
+                *) code=true; break ;;
+              esac
+            done < "$RUNNER_TEMP/changed-files"
+          fi
+          echo "code=$code" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v4
+        if: steps.changes.outputs.code == 'true'
         with:
           node-version: 22
           cache: yarn
 
       - name: Enable Corepack
+        if: steps.changes.outputs.code == 'true'
         run: corepack enable
 
       - name: Install dependencies
+        if: steps.changes.outputs.code == 'true'
         run: yarn install --immutable
 
       - name: Lint
+        if: steps.changes.outputs.code == 'true'
         run: yarn lint
 
 
       - name: Build
+        if: steps.changes.outputs.code == 'true'
         run: yarn build
