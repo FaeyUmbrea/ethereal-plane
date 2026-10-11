@@ -35,3 +35,7 @@ Requires: setup
 ```
 yarn build
 ```
+
+## Translation
+
+Help translate on [Void Monster Translations](https://translate.void.monster/projects/ethereal-plane/module/). Please submit human translations in languages you know.
