@@ -33,7 +33,7 @@
 		"eslint-plugin-format": "^2.0.1",
 		"eslint-plugin-svelte": "^3.16.0",
 		"fvtt-types": "13.346.0-beta.20251209192131",
-		"postcss": "^8.5.25",
+		"postcss": "^8.5.26",
 		"postcss-preset-env": "^11.2.0",
 		"rollup-plugin-visualizer": "^7.0.1",
 		"sass": "^1.98.0",
@@ -50,7 +50,8 @@
 	],
 	"resolutions": {
 		"socks": "^2.8",
-		"tar": "^7"
+		"tar": "^7.5.21",
+		"tinypool@npm:2.1.0": "npm:2.1.2"
 	},
 	"lint-staged": {
 		"*.js": "eslint --fix",
