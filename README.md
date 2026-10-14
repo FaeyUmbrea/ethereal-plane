@@ -45,3 +45,9 @@ Translations are managed on [Void Monster Translations](https://translate.void.m
 3. Accept the contributor confirmation in Weblate, then translate or review existing strings. Only approve strings you have personally reviewed.
 
 Only approved translations are submitted to the repositories. You can help bring back existing community translations by reviewing them.
+
+## Licence
+
+This source tree and future releases use the [Void Monster Module Licence](LICENSE). The source is available for inspection; it is not distributed under an open-source licence. Previously released versions retain the licences under which they were distributed.
+
+For alternative licensing, contact me on [Discord](https://discord.com/invite/WfMaKPPdeM) or at licensing@void.monster.
