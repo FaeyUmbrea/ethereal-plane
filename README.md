@@ -42,7 +42,7 @@ Translations are managed on [Void Monster Translations](https://translate.void.m
 
 1. Contact me on [Discord](https://discord.com/invite/WfMaKPPdeM) or by [email](mailto:contact@void.monster). Tell me which languages you speak fluently and confirm in writing that you will only submit translations you manually write or personally review in full.
 2. I'll invite you to Weblate with translation and review access for those confirmed languages.
-3. Accept the contributor confirmation in Weblate, then translate or review existing strings. Only approve strings you have personally reviewed.
+3. Accept the [Translation Contributor Agreement](https://translate.void.monster/legal/terms/) in Weblate, then translate or review existing strings. Only approve strings you have personally reviewed.
 
 Only approved translations are submitted to the repositories. You can help bring back existing community translations by reviewing them.
 
@@ -51,3 +51,7 @@ Only approved translations are submitted to the repositories. You can help bring
 This source tree and future releases use the [Void Monster Module Licence](LICENSE). The source is available for inspection; it is not distributed under an open-source licence. Previously released versions retain the licences under which they were distributed.
 
 For alternative licensing, contact me on [Discord](https://discord.com/invite/WfMaKPPdeM) or at licensing@void.monster.
+
+## Code contributions
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) and accept the [Code Contributor Agreement v1.0](CONTRIBUTOR-AGREEMENT.md) before submitting code.
