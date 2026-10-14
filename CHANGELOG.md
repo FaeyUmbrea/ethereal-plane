@@ -1,3 +1,9 @@
+## Unreleased
+
+### Changed
+
+- Future client releases use the Void Monster Module Licence. Previously released versions retain their original licences.
+
 ## Version 3.3.0
 
 ### Update

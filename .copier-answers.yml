@@ -24,7 +24,7 @@ manage_manifest: true
 module_description: ''
 module_id: ethereal-plane
 module_kind: code
-module_license: AGPL-3.0-only
+module_license: LICENSE
 module_media:
 -   type: icon
     url: https://avatars2.githubusercontent.com/u/71292812?s=400&u=ccdb4eeb7abf551ca8f314e5a9bfd0479a4d3d41&v=4

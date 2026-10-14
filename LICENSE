@@ -1,0 +1,57 @@
+# Void Monster Module Licence
+
+Version 1.0.
+
+Copyright Faey Umbrea. All rights reserved except as granted below.
+
+## Scope
+
+This licence applies to the particular module version distributed with it, whether its source is published or kept private. It does not replace the licences of earlier releases or other modules distributed under an open-source licence.
+
+An authorised recipient may install and use the module for its intended purpose. Where source is made available, you may inspect it. Source availability does not grant unrestricted rights to copy, modify or redistribute the software.
+
+## Actual play and recordings
+
+You may stream, record and otherwise make available footage of actual-play experiences created using the module, including monetised footage, without a commercial licence, provided that the content is not paywalled and none of the participating players pays to take part in the experience.
+
+Advertising, sponsorship and voluntary donations do not by themselves require a commercial licence, provided they do not purchase access to the content or participation in the experience.
+
+Credit for this actual-play content is optional but appreciated.
+
+Paywalled actual-play content and experiences in which any participating player pays to take part require a separately negotiated commercial licence. The permissions and credit obligations for those uses are governed by that agreement.
+
+## Modules and integrations
+
+Other modules may reuse this module's code only to integrate with this module. This permission covers the code necessary for that integration; it does not permit repackaging this module or reusing its code for unrelated features or products.
+
+Commercial modules integrating with this module must credit the module and Faey Umbrea. This requirement applies to direct integration and to integration provided through another module, including a free or noncommercial integration module. Using an intermediary does not remove the credit requirement.
+
+Noncommercial modules do not require credit. However, a noncommercial module that provides an integration for other modules must include a notice in its integration documentation explaining that commercial modules using that integration must credit the underlying module and Faey Umbrea under this licence. The notice must identify the underlying module and link to its licence.
+
+## Dependent content
+
+You may create and distribute independent content that depends on this module to function. This permission does not authorise bundling this module or its files with that content.
+
+Credit is not required when access to the content is wholly free and no direct commercial value is attached to it. Otherwise, credit to the module and Faey Umbrea is required.
+
+Paid experiences and paywalled actual-play content remain subject to the commercial-licence requirement above, even if they also include dependent content.
+
+## Generative AI
+
+You may provide this module's source code, documentation or assets to a generative AI tool as context only for developing an integration permitted by this licence. The resulting integration remains subject to all applicable permissions, restrictions and credit requirements in this licence.
+
+You may not use those materials with generative AI to reconstruct or rewrite the module, create a replacement for it, or produce unrelated software or content. This restriction also applies when you use intermediate descriptions, specifications or other material derived from the module instead of supplying the original material directly.
+
+Providing material to a model, training or fine-tuning a model on it, or using model output does not grant additional rights or remove existing licence obligations. Calling the result an independent or clean-room implementation does not create an exception to these restrictions.
+
+## Credit
+
+Where credit is required, identify the module used and Faey Umbrea in the product description, documentation, release announcement or another place reasonably visible to its users. A link to https://void.monster/ is appreciated.
+
+## Other permissions
+
+You may always contact me on [Discord](https://discord.com/invite/WfMaKPPdeM) or at licensing@void.monster to negotiate an alternative licence, including different reuse permissions or credit obligations.
+
+Except for the permissions expressly granted here, redistribution of the module or modified versions, sharing protected download access, and reuse of its code or files are not permitted without separate written permission.
+
+Third-party components retain their own licences. Nothing in this licence restricts rights granted by those licences or rights that applicable law does not allow to be restricted.
